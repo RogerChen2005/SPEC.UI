@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+// import { ref } from 'vue';
 import { useHistoryStore } from '~/store/historyStore';
 
 const history = useHistoryStore();

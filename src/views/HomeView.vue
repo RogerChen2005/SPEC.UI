@@ -92,6 +92,7 @@ const projects = ref<Project[]>([
 
 function openProject(project: Project) {
     router.push('/project');
+    console.log(`Opening project: ${project.title}`);
 }
 
 </script>
