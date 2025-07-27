@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-router";
 
 // Core components, load previously.
+import Home from '~/views/HomeView.vue';
 import Main from "~/views/MainView.vue";
 import UnauthorizedView from "~/views/UnauthorizedView.vue";
 import NotFoundView from "~/views/NotFoundView.vue";
@@ -10,6 +11,11 @@ import { coreRoutes } from "./corePath";
 const routes:readonly RouteRecordRaw[] = [
   {
     path: "/",
+    component: Home,
+    meta: { requiresAuth: true, title: "主页" },
+  },
+  {
+    path: "/project",
     component: Main,
     meta: { requiresAuth: true, title: "Main"},
     children: coreRoutes

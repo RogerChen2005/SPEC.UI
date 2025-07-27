@@ -1,11 +1,13 @@
 import type { RouteRecordRaw } from "vue-router";
 
-const Home = () => import("~/views/HomeView.vue");
+
+// const Project = () => import("~/views/ProjectView.vue");
+import Project from "~/views/ProjectView.vue";
 
 export const coreRoutes: RouteRecordRaw[] = [
   {
-    path: "/",
-    component: Home,
+    path: "",
+    component: Project,
     meta: { requiresAuth: true, title: "主页" },
   }
 ];
