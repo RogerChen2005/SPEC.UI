@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useVuetifyTheme } from './composables/useVuetifyTheme';
+useVuetifyTheme();
 </script>
 
 <template>

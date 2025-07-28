@@ -10,6 +10,7 @@ function createTheme(color: any): ThemeDefinition {
       info: color.base,
       background: color.lighten5,
       surface: color.lighten4,
+      "surface-light": color.lighten4,
     },
     dark: false,
     variables: {
@@ -25,13 +26,15 @@ function createDarkTheme(color: any): ThemeDefinition {
       secondary: color.lighten3,
       accent: color.lighten1,
       info: color.base,
-      background: color.darken3,
-      surface: color.darken4,
+      background: colors.grey.darken4,
+      surface: colors.grey.darken3,
+      "surface-light": colors.grey.darken3,
     },
     dark: true,
     variables: {
       "border-color": color.lighten3,
       "theme-colors-opacity": 0.8,
+      font: color.lighten2,
     },
   };
 }

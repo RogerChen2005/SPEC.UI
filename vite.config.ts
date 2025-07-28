@@ -5,6 +5,9 @@ import vuetify from 'vite-plugin-vuetify';
 
 export default defineConfig({
   base: './',
+  build:{
+    outDir: 'spec'
+  },
   plugins: [
     vue(),
     vuetify({

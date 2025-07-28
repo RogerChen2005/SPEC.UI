@@ -1,0 +1,3 @@
+<template>
+    EditSpec Component
+</template>

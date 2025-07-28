@@ -1,24 +1,36 @@
-import { createRouter, createWebHashHistory, type RouteRecordRaw } from "vue-router";
+import {
+  createRouter,
+  createWebHashHistory,
+  type RouteRecordRaw,
+} from "vue-router";
 
 // Core components, load previously.
-import Home from '~/views/HomeView.vue';
+import Home from "~/views/HomeView.vue";
 import Main from "~/views/MainView.vue";
+import CreateView from "~/views/Create/CreateView.vue";
 import UnauthorizedView from "~/views/UnauthorizedView.vue";
 import NotFoundView from "~/views/NotFoundView.vue";
 import { routerSetup } from "./setup";
-import { coreRoutes } from "./corePath";
+import { projectRoutes } from "./projectPath";
+import { rootRoutes } from "./rootPath";
 
-const routes:readonly RouteRecordRaw[] = [
+const routes: readonly RouteRecordRaw[] = [
   {
     path: "/",
     component: Home,
     meta: { requiresAuth: true, title: "主页" },
+    children: rootRoutes,
+  },
+  {
+    path: "/create",
+    component: CreateView,
+    meta: { requiresAuth: false, title: "创建" },
   },
   {
     path: "/project",
     component: Main,
-    meta: { requiresAuth: true, title: "Main"},
-    children: coreRoutes
+    meta: { requiresAuth: true, title: "Main" },
+    children: projectRoutes,
   },
   {
     path: "/unauthorized",

@@ -26,6 +26,10 @@ const vuetify = createVuetify({
   },
 });
 
+if (vuetify.theme.themes.value.dark) {
+  vuetify.theme.themes.value.dark.colors.background = '#1f1e1eff';
+}
+
 const app = createApp(App);
 const pinia = createPinia();
 

@@ -20,7 +20,7 @@
     
     <h1 class="mt-4 text-h6">SPEC Templates</h1>
 
-    <v-card variant="tonal" class="mt-2">
+    <v-card variant="elevated" class="mt-2">
         <v-card-title class="text-body-1 font-weight-bold"></v-card-title>
         <v-card-text>
             <v-radio-group v-model="specTemplate">

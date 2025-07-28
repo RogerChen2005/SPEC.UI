@@ -1,5 +1,9 @@
 <template>
-  <v-navigation-drawer location="right" app permanent width="400">
+  <v-navigation-drawer location="right" app permanent :width="drawerWidth">
+    <div
+      @mousedown.prevent="startResize"
+      style="cursor: col-resize; position: absolute; top: 0; left: 0; bottom: 0; width: 5px;"
+    ></div>
     <v-col cols="auto">
       <v-tabs v-model="mode" color="primary">
         <v-tab value="edit">Edit</v-tab>
@@ -66,9 +70,27 @@ const tab = ref('build')
 const mode = ref('edit') // 用于切换编辑模式
 const router = useRouter()
 
+const drawerWidth = ref(400)
+
 function backHome() {
   // 跳转到主页的逻辑
   router.push('/')
+}
+
+const startResize = () => {
+  window.addEventListener('mousemove', resize)
+  window.addEventListener('mouseup', stopResize)
+}
+
+const resize = (e: MouseEvent) => {
+  requestAnimationFrame(() => {
+    drawerWidth.value = window.innerWidth - e.clientX
+  })
+}
+
+const stopResize = () => {
+  window.removeEventListener('mousemove', resize)
+  window.removeEventListener('mouseup', stopResize)
 }
 </script>
 
