@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API 文档</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+      }
+      th,
+      td {
+        border: 1px solid #e0e0e0;
+        padding: 12px 15px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background-color: #f2f2f2;
+        font-weight: 600;
+        color: #555;
+      }
+      tr:nth-child(even) {
+        background-color: #fcfcfc;
+      }
+      code {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+          Courier, monospace;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+      pre {
+        background-color: #2d2d2d;
+        color: #f8f8f2;
+        padding: 15px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 0.9em;
+        line-height: 1.5;
+      }
+      .method {
+        font-weight: bold;
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        text-align: center;
+      }
+      .post {
+        background-color: #28a745;
+      }
+      .get {
+        background-color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>API 文档</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>API 端点</th>
+          <th>方法</th>
+          <th>功能描述</th>
+          <th>请求体 (Request Body)</th>
+          <th>成功响应 (Success Response)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>/api/image_to_spec</code></td>
+          <td><span class="method post">POST</span></td>
+          <td>将上传的图像解析为结构化的 UI Spec。</td>
+          <td>
+            <pre><code>{
+    "image": "string (base64)",
+    "save_name": "string (optional, default: 'default')"
+}</code></pre>
+          </td>
+          <td>
+            <pre><code>{
+    "success": true,
+    "data": {
+        "spec": { ... } // 生成的 UI Spec 对象
+    }
+}</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/api/adjust_spec_layout</code></td>
+          <td><span class="method post">POST</span></td>
+          <td>根据输入的 UI Spec 调整其布局。</td>
+          <td>
+            <pre><code>{
+    "spec": { ... } // 待调整的 UI Spec 对象
+}</code></pre>
+          </td>
+          <td>
+            <pre><code>{
+    "success": true,
+    "data": {
+        "spec": { ... } // 调整后的 UI Spec 对象
+    }
+}</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/api/intent_to_spec</code></td>
+          <td><span class="method post">POST</span></td>
+          <td>接收用户的自然语言意图，生成结构化的 UI 设计 Spec。</td>
+          <td>
+            <pre><code>{
+    "text": "string",
+    "save_name": "string (optional, default: 'intent_spec')"
+}</code></pre>
+          </td>
+          <td>
+            <pre><code>{
+    "success": true,
+    "data": {
+        "spec": { ... } // 生成的 UI Spec 对象
+    }
+}</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/api/image_reference</code></td>
+          <td><span class="method post">POST</span></td>
+          <td>接收参考图像，分析并返回图像的属性结构。</td>
+          <td>
+            <pre><code>{
+    "image": "string (base64)",
+    "spec": { ... } // (可选，当前未使用),
+    "save_name": "string"
+}</code></pre>
+          </td>
+          <td>
+            <pre><code>{
+    "success": true,
+    "data": {
+        "attribute": { ... } // 分析出的图像属性
+    }
+}</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/api/text_to_spec</code></td>
+          <td><span class="method post">POST</span></td>
+          <td>将纯文本转换为结构化的 UI Spec。</td>
+          <td>
+            <pre><code>{
+    "text": "string"
+}</code></pre>
+          </td>
+          <td>
+            <pre><code>{
+    "success": true,
+    "data": {
+        "spec": { ... } // 生成的 UI Spec 对象
+    }
+}</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/api/edit_spec</code></td>
+          <td><span class="method post">POST</span></td>
+          <td>根据文本指令，编辑并更新一个已有的 UI Spec。</td>
+          <td>
+            <pre><code>{
+    "text": "string", // 编辑指令
+    "spec": { ... }, // 原始 UI Spec 对象
+    "save_name": "string"
+}</code></pre>
+          </td>
+          <td>
+            <pre><code>{
+    "success": true,
+    "data": {
+        "spec": { ... } // 更新后的 UI Spec 对象
+    }
+}</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/api/combine_spec</code></td>
+          <td><span class="method post">POST</span></td>
+          <td>将一个或多个 UI Spec 合并为一个。</td>
+          <td>
+            <pre><code>{
+    "spec_list": [ { ... }, { ... } ] // UI Spec 对象列表
+}</code></pre>
+          </td>
+          <td>
+            <pre><code>{
+    "success": true,
+    "data": {
+        "spec": { ... } // 合并后的 UI Spec 对象
+    }
+}</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/api/generate_code</code></td>
+          <td><span class="method post">POST</span></td>
+          <td>根据 UI Spec 生成前端代码和渲染图。</td>
+          <td>
+            <pre><code>{
+    "spec": { ... },
+    "save_name": "string"
+}</code></pre>
+          </td>
+          <td>
+            <pre><code>{
+    "success": true,
+    "data": {
+        "code": "string", // 生成的前端代码
+        "render_image": "string (base64)" // 渲染效果图
+    }
+}</code></pre>
+          </td>
+        </tr>
+        <tr>
+          <td><code>/hello</code></td>
+          <td><span class="method get">GET</span></td>
+          <td>一个简单的测试端点，用于检查服务是否正常运行。</td>
+          <td>(无)</td>
+          <td>
+            <pre><code>hello world!</code></pre>
+            (Content-Type: text/html)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

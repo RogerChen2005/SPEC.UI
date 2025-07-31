@@ -12,7 +12,7 @@
 
       <template v-slot:append>
         <div class="pa-2">
-          <v-btn block color="grey-lighten-3" variant="text">
+          <v-btn block variant="text">
             <v-icon left>mdi-plus</v-icon> Add a SPEC level
           </v-btn>
         </div>

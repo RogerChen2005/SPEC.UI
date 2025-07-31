@@ -13,7 +13,7 @@
     <v-row>
         <v-col v-for="project in projects" :key="project.id" cols="12" sm="6" md="4">
             <v-card @click="openProject(project)" class="mx-auto" max-width="400" hover>
-                <v-img class="align-end text-white" height="200" :src="project.image" cover>
+                <v-img class="align-end" height="200" :src="project.image" cover>
                     <v-card-title>{{ project.title }}</v-card-title>
                 </v-img>
 

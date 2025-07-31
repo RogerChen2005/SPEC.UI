@@ -3,7 +3,7 @@ import axios from "axios";
 // import { useMainStore } from "~/store/mainStore";
 
 const instance = axios.create({
-  baseURL: "/api",
+  baseURL: "http://118.31.58.101:55500/api",
 });
 
 // instance.interceptors.request.use(

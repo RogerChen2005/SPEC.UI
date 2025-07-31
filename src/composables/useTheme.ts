@@ -11,6 +11,9 @@ function createTheme(color: any): ThemeDefinition {
       background: color.lighten5,
       surface: color.lighten4,
       "surface-light": color.lighten4,
+      "on-background": color.darken3,
+      "on-surface": color.darken3,
+      "on-surface-light": color.darken4,
     },
     dark: false,
     variables: {
@@ -29,6 +32,9 @@ function createDarkTheme(color: any): ThemeDefinition {
       background: colors.grey.darken4,
       surface: colors.grey.darken3,
       "surface-light": colors.grey.darken3,
+      "on-background": color.lighten5,
+      "on-surface": color.lighten5,
+      "on-surface-light": color.lighten4,
     },
     dark: true,
     variables: {
