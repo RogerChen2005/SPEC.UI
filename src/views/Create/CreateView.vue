@@ -1,6 +1,5 @@
 <template>
-    <v-container fluid>
-        <v-row class="pa-4 align-center pb-2 pt-2">
+    <!-- <v-row class="pa-4 align-center pb-2 pt-2">
             <v-btn icon="mdi-arrow-left" @click="$router.back()">
             </v-btn>
             <v-stepper editable flat rounded border v-model="currentStep" hide-actions class="ml-4" style="flex-grow: 1;">
@@ -29,14 +28,58 @@
             <v-window-item value="3">
                 <EditSpec />
             </v-window-item>
-        </v-window>
-    </v-container>
+        </v-window> -->
+    <v-navigation-drawer v-model="drawer" app permanent width="280" class="pa-4">
+        <v-sheet class="d-flex align-center pa-2">
+            <v-icon icon="mdi-folder-multiple-outline" class="mr-2"></v-icon>
+            <v-list-item-title class="font-weight-bold">My Project</v-list-item-title>
+            <v-spacer></v-spacer>
+            <v-icon icon="mdi-chevron-down"></v-icon>
+        </v-sheet>
+
+        <!-- <SpecLayer /> -->
+
+        <template v-slot:append>
+            <div class="pa-2">
+                <v-btn block variant="text">
+                    <v-icon left>mdi-plus</v-icon> Add a SPEC level
+                </v-btn>
+            </div>
+        </template>
+
+    </v-navigation-drawer>
+
+    <v-main>
+        <v-container>
+            <v-row align="center">
+                <v-btn @click="backHome" variant="plain" value="home" icon="mdi-home" class="ml-4">
+                </v-btn>
+                <v-col>
+                    <v-tabs v-model="tab" color="primary">
+                        <v-tab value="coarse">Coarse Comp</v-tab>
+                        <v-tab value="edit">Fine Edit</v-tab>
+                    </v-tabs>
+                </v-col>
+            </v-row>
+
+            <v-divider></v-divider>
+
+            <v-window v-model="tab">
+                <v-window-item value="coarse">
+                    <UploadPages />
+                </v-window-item>
+                <v-window-item value="edit">
+                    <EditSpec />
+                </v-window-item>
+            </v-window>
+        </v-container>
+    </v-main>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import UploadPages from './UploadPages.vue';
-import SpecComposition from './SpecComposition.vue';
+// import SpecComposition from './SpecComposition.vue';
 import EditSpec from './EditSpec.vue';
 
 // 控制 Stepper 的当前步骤
