@@ -18,6 +18,7 @@ export interface Component {
     information: string;
     layoutStyle: string;
     colorStyle?: string;
+    selected?: boolean;
 }
 
 export interface Region {
@@ -56,9 +57,10 @@ export interface SPEC {
 
 export interface UploadImage {
     id: string;
-    name: string;
+    name:string;
     url: string;
     file?: File;
     spec?: SPEC;
     analysisComplete: boolean;
+    selected?: boolean;
 }

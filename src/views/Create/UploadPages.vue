@@ -11,18 +11,36 @@
 </style>
 
 <template>
-    <!-- <v-navigation-drawer location="right" app permanent :width="500">
-        <v-col cols="auto">
-            <v-tabs v-model="mode" color="primary">
-                <v-tab value="edit">Edit</v-tab>
-                <v-tab value="history">Reference</v-tab>
-                <v-tab value="prompt">Prompt</v-tab>
-            </v-tabs>
-        </v-col>
-    </v-navigation-drawer> -->
+    <v-navigation-drawer location="right" app permanent :width="300">
+        <v-card variant="tonal" class="pa-4" height="100%">
+            <v-card-title class="font-weight-bold">设计规范</v-card-title>
+            <v-card-subtitle class="text-body-2 mb-4">Drag and drop the uploaded pages</v-card-subtitle>
+
+            <v-list variant="text" class="px-2 rounded" style="background: transparent;">
+                <v-list-item v-for="(item, index) in designSpecs" :key="item.label" class="mb-4 border rounded"
+                    @dragover.prevent @drop="onDrop(index)" :class="{
+                        dropable: isDragging,
+                    }">
+                    <template v-slot:prepend>
+                        <v-icon :icon="item.icon" class="mr-3"></v-icon>
+                    </template>
+                    <v-list-item-title>{{ item.label }}</v-list-item-title>
+                    <template v-slot:append>
+                        <v-chip size="small" v-if="item.value >= 0" variant="tonal">Image {{ item.value + 1
+                            }}</v-chip>
+                    </template>
+                </v-list-item>
+            </v-list>
+
+            <v-btn block color="primary" size="large" class="text-none mx-2 mt-8">
+                Generate
+            </v-btn>
+        </v-card>
+    </v-navigation-drawer>
+
     <v-row>
-        <v-col cols="9" class="pa-4">
-            <v-row align="center" class="mb-0">
+        <v-col class="pa-4 pt-2">
+            <v-row align="center" class="mt-2 mb-2">
                 <v-col>
                     <h2 class="text-h5 font-weight-bold">Uploaded Pages</h2>
                 </v-col>
@@ -31,109 +49,94 @@
                 </v-col>
             </v-row>
 
-            <v-card variant="elevated" class="pa-4 mb-4" border>
-                <!-- <v-radio-group v-model="selectedPage">
-                    <v-row class="flex-nowrap" style="overflow-x: auto;">
-                        <v-col v-for="(page, index) in uploadedPages" :key="index" cols="auto" class="text-center pa-2">
-                            <v-radio :value="index" :label="`Image ${index+1}`" class="d-block text-center"></v-radio>
-                            <v-img @dragstart="onSelectImage" :src="page" width="200" height="150" cover class="border rounded mt-2"></v-img>
-                        </v-col>
-                    </v-row>
-                </v-radio-group> -->
-                <v-row class="flex-nowrap" style="overflow-x: auto;">
-                    <v-col v-for="(page, index) in uploadedPages" :key="index" cols="auto"
-                        class="text-center pa-2 uploaded-page rounded" @dragstart="() => onSelectImage(index)"
-                        @dragend="onDragEnd" draggable="true">
-                        <v-row no-gutters align="center" class="mb-1" style="width: 200px;">
-                            <v-col class="text-left">
-                                <span class="text-body-2 font-weight-medium">Image {{ index + 1 }}</span>
-                            </v-col>
-                            <v-col cols="auto">
-                                <v-btn density="compact" icon="mdi-close" variant="text"
-                                    @click="uploadedPages.splice(index, 1)"></v-btn>
-                            </v-col>
-                        </v-row>
-                        <v-img draggable="false" :src="page.url" width="200" height="150" cover
-                            class="border rounded mt-2"></v-img>
-                    </v-col>
-                </v-row>
-            </v-card>
+            <!-- <v-carousel v-model="currentIndex" v-if="uploadedPages.length > 0" hide-delimiters direction="vertical"
+                height="400" progress="red" vertical-arrows="left" vertical-delimiters="right">
+                <v-carousel-item v-for="(page, index) in uploadedPages" :key="index"
+                    @dragstart="() => onSelectImage(index)" @dragend="onDragEnd" draggable="true" :src="page.url" cover>
+                </v-carousel-item>
+                <v-overlay :scrim="false"
+                    content-class="w-100 h-100 d-flex flex-column align-center justify-space-between pointer-pass-through py-3"
+                    contained model-value no-click-animation persistent>
+                    <v-scroll-x-transition mode="out-in" appear>
+                        <v-sheet :key="currentIndex" rounded="xl">
+                            <v-list-item :title="`Image ${currentIndex + 1}`" class="pa-1 pr-6"></v-list-item>
+                        </v-sheet>
+                    </v-scroll-x-transition>
+                    <v-chip :text="`${currentIndex + 1} / ${uploadedPages.length}`" color="#eee" size="small"
+                        variant="flat"></v-chip>
+                </v-overlay>
+            </v-carousel> -->
 
-            <div class="mt-6">
-                <h3 class="text-subtitle-1 font-weight-bold mb-2">Extracted SPECs</h3>
-                <v-tabs v-model="activeTab" bg-color="transparent">
-                    <v-tab v-for="(image, index) in uploadedPages" :key="image.id" :value="index">
-                        {{ image.name }}
-                    </v-tab>
-                </v-tabs>
+            <v-defaults-provider :defaults="{ VBtn: { variant: 'outlined', color: '#eee' } }">
+                <v-sheet class="overflow-hidden" max-width="700" rounded="xl">
+                    <v-carousel v-model="currentIndex" height="400" progress="red" vertical-arrows="left"
+                        hide-delimiter-background>
+                        <v-overlay z-index="1" :scrim="false"
+                            content-class="w-100 h-100 d-flex flex-column align-center justify-space-between py-3"
+                            contained model-value no-click-animation persistent class="pointer-events-none">
+                            <v-scroll-x-transition mode="out-in" appear>
+                                <v-sheet :key="currentIndex" rounded="xl" class="pointer-events-auto">
+                                    <v-list-item :title="`Image ${currentIndex + 1}`" class="pa-1 pr-6"></v-list-item>
+                                </v-sheet>
+                            </v-scroll-x-transition>
+                            <v-chip :text="`${currentIndex + 1} / ${uploadedPages.length}`" color="#eee" size="small"
+                                variant="flat" class="pointer-events-auto"></v-chip>
+                        </v-overlay>
+                        <v-carousel-item v-for="(page, index) in uploadedPages" :key="index"
+                            @dragstart="() => onSelectImage(index)" @dragend="onDragEnd" draggable="true"
+                            :src="page.url" cover>
+                        </v-carousel-item>
 
-                <v-tabs-window v-model="activeTab" class="mt-4">
-                    <v-tabs-window-item v-for="(image, index) in uploadedPages" :key="image.id" :value="index">
-                        <v-row v-if="image.spec">
-                            <v-col v-for="region in image.spec.页面构成.区域划分" :key="region.区域编号" cols="12" sm="6" md="3">
-                                <v-card flat border class="pa-2">
-                                    <v-checkbox-btn v-model="region.selected" :label="region.区域名称"
-                                        class="font-weight-medium"></v-checkbox-btn>
-                                    <v-card-text class="pt-0">
-                                        <div class="text-caption text-medium-emphasis">{{ region.所处的位置 }}</div>
-                                        <div class="text-caption">{{ region.包含组件.length }} 个组件</div>
-                                    </v-card-text>
-                                </v-card>
-                            </v-col>
-                        </v-row>
-                        <v-alert v-else type="info" variant="text">
-                            No SPEC data available for this image
-                        </v-alert>
-                    </v-tabs-window-item>
-                </v-tabs-window>
-            </div>
+                    </v-carousel>
+                </v-sheet>
+            </v-defaults-provider>
         </v-col>
-        <!-- <v-col cols="3" class="mb-4">
-            <v-card variant="tonal" class="pa-4" height="100%">
-                <v-card-title class="font-weight-bold">设计规范</v-card-title>
-                <v-card-subtitle class="text-body-2 mb-4">Drag and drop the uploaded pages</v-card-subtitle>
-
-                <v-list variant="text" class="px-2 rounded" style="background: transparent;">
-                    <v-list-item v-for="(item, index) in designSpecs" :key="item.label" class="mb-4 border rounded"
-                        @dragover.prevent @drop="onDrop(index)" :class="{
-                            dropable: isDragging,
-                        }">
-                        <template v-slot:prepend>
-                            <v-icon :icon="item.icon" class="mr-3"></v-icon>
-                        </template>
-                        <v-list-item-title>{{ item.label }}</v-list-item-title>
-                        <template v-slot:append>
-                            <v-chip size="small" v-if="item.value >= 0" variant="tonal">Image {{ item.value + 1
-                                }}</v-chip>
-                        </template>
-                    </v-list-item>
-                </v-list>
-
-                <v-btn block color="primary" size="large" class="text-none mx-2 mt-8">
-                    Generate
-                </v-btn>
-            </v-card>
-        </v-col> -->
     </v-row>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import axios from '~/scripts/request'
 import { type SPEC, type UploadImage } from '~/types';
+import { useSpecStore } from '~/store/SpecStore';
 
 const isDragging = ref(false);
 const selectedPageIndex = ref(0);
-const activeTab = ref(0);
+const currentIndex = ref(0);
+const specStore = useSpecStore();
 
-const uploadedPages = ref<UploadImage[]>([
+const uploadedPages = computed(() => specStore.uploadedPages);
+
+const items = ref([
     {
-        id: '1',
-        name: 'Sample Image',
-        url: 'https://via.placeholder.com/200x150.png?text=Image+1',
-        analysisComplete: false,
-    }
+        authorName: 'Bettany Nichols',
+        avatarId: 'women/31',
+        subtitle: '31k followers',
+        src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg',
+    },
+    {
+        authorName: 'Greg Kovalsky',
+        avatarId: 'men/61',
+        subtitle: '412 followers',
+        src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg',
+    },
+    {
+        authorName: 'Emma Kathleen',
+        avatarId: 'women/34',
+        subtitle: '521 followers',
+        src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg',
+    },
+    {
+        authorName: 'Anthony McKenzie',
+        avatarId: 'men/78',
+        subtitle: '6k followers',
+        src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg',
+    },
 ]);
+
+const currentItem = computed(() => {
+    return items.value[currentIndex.value]
+});
 
 function uploadImage() {
     const input = document.createElement('input');
@@ -166,11 +169,16 @@ function uploadImage() {
                         console.log('Generated UI Spec:', response.data.data.spec);
                         const imageIndex = uploadedPages.value.findIndex(img => img.id === imageId);
                         if (imageIndex !== -1) {
-                            uploadedPages.value[imageIndex].spec = response.data.data.spec as SPEC;
-                            uploadedPages.value[imageIndex].analysisComplete = true;
-                            uploadedPages.value[imageIndex].spec.页面构成.区域划分.forEach(region => {
-                                (region as any).selected = true;
+                            const spec = response.data.data.spec as SPEC;
+                            spec.页面构成.区域划分.forEach(region => {
+                                region.selected = true;
+                                region.包含组件.forEach(component => {
+                                    component.selected = true;
+                                });
                             });
+                            uploadedPages.value[imageIndex].spec = spec;
+                            uploadedPages.value[imageIndex].analysisComplete = true;
+                            uploadedPages.value[imageIndex].selected = true;
                         }
                     }
                 }).catch(error => {
