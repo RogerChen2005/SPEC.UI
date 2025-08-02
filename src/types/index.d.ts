@@ -11,48 +11,48 @@ export interface LayoutArea {
 }
 
 export interface Component {
-    componentId: string;
-    componentType: 'Image' | 'Text' | 'Divider';
-    position: string;
-    function: string;
-    information: string;
-    layoutStyle: string;
-    colorStyle?: string;
+    ComponentID: string;
+    ComponentType: string;
+    ComponentPosition: string;
+    Functionality: string;
+    InformationCarried: string;
+    ComponentLayoutStyle: string;
+    ComponentColorStyle?: string;
     selected?: boolean;
 }
 
 export interface Region {
     BBox: string;
-    包含组件: Component[];
-    区域内布局样式: string;
-    区域名称: string;
-    区域编号: string;
-    所处的位置: string;
+    ContainedComponents: Component[];
+    LayoutStyleWithinSection: string;
+    SectionName: string;
+    SectionID: string;
+    Location: string;
     selected?: boolean; 
 }
 
 export interface UIDescription {
-    产品场景: string;
-    功能简述: string;
-    整体描述: string;
-    核心功能: string;
-    目标用户: string;
+    ProductScenario: string;
+    FunctionSummary: string;
+    OverallDescription: string;
+    CoreFunctions: string[];
+    TargetUsers: string;
 }
 
 export interface VisualStyle {
-    colorSystem: string;
-    designStyle: string;
-    overallTone: string;
+    ColorScheme: string;
+    DesignStyle: string;
+    OverallTone: string;
 }
 
 export interface PageComposition {
-    区域划分: Region[];
+    SectionDivision: Region[];
 }
 
 export interface SPEC {
-    UI描述: UIDescription;
-    visualStyle: VisualStyle;
-    页面构成: PageComposition;
+    UIDescription: UIDescription;
+    VisualStyle: VisualStyle;
+    PageStructure: PageComposition;
 }
 
 export interface UploadImage {
@@ -63,4 +63,10 @@ export interface UploadImage {
     spec?: SPEC;
     analysisComplete: boolean;
     selected?: boolean;
+}
+
+export interface GeneratedImage {
+  code?: string;
+  render_image?: string;
+  generating: boolean;
 }

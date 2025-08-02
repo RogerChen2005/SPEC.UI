@@ -1,99 +1,294 @@
 {
-    "UI描述": {
-        "产品场景": "该页面适用于学术会议、教育活动或纪念活动的宣传场景，用于介绍浙江大学竺可桢学院工程教育高级班的相关信息。",
-        "功能简述": "页面的主要功能是展示活动名称、年份范围和主办单位信息，传达活动的主题和背景。",
-        "整体描述": "该页面是一个简洁的宣传标志设计，主要展示了一个名为'ACEE 30'的活动或项目。整体布局紧凑，以蓝色为主色调，视觉效果突出。",
-        "核心功能": "展示活动名称'ACEE 30'、时间范围'1994-2024'以及主办单位'浙江大学竺可桢学院工程教育高级班'的信息。",
-        "目标用户": "面向对浙江大学竺可桢学院工程教育高级班感兴趣的学者、学生、教育工作者以及相关领域的专业人士。"
+  "specs": [
+    {
+      "PageStructure": {
+        "SectionDivision": [
+          {
+            "BBox": "0, 0, 80, 250",
+            "ContainedComponents": [
+              {
+                "ComponentColorStyle": "Dark background with white text for menu items. Selected items have a light blue highlight.",
+                "ComponentID": "1.1",
+                "ComponentLayoutStyle": "Menu items are listed vertically with equal spacing. Text is horizontally centered within each item.",
+                "ComponentPosition": "Aligned at the top of the sidebar, taking up the full width of the section.",
+                "ComponentType": "Menu",
+                "Functionality": "Provides navigation options for different projects and settings.",
+                "InformationCarried": "Includes menu items such as 'My Project', 'Sample Image', and other project names."
+              }
+            ],
+            "LayoutStyleWithinSection": "Vertical layout with components stacked from top to bottom. Components are aligned to the left with consistent spacing between them.",
+            "Location": "Located on the left side of the page, spanning the full height of the page and occupying approximately 20% of the page width.",
+            "SectionID": "1",
+            "SectionName": "Sidebar"
+          },
+          {
+            "BBox": "80, 0, 380, 250",
+            "ContainedComponents": [
+              {
+                "ComponentColorStyle": "Light gray border around the card with a dark background for the image display area.",
+                "ComponentID": "2.1",
+                "ComponentLayoutStyle": "The image is displayed within the card, maintaining its aspect ratio. The label 'Image 1' is positioned below the image.",
+                "ComponentPosition": "Centered within the main content area, taking up a significant portion of the space.",
+                "ComponentType": "Card",
+                "Functionality": "Displays uploaded images for editing.",
+                "InformationCarried": "Shows an image of a squirrel on a mossy surface labeled as 'Image 1'."
+              },
+              {
+                "ComponentColorStyle": "Green background with white text.",
+                "ComponentID": "2.2",
+                "ComponentLayoutStyle": "The button is rectangular with rounded corners. Text is horizontally and vertically centered within the button.",
+                "ComponentPosition": "Positioned above the card, aligned to the right.",
+                "ComponentType": "Button",
+                "Functionality": "Allows users to add new images or pages.",
+                "InformationCarried": "Text 'Add' indicating the action to add new content."
+              }
+            ],
+            "LayoutStyleWithinSection": "Horizontal layout with two main areas: the uploaded pages display area and the generated pages display area. Components are aligned centrally with consistent spacing.",
+            "Location": "Located in the center of the page, occupying the majority of the page width and height, approximately 60% of the page width and 90% of the page height.",
+            "SectionID": "2",
+            "SectionName": "Main Content Area"
+          },
+          {
+            "BBox": "380, 0, 476, 250",
+            "ContainedComponents": [
+              {
+                "ComponentColorStyle": "Dark background with white text for tab labels. The selected tab has a light blue highlight.",
+                "ComponentID": "3.1",
+                "ComponentLayoutStyle": "Tabs are listed horizontally with equal spacing. Text is horizontally centered within each tab.",
+                "ComponentPosition": "Aligned at the top of the settings panel, taking up the full width of the section.",
+                "ComponentType": "Tabs",
+                "Functionality": "Allows users to switch between different settings categories such as Color, Information, and Layout.",
+                "InformationCarried": "Tabs labeled 'Color', 'Information', and 'Layout'."
+              },
+              {
+                "ComponentColorStyle": "Dark background with white text. The input field has a light gray border.",
+                "ComponentID": "3.2",
+                "ComponentLayoutStyle": "The input field is rectangular with rounded corners. Placeholder text is horizontally and vertically centered within the field.",
+                "ComponentPosition": "Below the tabs, aligned to the left.",
+                "ComponentType": "Input",
+                "Functionality": "Enables users to enter prompts for generating new pages.",
+                "InformationCarried": "Placeholder text 'Type your prompt:' indicating where users should input their text."
+              },
+              {
+                "ComponentColorStyle": "Yellow background with black text.",
+                "ComponentID": "3.3",
+                "ComponentLayoutStyle": "The button is rectangular with rounded corners. Text is horizontally and vertically centered within the button.",
+                "ComponentPosition": "Below the input field, aligned to the left.",
+                "ComponentType": "Button",
+                "Functionality": "Triggers the generation of new pages based on the entered prompt.",
+                "InformationCarried": "Text 'Generate' indicating the action to generate new content."
+              }
+            ],
+            "LayoutStyleWithinSection": "Vertical layout with components stacked from top to bottom. Components are aligned to the left with consistent spacing between them.",
+            "Location": "Located on the right side of the page, spanning the full height of the page and occupying approximately 20% of the page width.",
+            "SectionID": "3",
+            "SectionName": "Settings Panel"
+          }
+        ]
+      },
+      "UIDescription": {
+        "CoreFunctions": [
+          "Uploading images",
+          "Displaying uploaded pages",
+          "Generating new pages based on user prompts",
+          "Adjusting design elements"
+        ],
+        "FunctionSummary": "The main functional features include uploading images, displaying uploaded pages, generating new pages based on prompts, and adjusting design elements such as color, information, and layout.",
+        "OverallDescription": "The page features a clean and modern design with a focus on image editing and generation. The layout is well-structured, dividing the screen into distinct sections for navigation, content display, and settings.",
+        "ProductScenario": "This page is designed for users who need to edit and generate visual content, likely in a creative or design-related context, such as graphic designers or content creators.",
+        "TargetUsers": "The target users are graphic designers, content creators, and anyone involved in visual content creation and editing."
+      },
+      "VisualStyle": {
+        "ColorScheme": "Deep black and dark gray as primary colors, with light gray for borders and highlights. Green and yellow are used for interactive elements like buttons.",
+        "DesignStyle": "Minimalistic and flat design, with clean lines and simple shapes. The layout is organized and easy to navigate.",
+        "OverallTone": "Professional and tech-savvy, with a focus on functionality and ease of use."
+      }
     },
-    "visualStyle": {
-        "colorSystem": "主要使用深蓝色作为主色调，搭配白色背景，局部使用浅灰色强调。",
-        "designStyle": "扁平化设计，简洁明了，注重信息的清晰传达。",
-        "overallTone": "简洁、专业、科技感。"
+    {
+      "PageStructure": {
+        "SectionDivision": [
+          {
+            "BBox": "0, 0, 500, 50",
+            "ContainedComponents": [
+              {
+                "ComponentColorStyle": "Dark background with white text. Hover effect changes text color to light gray.",
+                "ComponentID": "1.1",
+                "ComponentLayoutStyle": "Text is horizontally centered within each menu item.",
+                "ComponentPosition": "Aligned to the left side of the section.",
+                "ComponentType": "Menu",
+                "Functionality": "Provides navigation options for different sections of the application.",
+                "InformationCarried": "Menu items: 'My Project', 'Search...', 'Page 1', 'Page 2'.",
+                "selected": true
+              },
+              {
+                "ComponentColorStyle": "Green background with white text. Border is slightly lighter green.",
+                "ComponentID": "1.2",
+                "ComponentLayoutStyle": "Text is vertically and horizontally centered within the button.",
+                "ComponentPosition": "Aligned to the right side of the section.",
+                "ComponentType": "Button",
+                "Functionality": "Generates output based on the current specifications.",
+                "InformationCarried": "Button text: 'Generate'.",
+                "selected": true
+              }
+            ],
+            "LayoutStyleWithinSection": "Horizontal layout with components aligned to the left and right sides. Components are evenly spaced.",
+            "Location": "Located at the top of the page, spanning 100% width and occupying approximately 10% of the page height.",
+            "SectionID": "1",
+            "SectionName": "Top Navigation Bar",
+            "selected": true
+          },
+          {
+            "BBox": "0, 50, 500, 450",
+            "ContainedComponents": [
+              {
+                "ComponentColorStyle": "Dark background with white text. Active tab has a light gray underline.",
+                "ComponentID": "2.1",
+                "ComponentLayoutStyle": "Tabs are horizontally aligned with equal spacing.",
+                "ComponentPosition": "At the top of the main content area.",
+                "ComponentType": "Tabs",
+                "Functionality": "Allows users to switch between different tabs for viewing and editing project specifications.",
+                "InformationCarried": "Tabs: 'BUILD SPEC', 'HISTORY VERSIONS'.",
+                "selected": true
+              },
+              {
+                "ComponentColorStyle": "Light background with dark text. Cards have colored headers (purple, blue, orange).",
+                "ComponentID": "2.2",
+                "ComponentLayoutStyle": "Cards are arranged in a horizontal row with equal spacing. Text and progress bars are vertically centered within each card.",
+                "ComponentPosition": "Below the tabs, occupying the full width of the content area.",
+                "ComponentType": "Card",
+                "Functionality": "Displays statistical data related to the project.",
+                "InformationCarried": "Cards show total amounts for 'Revenue', 'Expenses', and 'Profit' with corresponding values and progress bars.",
+                "selected": true
+              },
+              {
+                "ComponentColorStyle": "Dark background with white text. Input fields have light gray borders.",
+                "ComponentID": "2.3",
+                "ComponentLayoutStyle": "Form fields are arranged in a vertical stack with labels above each input field. Radio buttons are horizontally aligned.",
+                "ComponentPosition": "Below the statistical cards, occupying the full width of the content area.",
+                "ComponentType": "Form",
+                "Functionality": "Allows users to input and edit project specifications.",
+                "InformationCarried": "Form fields for 'Input Page 1' and 'Input Page 2' with corresponding radio buttons and input areas.",
+                "selected": true
+              }
+            ],
+            "LayoutStyleWithinSection": "Vertical layout with multiple sections stacked on top of each other. Each section has its own header and content area.",
+            "Location": "Located below the top navigation bar, occupying the majority of the page height and width.",
+            "SectionID": "2",
+            "SectionName": "Main Content Area",
+            "selected": true
+          },
+          {
+            "BBox": "400, 0, 500, 450",
+            "ContainedComponents": [
+              {
+                "ComponentColorStyle": "Dark background with white text. Input fields have light gray borders.",
+                "ComponentID": "3.1",
+                "ComponentLayoutStyle": "Form fields are arranged in a vertical stack with labels above each input field. Checkboxes are horizontally aligned with their corresponding labels.",
+                "ComponentPosition": "At the top of the sidebar.",
+                "ComponentType": "Form",
+                "Functionality": "Allows users to customize brand logo and prompt settings.",
+                "InformationCarried": "Form fields for 'Brand Logo' and 'Prompt' with corresponding input areas and checkboxes.",
+                "selected": true
+              }
+            ],
+            "LayoutStyleWithinSection": "Vertical layout with components stacked on top of each other. Components are aligned to the left side of the sidebar.",
+            "Location": "Located on the right side of the page, occupying approximately 20% of the page width.",
+            "SectionID": "3",
+            "SectionName": "Sidebar",
+            "selected": true
+          }
+        ]
+      },
+      "UIDescription": {
+        "CoreFunctions": [
+          "Navigating through different project pages",
+          "Building specifications using templates",
+          "Displaying statistical data in card-based modules",
+          "Generating outputs based on the built specifications",
+          "Customizing brand logo and prompt settings"
+        ],
+        "FunctionSummary": "The main functional features include navigating through different pages of a project, building specifications with templates, displaying statistical data in card-based modules, and generating outputs. Users can also customize the brand logo and prompt settings.",
+        "OverallDescription": "The page features a clean and modern design with a dark theme, focusing on a structured layout for creating and managing project specifications. The interface is divided into distinct sections for navigation, content creation, and settings.",
+        "ProductScenario": "This page is designed for a project management or design tool where users can create detailed specifications for various projects. It could be used in scenarios such as software development, graphic design, or any field requiring detailed documentation.",
+        "TargetUsers": "The target users are project managers, designers, and developers who need to create and manage detailed project specifications. They require an intuitive interface to navigate through different project pages and build specifications efficiently."
+      },
+      "VisualStyle": {
+        "ColorScheme": "Deep black and dark gray as primary colors, with light gray for borders and highlights. White text is used for contrast. Accents are provided by purple, blue, and orange colors.",
+        "DesignStyle": "Minimalistic and flat design with a focus on functionality and ease of use.",
+        "OverallTone": "Professional and tech-savvy"
+      }
     },
-    "页面构成": {
-        "区域划分": [
+    {
+    "PageStructure": {
+        "SectionDivision": [
             {
-                "BBox": "50, 0, 950, 350",
-                "包含组件": [
+                "BBox": "0, 0, 475, 30",
+                "ContainedComponents": [
                     {
-                        "所处的位置": "位于区域左侧，紧邻文字。",
-                        "承担的功能": "展示活动标志图标。",
-                        "承载的信息": "图标为一个带有电路板图案的机器人头部形象，颜色为深蓝色。",
-                        "组件内的布局样式": "图标居中显示，大小适中，确保清晰可见。",
-                        "组件的配色样式": "图标为深蓝色，与背景形成鲜明对比。",
-                        "组件类型": "Image",
-                        "组件编号": "1.1"
-                    },
-                    {
-                        "colorStyle": "文本为深蓝色，与背景形成对比，易于阅读。",
-                        "componentId": "1.2",
-                        "componentType": "Text",
-                        "function": "展示活动名称。",
-                        "information": "文本内容为'ACEE'，字体为大号无衬线字体，颜色为深蓝色。",
-                        "layoutStyle": "文本居中对齐，字体大小适中，确保清晰可见。",
-                        "position": "位于区域右侧，紧邻标志图标。"
+                        "ComponentColorStyle": "Tabs have a dark gray background with white text. The selected tab has a slightly lighter background.",
+                        "ComponentID": "1.1",
+                        "ComponentLayoutStyle": "Tabs are arranged in a horizontal row with equal spacing.",
+                        "ComponentPosition": "Aligned horizontally across the top of the section.",
+                        "ComponentType": "Tabs",
+                        "Functionality": "Navigation between different sections of the about page.",
+                        "InformationCarried": "Tabs include: About, Credits, Translators, License, and Used Software.",
+                        "selected": true
                     }
                 ],
-                "区域内布局样式": "区域内包含一个标志图标和文字，标志图标位于左侧，文字位于右侧，两者紧密排列。",
-                "区域名称": "顶部标志区",
-                "区域编号": "1",
-                "所处的位置": "位于页面顶部中央，占据页面上半部分的主要空间。"
+                "LayoutStyleWithinSection": "Horizontal layout with evenly spaced tabs.",
+                "Location": "Located at the top of the window, spanning the full width of the page.",
+                "SectionID": "1",
+                "SectionName": "Top Navigation Bar",
+                "selected": true
             },
             {
-                "BBox": "100, 350, 900, 600",
-                "包含组件": [
+                "BBox": "0, 30, 475, 300",
+                "ContainedComponents": [
                     {
-                        "colorStyle": "文本为深蓝色，与背景形成对比，易于阅读。",
-                        "componentId": "2.1",
-                        "componentType": "Text",
-                        "function": "展示数字'30'。",
-                        "information": "文本内容为'30'，字体为超大号无衬线字体，颜色为深蓝色。",
-                        "layoutStyle": "文本居中对齐，字体大小适中，确保清晰可见。",
-                        "position": "位于区域中央，横向排列。"
-                    }
-                ],
-                "区域内布局样式": "区域内包含两个大号数字，横向排列，数字之间有一定的间距。",
-                "区域名称": "中部数字区",
-                "区域编号": "2",
-                "所处的位置": "位于页面中部，占据页面中间部分的主要空间。"
-            },
-            {
-                "BBox": "50, 600, 950, 800",
-                "包含组件": [
-                    {
-                        "colorStyle": "线条为深蓝色，与背景形成对比。",
-                        "componentId": "3.1",
-                        "componentType": "Divider",
-                        "function": "分隔不同信息块。",
-                        "information": "两条水平线条，颜色为深蓝色。",
-                        "layoutStyle": "线条居中对齐，长度适中，确保清晰可见。",
-                        "position": "位于区域上方，横向排列。"
+                        "ComponentColorStyle": "The image features bright green colors against a light beige background.",
+                        "ComponentID": "2.1",
+                        "ComponentLayoutStyle": "The image is centered vertically within its allocated space.",
+                        "ComponentPosition": "Aligned to the left side of the section.",
+                        "ComponentType": "Image",
+                        "Functionality": "Displays the qBittorrent logo.",
+                        "InformationCarried": "An image of a green cartoon character hatching from an egg.",
+                        "selected": true
                     },
                     {
-                        "colorStyle": "文本为深蓝色，与背景形成对比，易于阅读。",
-                        "componentId": "3.2",
-                        "componentType": "Text",
-                        "function": "展示时间范围。",
-                        "information": "文本内容为'1994-2024'，字体为中号无衬线字体，颜色为深蓝色。",
-                        "layoutStyle": "文本居中对齐，字体大小适中，确保清晰可见。",
-                        "position": "位于区域中部，紧邻线条下方。"
-                    },
-                    {
-                        "colorStyle": "文本为深蓝色，与背景形成对比，易于阅读。",
-                        "componentId": "3.3",
-                        "componentType": "Text",
-                        "function": "展示主办单位信息。",
-                        "information": "文本内容为'浙江大学竺可桢学院 工程教育高级班'，字体为小号无衬线字体，颜色为深蓝色。",
-                        "layoutStyle": "文本居中对齐，字体大小适中，确保清晰可见。",
-                        "position": "位于区域底部，紧邻时间范围下方。"
+                        "ComponentColorStyle": "Text is displayed in white against a dark gray background.",
+                        "ComponentID": "2.2",
+                        "ComponentLayoutStyle": "Text is arranged in a vertical column with appropriate line spacing for readability.",
+                        "ComponentPosition": "Aligned to the right side of the section.",
+                        "ComponentType": "Text",
+                        "Functionality": "Provides information about the qBittorrent application.",
+                        "InformationCarried": "Text includes a brief description of the application, copyright information, and links to the homepage, forum, and bug tracker.",
+                        "selected": true
                     }
                 ],
-                "区域内布局样式": "区域内包含两条水平线条和两行文字，文字位于线条下方，横向排列。",
-                "区域名称": "底部信息区",
-                "区域编号": "3",
-                "所处的位置": "位于页面底部，占据页面下半部分的主要空间。"
+                "LayoutStyleWithinSection": "Vertical layout with an image on the left and text on the right.",
+                "Location": "Located below the navigation bar, occupying the majority of the window space.",
+                "SectionID": "2",
+                "SectionName": "Main Content Area",
+                "selected": true
             }
         ]
+    },
+    "UIDescription": {
+        "CoreFunctions": [
+            "Displaying version information",
+            "Providing links to the project's homepage, forum, and bug tracker",
+            "Listing contributors and acknowledgments"
+        ],
+        "FunctionSummary": "The main function of this page is to provide users with detailed information about the qBittorrent application, including version details, contributors, and links to related resources such as the homepage, forum, and bug tracker.",
+        "OverallDescription": "The UI is a simple and functional window for the qBittorrent application, displaying information about the software version and credits. The layout is straightforward with minimalistic design elements.",
+        "ProductScenario": "This page is designed for users who want to learn more about the qBittorrent application, its development team, and where to find additional support or community resources.",
+        "TargetUsers": "The target users are primarily qBittorrent users who are interested in the technical details and background of the application, including developers, power users, and contributors."
+    },
+    "VisualStyle": {
+        "ColorScheme": "Dark gray background with white text, bright green accents from the logo, and orange highlights for links.",
+        "DesignStyle": "Minimalistic and functional, focusing on clear communication of information without unnecessary visual elements.",
+        "OverallTone": "Professional and tech-savvy"
     }
+}
+  ]
 }

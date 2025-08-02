@@ -9,8 +9,8 @@
         <v-window-item v-for="(page, index) in pages" :key="index" :value="page.id">
             <v-list density="compact" nav>
                 <template v-if="page.spec">
-                    <template v-for="region in page.spec.页面构成.区域划分" :key="region.区域编号">
-                        <v-list-group v-if="!keyword || region.区域名称.includes(keyword)" :value="region.区域编号">
+                    <template v-for="region in page.spec.PageStructure.SectionDivision" :key="region.SectionID">
+                        <v-list-group v-if="!keyword || region.SectionName.includes(keyword)" :value="region.SectionID">
                             <template v-slot:activator="{ props }">
                                 <v-list-item v-bind="props">
                                     <template v-slot:prepend>
@@ -18,16 +18,16 @@
                                     </template>
                                     <template #title>
                                         <v-icon>mdi-texture-box</v-icon>
-                                        {{ region.区域名称 }}
+                                        {{ region.SectionName }}
                                     </template>
                                 </v-list-item>
                             </template>
 
-                            <v-list-item v-for="component in region.包含组件" :key="component.componentId"
-                                :value="component.componentId">
+                            <v-list-item v-for="component in region.ContainedComponents" :key="component.ComponentID"
+                                :value="component.ComponentID">
                                 <template #title>
-                                    <v-icon>{{ getComponentIcon(component.componentType) }}</v-icon>
-                                    {{ component.information }}
+                                    <v-icon>{{ getComponentIcon(component.ComponentType) }}</v-icon>
+                                    {{ component.InformationCarried }}
                                 </template>
                                 <template v-slot:prepend>
                                     <v-checkbox-btn v-model="component.selected" @click.stop></v-checkbox-btn>
@@ -56,7 +56,7 @@ const keyword = ref('');
 
 const pages = computed(() => specStore.uploadedPages);
 
-function getComponentIcon(componentType: Component['componentType']) {
+function getComponentIcon(componentType: Component['ComponentType']) {
     switch (componentType) {
         case 'Image':
             return 'mdi-image-outline';

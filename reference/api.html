@@ -249,6 +249,26 @@
           </td>
         </tr>
       </tbody>
-    </table>
+    <tr>
+      <td><code>/api/init_ui_generation</code></td>
+      <td><span class="method post">POST</span></td>
+      <td>根据文本意图直接生成 UI 设计并返回代码和渲染图。</td>
+      <td>
+        <pre><code>{
+      "text": "string",
+      "save_name": "string (optional, default: 'intent_spec')"
+  }</code></pre>
+      </td>
+      <td>
+        <pre><code>{
+      "success": true,
+      "data": {
+    "code": "string", // 生成的前端代码
+    "render_image": "string (base64)" // 渲染效果图
+      }
+  }</code></pre>
+      </td>
+    </tr>
+      </table>
   </body>
 </html>

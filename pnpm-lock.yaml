@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       animejs:
-        specifier: ^3.2.2
-        version: 3.2.2
+        specifier: ^4.1.2
+        version: 4.1.2
       axios:
         specifier: ^1.7.9
         version: 1.7.9
@@ -461,8 +461,8 @@ packages:
   alien-signals@0.4.14:
     resolution: {integrity: sha512-itUAVzhczTmP2U5yX67xVpsbbOiquusbWVyA9N+sy6+r6YVbFkahXvNCeEPWEOMhwDYwbVbGHFkVL03N9I5g+Q==}
 
-  animejs@3.2.2:
-    resolution: {integrity: sha512-Ao95qWLpDPXXM+WrmwcKbl6uNlC5tjnowlaRYtuVDHHoygjtIPfDUoK9NthrlZsQSKjZXlmji2TrBUAVbiH0LQ==}
+  animejs@4.1.2:
+    resolution: {integrity: sha512-QojQzHzN4ZCOGk4Seir5CWPHGKFPpMAsen3KEj/BHsIKDceH0xKd3FBWflyKiNefKG2fn3+ofpY9jD/UXhpY6A==}
 
   anymatch@3.1.3:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
@@ -1264,7 +1264,7 @@ snapshots:
       typescript: 5.6.3
       vue: 3.5.13(typescript@5.6.3)
 
-  '@vuetify/loader-shared@2.0.3(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3)))':
+  '@vuetify/loader-shared@2.0.3(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6)':
     dependencies:
       upath: 2.0.1
       vue: 3.5.13(typescript@5.6.3)
@@ -1274,7 +1274,7 @@ snapshots:
 
   alien-signals@0.4.14: {}
 
-  animejs@3.2.2: {}
+  animejs@4.1.2: {}
 
   anymatch@3.1.3:
     dependencies:
@@ -1680,7 +1680,7 @@ snapshots:
 
   vite-plugin-vuetify@2.0.4(vite@6.0.7(@types/node@22.10.5)(sass-embedded@1.83.1))(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6):
     dependencies:
-      '@vuetify/loader-shared': 2.0.3(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6(typescript@5.6.3)(vite-plugin-vuetify@2.0.4)(vue@3.5.13(typescript@5.6.3)))
+      '@vuetify/loader-shared': 2.0.3(vue@3.5.13(typescript@5.6.3))(vuetify@3.7.6)
       debug: 4.4.0
       upath: 2.0.1
       vite: 6.0.7(@types/node@22.10.5)(sass-embedded@1.83.1)

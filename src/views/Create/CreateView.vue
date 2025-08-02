@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import UploadPages from './UploadPages.vue';
+import UploadPages from './CoarseComp.vue';
 // import SpecComposition from './SpecComposition.vue';
 import EditSpec from './EditSpec.vue';
 import { useRouter } from 'vue-router';
