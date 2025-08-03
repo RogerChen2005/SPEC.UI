@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { GeneratedImage, SPEC, UploadImage } from '~/types';
+import type { GeneratedImage, SPEC, UploadImage } from '~/types/index';
 import initial_spec from "~/example/generate_spec.json"
 
 interface Initial_Spec {
@@ -24,7 +24,7 @@ export const useSpecStore = defineStore('spec', () => {
   {
         id: '2',
         name: 'Sample Image 3',
-        url: 'https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui2.png',
+        url: 'https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui3.png',
         analysisComplete: true,
         spec: (initial_spec as Initial_Spec).specs[1]
     }]);

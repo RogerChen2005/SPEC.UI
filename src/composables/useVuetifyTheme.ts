@@ -1,7 +1,7 @@
 import { watchEffect } from 'vue';
 import { useTheme } from 'vuetify';
 import { useMainStore } from '~/store/mainStore';
-import type { ThemePreference } from '~/types';
+import type { ThemePreference } from '~/types/index';
 
 export function useVuetifyTheme() {
   const theme = useTheme();

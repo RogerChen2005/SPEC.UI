@@ -46,9 +46,9 @@
 </template>
 
 <script setup lang="ts">
-import { type Component} from '~/types';
 import { computed, ref } from 'vue';
 import { useSpecStore } from '~/store/SpecStore';
+import type { Component } from '~/types';
 const specStore = useSpecStore();
 
 const currentTab = ref<string>('0');
@@ -62,6 +62,18 @@ function getComponentIcon(componentType: Component['ComponentType']) {
             return 'mdi-image-outline';
         case 'Text':
             return 'mdi-format-text';
+        case 'Menu':
+            return 'mdi-menu';
+        case 'Card':
+            return 'mdi-card-outline';
+        case 'Button':
+            return 'mdi-gesture-tap-button';
+        case 'Tabs':
+            return 'mdi-tab';
+        case 'Input':
+            return 'mdi-form-textbox';
+        case 'Form':
+            return 'mdi-form-select';
         case 'Divider':
             return 'mdi-minus';
         default:

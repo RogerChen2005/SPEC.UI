@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { LayoutArea } from '~/types';
+import type { LayoutArea } from '~/types/index';
 
 const layoutAreas = ref<LayoutArea[]>([
     { id: 1, title: 'Area 1', description: 'Short description', x: 5, y: 5, width: 25, height: 60 },

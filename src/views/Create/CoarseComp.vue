@@ -260,7 +260,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import axios from "~/scripts/request";
-import { type SPEC, type UploadImage, type GeneratedImage } from "~/types";
+import type { SPEC, UploadImage, GeneratedImage, Component, Region, PageComposition } from "~/types/index.d";
 import { useSpecStore } from "~/store/SpecStore";
 import SmoothPicture from "~/components/SmoothPicture.vue";
 
@@ -333,6 +333,23 @@ function uploadImage() {
   input.click();
 }
 
+function filterSelectedComponents(components: Component[]): Component[] {
+  return components.filter(component => component.selected === true);
+}
+
+function filterSelectedRegions(regions: Region[]): Region[] {
+  return regions.filter(region => region.selected === true).map(region => ({
+    ...region,
+    ContainedComponents: filterSelectedComponents(region.ContainedComponents)
+  }));
+}
+
+function filterSelectedPageStructure(pageStructure: PageComposition): PageComposition {
+  return {
+    SectionDivision: filterSelectedRegions(pageStructure.SectionDivision)
+  };
+}
+
 function generateImage() {
   const spec: Partial<SPEC> = {};
 
@@ -364,7 +381,7 @@ function generateImage() {
           spec.UIDescription = page.spec.UIDescription;
           break;
         case "Layout":
-          spec.PageStructure = page.spec.PageStructure;
+          spec.PageStructure = filterSelectedPageStructure(page.spec.PageStructure);
           break;
       }
     }

@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
 import { useMainStore } from '@/store/mainStore';
-import type { ThemePreference } from '~/types';
+import type { ThemePreference } from '~/types/index';
 
 const mainStore = useMainStore();
 const theme = ref<ThemePreference>(mainStore.ThemePreference);

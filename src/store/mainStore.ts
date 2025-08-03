@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { ThemePreference } from '~/types';
+import type { ThemePreference } from '~/types/index';
 
 export const useMainStore = defineStore('main', () => {
   const isDarkMode = ref<boolean>(false); // Add isDarkMode state
