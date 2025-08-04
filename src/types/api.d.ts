@@ -1,4 +1,4 @@
-export  interface Image2Spec {
+export interface Image2Spec {
     data: {
         spec: SPEC
     },
