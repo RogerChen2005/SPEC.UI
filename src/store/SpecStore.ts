@@ -26,7 +26,7 @@ export const useSpecStore = defineStore('spec', () => {
         name: 'Sample Image 3',
         url: 'https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui3.png',
         analysisComplete: true,
-        spec: (initial_spec as Initial_Spec).specs[1]
+        spec: (initial_spec as Initial_Spec).specs[2]
     }]);
   const generatedPages = ref<GeneratedImage[]>([]);
   return {

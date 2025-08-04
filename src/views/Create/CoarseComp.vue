@@ -370,6 +370,8 @@ function generateImage() {
 
   generatedPages.value.push(generatedPage);
 
+  let index = generatedPages.value.length - 1;
+
   designSpecs.value.forEach((designSpec) => {
     const page = uploadedPages.value[designSpec.value];
     if (page && page.spec) {
@@ -396,11 +398,9 @@ function generateImage() {
       if (response.data.success) {
         console.log("Generated Code:", response.data.data.code);
         console.log("Generated Image:", response.data.data.render_image);
-        generatedPage.code = response.data.data.code;
-        generatedPage.render_image = URL.createObjectURL(
-          new Blob([response.data.data.render_image], { type: "image/png" })
-        );
-        generatedPage.generating = false;
+        generatedPages.value[index].code = response.data.data.code;
+        generatedPages.value[index].render_image = 'data:image/png;base64,' + response.data.data.render_image;
+        generatedPages.value[index].generating = false;
       }
     })
     .catch((error) => {
