@@ -1,0 +1,122 @@
+{
+  "UIDescription": {
+    "OverallDescription": "A clean and modern admin dashboard interface with a card-based layout, featuring a top navigation bar, collapsible sidebar, and main content area displaying key metrics and data visualizations.",
+    "FunctionSummary": "Displays real-time sales data through charts and tables, allows filtering by time range and category, and provides quick access to user management and settings.",
+    "ProductScenario": "Designed for an e-commerce platform's operational dashboard where managers monitor business performance and manage product listings.",
+    "TargetUsers": "Operations staff and e-commerce managers who need to track sales performance and manage inventory.",
+    "CoreFunctions": [
+      "View real-time sales metrics",
+      "Filter data by time and category",
+      "Access user and product management modules",
+      "Monitor key performance indicators via charts"
+    ]
+  },
+  "PageStructure": {
+    "SectionDivision": [
+      {
+        "SectionID": "1",
+        "SectionName": "Top Navigation Bar",
+        "Location": "Top section spanning 100% width of the page, occupying 8% of the page height.",
+        "BBox": "0, 0, 1920, 108",
+        "LayoutStyleWithinSection": "Horizontal layout with evenly spaced elements. Logo aligned left, navigation tabs centered, user profile and settings aligned right.",
+        "ContainedComponents": [
+          {
+            "ComponentID": "1.1",
+            "ComponentType": "Menu",
+            "Functionality": "Provides primary navigation links to different sections of the admin panel such as Dashboard, Products, Users, and Settings.",
+            "InformationCarried": "Menu items: Dashboard, Products, Users, Settings",
+            "ComponentColorStyle": "Dark background with white text for active items, light gray for inactive items.",
+            "ComponentPosition": "Centered horizontally in the navigation bar, taking up 60% of the bar's width.",
+            "ComponentLayoutStyle": "Horizontal arrangement of menu items with equal spacing between them, vertically centered within the bar."
+          },
+          {
+            "ComponentID": "1.2",
+            "ComponentType": "Avatar",
+            "Functionality": "Displays the logged-in user's profile picture and opens a dropdown menu for account-related actions.",
+            "InformationCarried": "User avatar image, dropdown options: Profile, Logout",
+            "ComponentColorStyle": "White border around the avatar circle, dropdown background in light gray.",
+            "ComponentPosition": "Aligned to the far right of the navigation bar.",
+            "ComponentLayoutStyle": "Circular avatar with dropdown menu appearing below on click, text aligned left within dropdown items."
+          }
+        ]
+      },
+      {
+        "SectionID": "2",
+        "SectionName": "Sidebar",
+        "Location": "Left side of the page below the top navigation bar, spanning 15% of the page width and 92% of the height.",
+        "BBox": "0, 108, 288, 1080",
+        "LayoutStyleWithinSection": "Vertical layout with collapsible menu groups. Icons aligned left with text labels to the right.",
+        "ContainedComponents": [
+          {
+            "ComponentID": "2.1",
+            "ComponentType": "Menu",
+            "Functionality": "Provides secondary navigation for detailed sub-sections like Sales Reports, Inventory, and Customer Analytics.",
+            "InformationCarried": "Menu groups: Reports (Sales Overview, Traffic Analysis), Inventory (Stock Levels, Reorder List), Analytics (Customer Segments, Retention Rate)",
+            "ComponentColorStyle": "Light gray background with dark blue text for active items and icons.",
+            "ComponentPosition": "Occupies full width and height of the sidebar.",
+            "ComponentLayoutStyle": "Vertically stacked menu items with icons on the left and text to the right, collapsible sections indicated by chevron icons."
+          }
+        ]
+      },
+      {
+        "SectionID": "3",
+        "SectionName": "Main Content Area",
+        "Location": "Main central area to the right of the sidebar and below the top navigation bar, spanning 85% of the page width and 92% of the height.",
+        "BBox": "288, 108, 1920, 1080",
+        "LayoutStyleWithinSection": "Grid layout with responsive card components arranged in rows. Cards have consistent padding and margins.",
+        "ContainedComponents": [
+          {
+            "ComponentID": "3.1",
+            "ComponentType": "Card",
+            "Functionality": "Displays total sales revenue for the selected period.",
+            "InformationCarried": "Title: Total Revenue, Value: $124,560, Change: +12% from last month",
+            "ComponentColorStyle": "White background with dark blue header and green text for positive change.",
+            "ComponentPosition": "Top-left card in the first row.",  
+            "ComponentLayoutStyle": "Header with title on the left and value on the right, change indicator below the value in smaller font size."
+          },
+          {
+            "ComponentID": "3.2",
+            "ComponentType": "Card",
+            "Functionality": "Displays total number of orders placed.",
+            "InformationCarried": "Title: Orders, Value: 3,420, Change: +8% from last month",
+            "ComponentColorStyle": "White background with dark blue header and green text for positive change.",
+            "ComponentPosition": "Adjacent to 3.1 in the first row.",
+            "ComponentLayoutStyle": "Same as 3.1 but aligned horizontally with consistent spacing."
+          },
+          {
+            "ComponentID": "3.3",
+            "ComponentType": "Card",
+            "Functionality": "Displays average order value.",
+            "InformationCarried": "Title: Avg Order Value, Value: $87.30, Change: -2% from last month",
+            "ComponentColorStyle": "White background with dark blue header and red text for negative change.",
+            "ComponentPosition": "Adjacent to 3.2 in the first row.",
+            "ComponentLayoutStyle": "Same as 3.1 but with red text for the change value."
+          },
+          {
+            "ComponentID": "3.4",
+            "ComponentType": "Card",
+            "Functionality": "Line chart showing sales trend over the past 30 days.",
+            "InformationCarried": "Chart data: 30 data points representing daily sales values ranging from $2,000 to $6,500.",
+            "ComponentColorStyle": "White background with light gray border and blue line chart.",
+            "ComponentPosition": "Full-width card in the second row.",
+            "ComponentLayoutStyle": "Chart fills most of the card with axis labels and legend at the bottom."
+          },
+          {
+            "ComponentID": "3.5",
+            "ComponentType": "Table",
+            "Functionality": "Lists top-selling products with quantity sold and revenue generated.",
+            "InformationCarried": "Header fields: Product Name, Quantity Sold, Revenue. Data rows: 10 products with respective values.",
+            "ComponentColorStyle": "White background with light gray header row and dark text.",
+            "ComponentPosition": "Full-width card in the third row.",
+            "ComponentLayoutStyle": "Vertically scrollable table with fixed header, consistent row height and alternating row colors."
+          }
+        ]
+      }
+    ]
+  },
+  "VisualStyle": {
+    "OverallTone": "Professional and tech-savvy",
+    "ColorScheme": "Deep blue and bright blue as primary colors, with light gray as background and green/red for data indicators.",
+    "DesignStyle": "Flat design with card-style layout"
+  }
+}

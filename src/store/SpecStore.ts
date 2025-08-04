@@ -1,7 +1,9 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { GeneratedImage, SPEC, UploadImage } from "~/types/index";
+import type { GeneratedImage, SPEC, UploadImage, Component } from "~/types/index";
 import initial_spec from "~/example/generate_spec.json";
+import generated_spec from "~/example/generatedUI.json";
+import {render_image} from "~/example/render_image";
 import { imageGenerationUtil } from "~/helpers/ReferenceHelper";
 
 interface Initial_Spec {
@@ -32,7 +34,16 @@ export const useSpecStore = defineStore("spec", () => {
       spec: (initial_spec as Initial_Spec).specs[2],
     },
   ]);
-  const generatedPages = ref<GeneratedImage[]>([]);
+  const generatedPages = ref<GeneratedImage[]>([
+    {
+      spec: generated_spec as SPEC,
+      generating: false,
+      render_image: "data:image/png;base64," + render_image,
+    }
+  ]);
+  const currentGeneratedPageIndex = ref<number>(0);
+  const selectedUploadedImage = ref<UploadImage>();
+  const selectedComponent = ref<Component>();
   const promptText = ref("");
   const DraggingInfo = ref({
     isDragging: false,
@@ -52,6 +63,9 @@ export const useSpecStore = defineStore("spec", () => {
   return {
     uploadedPages,
     generatedPages,
+    currentGeneratedPageIndex,
+    selectedUploadedImage,
+    selectedComponent,
     designSpecs,
     promptText,
     DraggingInfo,

@@ -1,3 +1,5 @@
+import type exp from "constants";
+
 export interface LayoutArea {
   id: number;
   title: string;
@@ -59,6 +61,7 @@ export interface UploadImage {
   url: string;
   file?: File;
   spec?: SPEC;
+  reference?: Reference;
   analysisComplete: boolean;
   selected?: boolean;
 }
@@ -74,4 +77,13 @@ export interface DesignSpec {
   icon: string;
   label: string;
   value: number;
+}
+
+export interface Reference {
+  承担的功能: string;
+  承载的信息: string;
+  布局样式: string;
+  组件的配色样式: string;
+  所处的位置: string;
+  组件内的布局样式: string;
 }

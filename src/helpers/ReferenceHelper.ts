@@ -8,6 +8,7 @@ import type {
   GeneratedImage,
   DesignSpec,
   UploadImage,
+  Reference,
 } from "~/types";
 
 function filterSelectedComponents(components: Component[]): Component[] {
@@ -83,6 +84,26 @@ export function imageUploadUtil(uploadedPages: Ref<UploadImage[]>, file: File, c
       .catch((error) => {
         console.error("Error uploading image:", error);
       });
+    axios.post("/image_reference", {
+      image: base64Image,
+      save_name: file.name,
+      spec: ""
+    })
+    .then((response) => {
+      if(response.data.success) {
+        console.log("UI attribute: ", response.data.data.attribute);
+        const imageIndex = uploadedPages.value.findIndex(
+            (img) => img.id === imageId
+          );
+        if (imageIndex !== -1) {
+          const reference = response.data.data.attribute as Reference;
+          uploadedPages.value[imageIndex].reference = reference;
+        }
+      }
+    })
+    .catch(error => {
+      console.error("Error uploading image:", error);
+    });
   };
 }
 
@@ -93,8 +114,6 @@ export function imageGenerationUtil(
   designSpecs: Ref<DesignSpec[]>
 ) {
   const spec: Partial<SPEC> = {};
-
-  let index = generatedPages.value.length - 1;
 
   designSpecs.value.forEach((designSpec) => {
     const page = uploadedPages.value[designSpec.value];
@@ -124,6 +143,8 @@ export function imageGenerationUtil(
 
   generatedPages.value.push(generatedPage);
 
+  let index = generatedPages.value.length - 1;
+
   axios
     .post("/init_ui_generation", {
       text: promptText.value,
@@ -135,9 +156,21 @@ export function imageGenerationUtil(
         generatedPages.value[index].render_image =
           "data:image/png;base64," + response.data.data.render_image;
         generatedPages.value[index].generating = false;
+        const fileData = JSON.stringify(response.data, null, 2);
+        const blob = new Blob([fileData], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "example.json";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       }
     })
     .catch((error) => {
       console.error("Error generating image:", error);
     });
+  
+    console.log(generatedPage);
 }

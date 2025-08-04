@@ -6,6 +6,7 @@
           <LayerSelect></LayerSelect>
         </v-window-item>
         <v-window-item value="edit">
+          <SpecTree></SpecTree>
         </v-window-item>
       </v-window>
     </template>
@@ -15,6 +16,7 @@
           <DesignSpec></DesignSpec>
         </v-window-item>
         <v-window-item value="edit">
+          <DetailPane>  </DetailPane>
         </v-window-item>
       </v-window>
     </template>
@@ -62,7 +64,8 @@ import { useRouter } from "vue-router";
 import LayerSelect from "~/components/LayerSelect.vue";
 import DesignSpec from "~/components/DesignSpec.vue";
 import CreateLayout from "~/layout/CreateLayout.vue";
-
+import SpecTree from "~/components/SpecTree.vue";
+import DetailPane from "~/components/RightPanel/DetailPane.vue";
 const tab = ref("coarse");
 
 const router = useRouter();
