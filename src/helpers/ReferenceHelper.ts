@@ -94,14 +94,6 @@ export function imageGenerationUtil(
 ) {
   const spec: Partial<SPEC> = {};
 
-  const generatedPage: GeneratedImage = {
-    generating: true,
-    code: "",
-    render_image: "",
-  };
-
-  generatedPages.value.push(generatedPage);
-
   let index = generatedPages.value.length - 1;
 
   designSpecs.value.forEach((designSpec) => {
@@ -122,6 +114,15 @@ export function imageGenerationUtil(
       }
     }
   });
+
+  const generatedPage: GeneratedImage = {
+    spec: spec as SPEC,
+    generating: true,
+    code: "",
+    render_image: "",
+  };
+
+  generatedPages.value.push(generatedPage);
 
   axios
     .post("/init_ui_generation", {

@@ -64,6 +64,7 @@ export interface UploadImage {
 }
 
 export interface GeneratedImage {
+  spec: SPEC;
   code?: string;
   render_image?: string;
   generating: boolean;
