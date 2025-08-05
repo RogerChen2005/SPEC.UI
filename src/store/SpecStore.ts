@@ -1,13 +1,17 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { GeneratedImage, SPEC, UploadImage, Component, DesignSpec } from "~/types/index";
+import type { GeneratedImage, SPEC, UploadImage, Component, DesignSpec, Reference } from "~/types/index";
 import initial_spec from "~/example/generate_spec.json";
+import initial_reference from "~/example/reference.json";
 import generated_spec from "~/example/generatedUI.json";
 import {render_image} from "~/example/render_image";
 import { imageGenerationUtil } from "~/helpers/ReferenceHelper";
 
 interface Initial_Spec {
   specs: SPEC[];
+}
+interface Initial_Reference {
+  references: Reference[];
 }
 
 export const useSpecStore = defineStore("spec", () => {
@@ -18,6 +22,7 @@ export const useSpecStore = defineStore("spec", () => {
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui1.png",
       analysisComplete: true,
       spec: (initial_spec as Initial_Spec).specs[0],
+      reference: (initial_reference as Initial_Reference).references[0],
     },
     {
       id: "1",
@@ -25,6 +30,7 @@ export const useSpecStore = defineStore("spec", () => {
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui2.png",
       analysisComplete: true,
       spec: (initial_spec as Initial_Spec).specs[1],
+      reference: (initial_reference as Initial_Reference).references[1],
     },
     {
       id: "2",
@@ -32,6 +38,7 @@ export const useSpecStore = defineStore("spec", () => {
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui3.png",
       analysisComplete: true,
       spec: (initial_spec as Initial_Spec).specs[2],
+      reference: (initial_reference as Initial_Reference).references[2],
     },
   ]);
   const generatedPages = ref<GeneratedImage[]>([
@@ -61,6 +68,21 @@ export const useSpecStore = defineStore("spec", () => {
     imageGenerationUtil(uploadedPages, generatedPages, promptText, designSpecs);
   }
 
+  function updateComponentInCurrentPage(component: Component) {
+    const currentPage = generatedPages.value[currentGeneratedPageIndex.value];
+    if(currentPage && currentPage.spec) {
+      currentPage.spec.PageStructure.SectionDivision.forEach(region => {
+      const componentIndex = region.ContainedComponents.findIndex(
+        comp => comp.ComponentID === component.ComponentID
+      );
+      
+      if (componentIndex !== -1) {
+        region.ContainedComponents[componentIndex] = component;
+      }
+    });
+    }
+  }
+
   return {
     currentUploadedPageIndex,
     uploadedPages,
@@ -72,5 +94,6 @@ export const useSpecStore = defineStore("spec", () => {
     promptText,
     draggingInfo,
     generateImage,
+    updateComponentInCurrentPage,
   };
 });

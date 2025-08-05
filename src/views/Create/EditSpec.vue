@@ -1,18 +1,21 @@
 <template>
 
     <div class="flex-grow-1" style="overflow-y: auto;">
-        <v-card outlined>
+        <!-- <v-card outlined>
           <v-row no-gutters class="fill-height">
             <v-col cols="8">
               <iframe 
-              src="http://118.31.58.101:3000" 
+              src="http://118.31.58.101:45501" 
               height="1000px" 
               width="700px" 
               style="transform: scale(0.9); transform-origin: 0 0;">
               </iframe>
             </v-col>
           </v-row>
-        </v-card>
+        </v-card> -->
+        <template v-if="!page.generating && page.render_image">
+            <SmoothPicture :url="page.render_image"></SmoothPicture>
+        </template>
     </div>
       <v-sheet color="background" class="pa-3">
         <!-- Image display area -->
@@ -61,7 +64,9 @@
 import { ref, computed, toRaw } from 'vue';
 import { useSpecStore } from '~/store/SpecStore';
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
+import SmoothPicture from '~/components/SmoothPicture.vue';
 import axios from '~/helpers/RequestHelper';
+import { spec } from 'node:test/reporters';
 
 const textValue = ref('');
 const currentPage = ref(0);
@@ -69,6 +74,7 @@ const specStore = useSpecStore();
 const uploadedPages = computed(() => specStore.uploadedPages);
 const generatedPages = computed(() => specStore.generatedPages);
 const selectedImage = computed(() => specStore.selectedUploadedImage)
+const page = computed(() => generatedPages.value[specStore.currentGeneratedPageIndex]);
 
 function handleRemoveImage(id: string) {
   specStore.uploadedPages = specStore.uploadedPages.filter(img => img.id !== id);
@@ -103,11 +109,11 @@ function confirmEditSpec()  {
   const payload = {
       save_name: "edit_spec_01",
       text: textValue.value,
-      spec: toRaw(generatedPages.value[0].spec),
+      spec: toRaw(generatedPages.value[specStore.currentGeneratedPageIndex].spec),
   };
   axios.post("/edit_spec", payload).then(response => {
     console.log("Edit spec response:", response.data);
-    specStore.generatedPages[0].spec = response.data.spec;
+    specStore.generatedPages[specStore.currentGeneratedPageIndex].spec = response.data.data.spec;
   }).catch(error => {
     console.error("Error editing spec:", error);
   });

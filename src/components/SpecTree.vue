@@ -97,6 +97,7 @@ const pages = computed(() =>
 );
 
 const currentPage = computed(() => {
+  specStore.currentGeneratedPageIndex = currentTab.value;
   return pages.value[currentTab.value] || null;
 });
 
@@ -133,12 +134,13 @@ function getComponentIcon(componentType: Component["ComponentType"]) {
 
 function generateCode() {
   axios.post("/generate_code", {
-    spec: specStore.generatedPages[specStore.currentGeneratedPageIndex],
+    spec: specStore.generatedPages[specStore.currentGeneratedPageIndex].spec,
     save_name: "generate_1"
   }).then((response) => {
     if(response.data.success) {
-      specStore.generatedPages[specStore.currentGeneratedPageIndex].code =  response.data.code;
-      specStore.generatedPages[specStore.currentGeneratedPageIndex].render_image = response.data.render_image;
+      console.log("generate code success:", response.data);
+      specStore.generatedPages[specStore.currentGeneratedPageIndex].code =  response.data.data.code;
+      specStore.generatedPages[specStore.currentGeneratedPageIndex].render_image ="data:image/png;base64," + response.data.data.render_image;
     }
   })
 }

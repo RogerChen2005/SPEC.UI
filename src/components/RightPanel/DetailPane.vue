@@ -28,12 +28,12 @@
             class="mt-2"
           ></v-textarea>
           <v-textarea
-            v-if="selectedImage?.reference"
-            v-model="selectedImage.reference[item.specKey as keyof typeof selectedImage.reference]"
+            v-model="editableSpecData[item.specKey]"
             variant="outlined"
             rows="2"
             dense
-            class="mt-1"
+            :label="`Edit ${item.label}`"
+            class="mb-2"
           ></v-textarea>
         </div>
       </v-window-item>
@@ -46,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
-import { ref, reactive, computed } from 'vue';
+import axios from '~/helpers/RequestHelper';
+import { ref, reactive, computed, watch } from 'vue';
 import { useSpecStore } from '~/store/SpecStore';
 
 const specStore = useSpecStore();
@@ -65,6 +65,37 @@ const switchStates = reactive({
 });
 
 const editableSpecData = ref<Record<string, any>>({});
+
+watch(
+  () => selectedImage.value?.reference,
+  (newReference) => {
+    if (newReference) {
+      // 将 reference 数据填充到 editableSpecData
+      editableSpecData.value = {
+        '承担的功能': newReference['承担的功能'] || '',
+        '承载的信息': newReference['承载的信息'] || '',
+        '组件的配色样式': newReference['组件的配色样式'] || '',
+        '所处的位置': newReference['所处的位置'] || '',
+        '组件内的布局样式': newReference['组件内的布局样式'] || '',
+      };
+      console.log('Filled editableSpecData from selectedImage.reference:', editableSpecData.value);
+    } else {
+      // 如果没有 reference，清空 editableSpecData
+      editableSpecData.value = {};
+    }
+  },
+  { immediate: true, deep: true }
+);
+
+watch(
+  () => selectedComponent.value,
+  (newComponent) => {
+    if (!newComponent) {
+      editableSpecData.value = {};
+    }
+  },
+  { immediate: true }
+);
 
 const detailItems = [
   { label: 'Function', icon: 'mdi-cog-outline', switchKey: 'function', componentKey: 'Functionality', specKey: '承担的功能' },
@@ -99,7 +130,7 @@ const applyChange = () => {
       }
     }
   });
-
+  console.log(switchStates);
   console.log('✔️ 应用的规格内容：\\n' + result);
   applySpecEdit(result);
 };
@@ -107,14 +138,16 @@ const applyChange = () => {
 const applySpecEdit = (text: string) => {
 
   const payload = {
-    spec: selectedComponent,
+    spec: selectedComponent.value,
     text: text,
     save_name: "edit_spec_01",
   };
   console.log("start editing spec from detailpane:", JSON.stringify(payload));
   axios.post("/edit_spec", payload).then(response => {
-    console.log("Spec edited successfully:", response.data.spec);
+    console.log("Spec edited successfully:", response.data.data.spec);
     // Optionally, you can emit an event or update the store here
+    specStore.selectedComponent = response.data.data.spec;
+    specStore.updateComponentInCurrentPage(response.data.data.spec);
   }).catch(error => {
     console.error("Error editing spec:", error);
   });
