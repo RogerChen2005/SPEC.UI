@@ -45,9 +45,9 @@ function generate() {
         </template>
         <v-list-item-title>{{ item.label }}</v-list-item-title>
         <template v-slot:append>
-          <v-chip size="small" v-if="item.value >= 0" variant="tonal"
-            >Image {{ item.value + 1 }}</v-chip
-          >
+          <v-chip size="small" v-if="item.value >= 0" variant="tonal" closable @click:close="item.value = -1">
+            Image {{ item.value + 1 }}
+          </v-chip>
         </template>
       </v-list-item>
     </v-list>
@@ -95,7 +95,7 @@ function generate() {
       <v-card title="Missing Design Specs" class="pa-2">
         <v-card-text>
           Please select an image for the following design specs:
-          <ul class="pa-2 pl-8" style="color: rgb(var(--v-theme-error));">
+          <ul class="pa-2 pl-8" style="color: rgb(var(--v-theme-error))">
             <li v-for="label in missingLabels" :key="label">{{ label }}</li>
           </ul>
         </v-card-text>
