@@ -2,15 +2,17 @@
 import { computed, ref } from "vue";
 import { checkMissingSpecs } from "~/helpers/ReferenceHelper";
 import { useSpecStore } from "~/store/SpecStore";
+import LayerDisplay from "./LayerDisplay.vue";
 
 const specStore = useSpecStore();
 const designSpecs = computed(() => specStore.designSpecs);
-const DraggingInfo = computed(() => specStore.DraggingInfo);
+const draggingInfo = computed(() => specStore.draggingInfo);
 const warningVisible = ref(false);
 const missingLabels = ref<string[]>([]);
+const uploadedPages = computed(() => specStore.uploadedPages);
 
-function onDrop(index: number) {
-  designSpecs.value[index].value = DraggingInfo.value.selectedPageIndex;
+function onDrop(index: string) {
+  designSpecs.value[index].value = draggingInfo.value.selectedPageIndex;
 }
 
 function generate() {
@@ -24,26 +26,32 @@ function generate() {
 </script>
 
 <template>
+  <v-sheet class="d-flex align-center pa-4 pb-0 pt-6">
+    <v-icon icon="mdi-folder-multiple-outline" class="mr-2"></v-icon>
+    <v-list-item-title class="font-weight-bold">My Project</v-list-item-title>
+    <v-spacer></v-spacer>
+    <v-icon icon="mdi-chevron-down"></v-icon>
+  </v-sheet>
   <v-card class="pa-4" height="100%">
-    <v-card-title class="font-weight-bold">设计规范</v-card-title>
-    <v-card-subtitle class="text-body-2 mb-4"
+    <v-card-title class="font-weight-bold pl-0">设计规范</v-card-title>
+    <v-card-subtitle class="text-body-2 mb-4 pl-0"
       >Drag and drop the uploaded pages</v-card-subtitle
     >
     <v-list variant="text" class="px-2 rounded" style="background: transparent">
       <v-list-item
         v-for="(item, index) in designSpecs"
-        :key="item.label"
+        :key="index"
         class="mb-4 border rounded"
         @dragover.prevent
-        @drop="onDrop(index)"
+        @drop="onDrop(index as string)"
         :class="{
-          dropable: DraggingInfo.isDragging,
+          dropable: draggingInfo.isDragging,
         }"
       >
         <template v-slot:prepend>
           <v-icon :icon="item.icon" class="mr-3"></v-icon>
         </template>
-        <v-list-item-title>{{ item.label }}</v-list-item-title>
+        <v-list-item-title>{{ index }}</v-list-item-title>
         <template v-slot:append>
           <v-chip size="small" v-if="item.value >= 0" variant="tonal" closable @click:close="item.value = -1">
             Image {{ item.value + 1 }}
@@ -51,7 +59,11 @@ function generate() {
         </template>
       </v-list-item>
     </v-list>
-    <v-card variant="tonal" rounded="lg" class="pa-6" max-width="400">
+    <template v-if="designSpecs.Layout.value >= 0">
+      <h1 class="text-h6 font-weight-bold">Containing Specs</h1>
+      <LayerDisplay :page="uploadedPages[designSpecs.Layout.value]"></LayerDisplay>
+    </template>
+    <v-card variant="tonal" rounded="lg" class="pa-6" max-width="400" elevation="2">
       <h2 class="text-h5 font-weight-bold">Type your prompt:</h2>
 
       <v-text-field
@@ -83,7 +95,7 @@ function generate() {
       block
       color="primary"
       size="large"
-      class="text-none mx-2 mt-8"
+      class="text-none mt-4"
       @click="generate"
     >
       Generate

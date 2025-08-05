@@ -74,9 +74,10 @@ export interface GeneratedImage {
 }
 
 export interface DesignSpec {
-  icon: string;
-  label: string;
-  value: number;
+  [key:string] : {
+    icon: string;
+    value: number;
+  }
 }
 
 export interface Reference {

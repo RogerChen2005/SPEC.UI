@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import type { GeneratedImage, SPEC, UploadImage, Component } from "~/types/index";
+import type { GeneratedImage, SPEC, UploadImage, Component, DesignSpec } from "~/types/index";
 import initial_spec from "~/example/generate_spec.json";
 import generated_spec from "~/example/generatedUI.json";
 import {render_image} from "~/example/render_image";
@@ -45,22 +45,24 @@ export const useSpecStore = defineStore("spec", () => {
   const selectedUploadedImage = ref<UploadImage>();
   const selectedComponent = ref<Component>();
   const promptText = ref("");
-  const DraggingInfo = ref({
+  const draggingInfo = ref({
     isDragging: false,
     selectedPageIndex: 0,
   });
+  const currentUploadedPageIndex = ref<number>(-1);
 
-  const designSpecs = ref([
-    { icon: "mdi-palette-outline", label: "Color", value: -1 },
-    { icon: "mdi-information-outline", label: "Information", value: -1 },
-    { icon: "mdi-layers-outline", label: "Layout", value: -1 },
-  ]);
+  const designSpecs = ref<DesignSpec>({
+    "Color": { icon: "mdi-palette-outline", value: -1 },
+    "Information": { icon: "mdi-information-outline", value: -1 },
+    "Layout": { icon: "mdi-layers-outline", value: -1 },
+  });
 
   function generateImage() {
     imageGenerationUtil(uploadedPages, generatedPages, promptText, designSpecs);
   }
 
   return {
+    currentUploadedPageIndex,
     uploadedPages,
     generatedPages,
     currentGeneratedPageIndex,
@@ -68,7 +70,7 @@ export const useSpecStore = defineStore("spec", () => {
     selectedComponent,
     designSpecs,
     promptText,
-    DraggingInfo,
+    draggingInfo,
     generateImage,
   };
 });

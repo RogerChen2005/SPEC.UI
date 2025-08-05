@@ -32,12 +32,14 @@ function filterSelectedPageStructure(
   };
 }
 
-export function checkMissingSpecs(designSpecs: DesignSpec[]) {
-  const missingSpecs = designSpecs.filter((s) => s.value === -1);
-  if (missingSpecs.length > 0) {
-    const missingLabels = missingSpecs.map((s) => s.label);
-    return missingLabels;
-  } else return [];
+export function checkMissingSpecs(designSpecs: DesignSpec) {
+  const missingSpecs = [];
+  for (const key in designSpecs) {
+    if (designSpecs[key].value < 0) {
+      missingSpecs.push(key);
+    }
+  }
+  return missingSpecs;
 }
 
 export function imageUploadUtil(uploadedPages: Ref<UploadImage[]>, file: File, currentPageIndex: Ref<number>) {
@@ -111,28 +113,32 @@ export function imageGenerationUtil(
   uploadedPages: Ref<UploadImage[]>,
   generatedPages: Ref<GeneratedImage[]>,
   promptText: Ref<string>,
-  designSpecs: Ref<DesignSpec[]>
+  designSpecs: Ref<DesignSpec>
 ) {
   const spec: Partial<SPEC> = {};
 
-  designSpecs.value.forEach((designSpec) => {
-    const page = uploadedPages.value[designSpec.value];
-    if (page && page.spec) {
-      switch (designSpec.label) {
-        case "Color":
-          spec.VisualStyle = page.spec.VisualStyle;
-          break;
-        case "Information":
-          spec.UIDescription = page.spec.UIDescription;
-          break;
-        case "Layout":
-          spec.PageStructure = filterSelectedPageStructure(
-            page.spec.PageStructure
-          );
-          break;
+  for (const key in designSpecs.value) {
+    const designSpec = designSpecs.value[key];
+    const pageIndex = designSpec.value;
+    if (pageIndex >= 0 && pageIndex < uploadedPages.value.length) {
+      const page = uploadedPages.value[pageIndex];
+      if (page && page.spec) {
+        switch (key) {
+          case "Color":
+            spec.VisualStyle = page.spec.VisualStyle;
+            break;
+          case "Information":
+            spec.UIDescription = page.spec.UIDescription;
+            break;
+          case "Layout":
+            spec.PageStructure = filterSelectedPageStructure(
+              page.spec.PageStructure
+            );
+            break;
+        }
       }
     }
-  });
+  }
 
   const generatedPage: GeneratedImage = {
     spec: spec as SPEC,

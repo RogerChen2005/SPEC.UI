@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import { useSpecStore } from "~/store/SpecStore";
 
-const currentPage = ref(0);
 const specStore = useSpecStore();
+const currentPage = computed({
+  get: () => specStore.currentUploadedPageIndex,
+  set: (val) => {
+    specStore.currentUploadedPageIndex = val;
+  },
+});
 const uploadedPages = computed(() => specStore.uploadedPages);
-const DraggingInfo = computed(() => specStore.DraggingInfo);
+const DraggingInfo = computed(() => specStore.draggingInfo);
 
 function uploadImage() {
   const input = document.createElement("input");
