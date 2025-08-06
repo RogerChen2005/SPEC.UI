@@ -42,11 +42,7 @@ export function checkMissingSpecs(designSpecs: DesignSpec) {
   return missingSpecs;
 }
 
-export function imageUploadUtil(
-  uploadedPages: Ref<UploadImage[]>,
-  file: File,
-  currentPageIndex: Ref<number>
-) {
+export function imageUploadUtil(uploadedPages: Ref<UploadImage[]>, file: File, currentPageIndex: Ref<number>) {
   const imageId = Date.now().toString();
   const newImage: UploadImage = {
     id: imageId,
@@ -90,6 +86,26 @@ export function imageUploadUtil(
       .catch((error) => {
         console.error("Error uploading image:", error);
       });
+    axios.post("/image_reference", {
+      image: base64Image,
+      save_name: file.name,
+      spec: ""
+    })
+    .then((response) => {
+      if(response.data.success) {
+        console.log("UI attribute: ", response.data.data.attribute);
+        const imageIndex = uploadedPages.value.findIndex(
+            (img) => img.id === imageId
+          );
+        if (imageIndex !== -1) {
+          const reference = response.data.data.attribute as Reference;
+          uploadedPages.value[imageIndex].reference = reference;
+        }
+      }
+    })
+    .catch(error => {
+      console.error("Error uploading image:", error);
+    });
   };
 }
 
@@ -161,6 +177,6 @@ export function imageGenerationUtil(
     .catch((error) => {
       console.error("Error generating image:", error);
     });
-
-  console.log(generatedPage);
+  
+    console.log(generatedPage);
 }
