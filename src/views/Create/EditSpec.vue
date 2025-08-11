@@ -66,7 +66,6 @@ import { useSpecStore } from '~/store/SpecStore';
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import SmoothPicture from '~/components/SmoothPicture.vue';
 import axios from '~/helpers/RequestHelper';
-import { spec } from 'node:test/reporters';
 
 const textValue = ref('');
 const currentPage = ref(0);
@@ -113,7 +112,18 @@ function confirmEditSpec()  {
   };
   axios.post("/edit_spec", payload).then(response => {
     console.log("Edit spec response:", response.data);
-    specStore.generatedPages[specStore.currentGeneratedPageIndex].spec = response.data.data.spec;
+    
+    // 创建新的 GeneratedImage 而不是覆盖原有数据
+    const newGeneratedImage = {
+      spec: response.data.data.spec,
+      generating: false,
+      code: generatedPages.value[specStore.currentGeneratedPageIndex].code || "",
+      render_image: generatedPages.value[specStore.currentGeneratedPageIndex].render_image || "",
+      time: new Date(),
+    };
+    
+    specStore.generatedPages.push(newGeneratedImage);
+    specStore.currentGeneratedPageIndex = specStore.generatedPages.length - 1;
   }).catch(error => {
     console.error("Error editing spec:", error);
   });

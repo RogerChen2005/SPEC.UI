@@ -1,5 +1,4 @@
 import type exp from "constants";
-
 export interface LayoutArea {
   id: number;
   title: string;
@@ -58,6 +57,7 @@ export interface GeneratedImage {
   code?: string;
   render_image?: string;
   generating: boolean;
+  time: Date;
 }
 
 export type SpecType = keyof UIDesignSpecification;

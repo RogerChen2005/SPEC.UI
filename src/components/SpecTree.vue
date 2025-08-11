@@ -28,7 +28,6 @@
     class="ma-2"
   ></v-select>
 
-  <!-- 使用 currentPage 而不是 pages[currentTab] -->
   <div v-if="currentPage">
     <v-list density="compact" nav>
       <template v-if="currentPage.spec">
@@ -49,21 +48,49 @@
               </v-list-item>
             </template>
 
-            <v-list-item
-              v-for="component in region.ContainedComponents"
-              :key="component.ComponentID"
-              :value="component.ComponentID"
-              :active="specStore.selectedComponent?.ComponentID === component.ComponentID"
-              @click="selectComponent(component)"
-              class="component-item"
-            >
-              <template #title>
-                <v-icon>{{
-                  getComponentIcon(component.ComponentType)
-                }}</v-icon>
-                {{ component.InformationCarried }}
-              </template>
-            </v-list-item>
+            <template v-for="component in region.ContainedComponents" :key="component.ComponentID">
+              <v-menu
+                location="end"
+                :close-on-content-click="false"
+                offset="10"
+              >
+                <template v-slot:activator="{ props }">
+                  <v-list-item
+                    v-bind="props"
+                    :value="component.ComponentID"
+                    :active="specStore.selectedComponent?.ComponentID === component.ComponentID"
+                    @click="selectComponent(component)"
+                    class="component-item"
+                  >
+                    <template #title>
+                      <v-icon>{{ getComponentIcon(component.ComponentType) }}</v-icon>
+                      {{ component.InformationCarried }}
+                    </template>
+                  </v-list-item>
+                </template>
+
+                <v-card width="350" elevation="5">
+                  <v-card-title class="d-flex align-center text-body-2">
+                    Attributes - {{ component.InformationCarried }}
+                    <v-spacer></v-spacer>
+                    <v-btn icon="mdi-close" variant="text" size="small"></v-btn>
+                  </v-card-title>
+                  <v-divider></v-divider>
+
+                  <v-card-text>
+                    <p class="mb-2"><strong>Function:</strong> Displays product name and brand identity.</p>
+                    <p class="mb-2"><strong>Color:</strong> Displays product name and brand identity.</p>
+                    <p class="mb-2"><strong>Layout:</strong> Displays product name and brand identity.</p>
+                  </v-card-text>
+
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" variant="flat">Apply</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-menu>
+            </template>
           </v-list-group>
         </template>
       </template>
@@ -81,7 +108,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useSpecStore } from "~/store/SpecStore";
-import type { Component, SPEC } from "~/types";
+import type { Component } from "~/types";
 import axios from '~/helpers/RequestHelper'
 
 const specStore = useSpecStore();
@@ -91,7 +118,7 @@ const keyword = ref("");
 const pages = computed(() => 
   specStore.generatedPages.map((page, index) => ({
     id: index,
-    name: `Page ${index + 1}`,
+    name: page.time ? new Date(page.time).toLocaleString() : "",
     ...page
   }))
 );

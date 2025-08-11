@@ -57,12 +57,8 @@ export const useSpecStore = defineStore("spec", () => {
       spec: generated_spec as SPEC,
       generating: false,
       render_image: "data:image/png;base64," + render_image,
-    },
-    {
-      spec: generated_spec as SPEC,
-      generating: true,
-      render_image: "data:image/png;base64," + render_image,
-    },
+      time: new Date(),
+    }
   ]);
   const currentGeneratedPageIndex = ref<number>(0);
   const selectedUploadedImage = ref<UploadImage>();
