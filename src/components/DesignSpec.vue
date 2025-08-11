@@ -3,17 +3,20 @@ import { computed, ref } from "vue";
 import { checkMissingSpecs } from "~/helpers/ReferenceHelper";
 import { useSpecStore } from "~/store/SpecStore";
 import LayerDisplay from "./LayerDisplay.vue";
+import CDialog from "./UI/CDialog.vue";
+import SelectSpec from "./SelectSpec.vue";
+import type { SpecType } from "~/types";
 
 const specStore = useSpecStore();
 const designSpecs = computed(() => specStore.designSpecs);
-const draggingInfo = computed(() => specStore.draggingInfo);
+const pageCompositionReference = computed(
+  () => specStore.pageCompositionReference
+);
 const warningVisible = ref(false);
 const missingLabels = ref<string[]>([]);
 const uploadedPages = computed(() => specStore.uploadedPages);
-
-function onDrop(index: string) {
-  designSpecs.value[index].value = draggingInfo.value.selectedPageIndex;
-}
+const selectDialogVisible = ref(false);
+const selectingType = ref<SpecType>("Color_System");
 
 function generate() {
   missingLabels.value = checkMissingSpecs(designSpecs.value);
@@ -23,6 +26,16 @@ function generate() {
     specStore.generateImage();
   }
 }
+
+function addSpec(index: SpecType) {
+  selectingType.value = index;
+  selectDialogVisible.value = true;
+}
+
+function handleSelection(index: number) {
+  designSpecs.value[selectingType.value].value = index;
+  selectDialogVisible.value = false;
+}
 </script>
 
 <template>
@@ -30,66 +43,50 @@ function generate() {
     <v-icon icon="mdi-folder-multiple-outline" class="mr-2"></v-icon>
     <v-list-item-title class="font-weight-bold">My Project</v-list-item-title>
     <v-spacer></v-spacer>
-    <v-icon icon="mdi-chevron-down"></v-icon>
   </v-sheet>
   <v-card class="pa-4" height="100%">
     <v-card-title class="font-weight-bold pl-0">设计规范</v-card-title>
-    <v-card-subtitle class="text-body-2 mb-4 pl-0"
-      >Drag and drop the uploaded pages</v-card-subtitle
-    >
     <v-list variant="text" class="px-2 rounded" style="background: transparent">
       <v-list-item
         v-for="(item, index) in designSpecs"
         :key="index"
         class="mb-4 border rounded"
-        @dragover.prevent
-        @drop="onDrop(index as string)"
-        :class="{
-          dropable: draggingInfo.isDragging,
-        }"
       >
         <template v-slot:prepend>
-          <v-icon :icon="item.icon" class="mr-3"></v-icon>
+          <v-icon :icon="item.icon"></v-icon>
         </template>
-        <v-list-item-title>{{ index }}</v-list-item-title>
+        <v-list-item-title>{{ item.label }}</v-list-item-title>
         <template v-slot:append>
-          <v-chip size="small" v-if="item.value >= 0" variant="tonal" closable @click:close="item.value = -1">
-            Image {{ item.value + 1 }}
-          </v-chip>
+          <template v-if="item.value >= 0">
+            <v-chip
+              size="small"
+              variant="tonal"
+              closable
+              @click:close="item.value = -1"
+              @click="addSpec(index)"
+              link
+            >
+              Img {{ item.value + 1 }}
+            </v-chip>
+          </template>
+          <template v-else>
+            <v-btn
+              variant="text"
+              size="small"
+              @click="addSpec(index)"
+              icon="mdi-plus"
+            >
+            </v-btn>
+          </template>
         </template>
       </v-list-item>
     </v-list>
-    <template v-if="designSpecs.Layout.value >= 0">
+    <template v-if="pageCompositionReference >= 0">
       <h1 class="text-h6 font-weight-bold">Containing Specs</h1>
-      <LayerDisplay :page="uploadedPages[designSpecs.Layout.value]"></LayerDisplay>
+      <LayerDisplay
+        :page="uploadedPages[pageCompositionReference]"
+      ></LayerDisplay>
     </template>
-    <v-card variant="tonal" rounded="lg" class="pa-6" max-width="400" elevation="2">
-      <h2 class="text-h5 font-weight-bold">Type your prompt:</h2>
-
-      <v-text-field
-        v-model="specStore.promptText"
-        variant="underlined"
-        placeholder="Tell me what you think.."
-        rows="3"
-        no-resize
-        auto-grow
-      ></v-text-field>
-
-      <p class="text-body-2 text-medium-emphasis mt-2 mb-4">
-        Use short, relevant keywords. Separate terms with commas if needed.
-      </p>
-
-      <v-divider></v-divider>
-
-      <v-btn
-        variant="text"
-        color="primary"
-        class="text-none mt-4 pa-0"
-        disabled
-      >
-        Need ideas? Check the tips.
-      </v-btn>
-    </v-card>
 
     <v-btn
       block
@@ -120,11 +117,14 @@ function generate() {
       </v-card>
     </template>
   </v-dialog>
-</template>
 
-<style scoped>
-.dropable {
-  background: rgba(var(--v-theme-on-surface), 0.1);
-  border: 1px dashed rgb(var(--v-theme-on-surface)) !important;
-}
-</style>
+  <Teleport to="body">
+    <CDialog v-model:visible="selectDialogVisible" width="80%" height="80%">
+      <template #header>
+        <h2 class="text-h4 font-weight-bold ml-4">Spec Select</h2>
+        <h2 class="text-h6 ml-4">Referencing {{ selectingType }}</h2>
+      </template>
+      <SelectSpec :type="selectingType" @selected="handleSelection"/>
+    </CDialog>
+  </Teleport>
+</template>

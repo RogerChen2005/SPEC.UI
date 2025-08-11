@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
-import type { Component, Region, UploadImage } from "~/types";
+import type { Component, Section, UploadImage } from "~/types";
 
 const props = defineProps({
   checkable: {
@@ -17,7 +17,7 @@ const props = defineProps({
   },
 });
 
-function getComponentIcon(componentType: Component["ComponentType"]) {
+function getComponentIcon(componentType: Component["Component_Type"]) {
   switch (componentType) {
     case "Image":
       return "mdi-image-outline";
@@ -42,11 +42,11 @@ function getComponentIcon(componentType: Component["ComponentType"]) {
   }
 }
 
-function regionFilter(region: Region, query: string) {
+function sectionFilter(section: Section, query: string) {
   if (props.checkable) {
-    return !query || region.SectionName.includes(query);
+    return !query || section.Section_Name.includes(query);
   } else {
-    return region.selected;
+    return section.selected;
   }
 }
 
@@ -56,40 +56,40 @@ function componentFilter(component: Component) {
 </script>
 
 <template>
-  <v-list density="compact" nav>
+  <v-list density="compact" class="rounded-lg">
     <template v-if="page.spec">
       <template
-        v-for="region in page.spec.PageStructure.SectionDivision"
-        :key="region.SectionID"
+        v-for="section in page.spec.Page_Composition.Sections"
+        :key="section.Section_Name"
       >
         <v-list-group
-          v-if="regionFilter(region, query)"
-          :value="region.SectionID"
+          v-if="sectionFilter(section, query)"
+          :value="section.Section_Name"
         >
           <template v-slot:activator="{ props }">
             <v-list-item v-bind="props">
               <template v-if="checkable" v-slot:prepend>
                 <v-checkbox-btn
-                  v-model="region.selected"
+                  v-model="section.selected"
                   @click.stop
                 ></v-checkbox-btn>
               </template>
               <template #title>
                 <v-icon>mdi-texture-box</v-icon>
-                {{ region.SectionName }}
+                {{ section.Section_Name }}
               </template>
             </v-list-item>
           </template>
 
           <template
-            v-for="component in region.ContainedComponents"
-            :key="component.ComponentID"
+            v-for="(component, index) in section.Contained_Components"
+            :key="index"
             :value="component.ComponentID"
           >
             <v-list-item v-if="componentFilter(component)">
               <template #title>
-                <v-icon>{{ getComponentIcon(component.ComponentType) }}</v-icon>
-                {{ component.InformationCarried }}
+                <v-icon>{{ getComponentIcon(component.Component_Type) }}</v-icon>
+                {{ component.Function }}
               </template>
               <template v-if="checkable" v-slot:prepend>
                 <v-checkbox-btn

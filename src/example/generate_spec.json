@@ -1,294 +1,458 @@
 {
   "specs": [
     {
-      "PageStructure": {
-        "SectionDivision": [
+      "Page_Composition": {
+        "Sections": [
           {
-            "BBox": "0, 0, 80, 250",
-            "ContainedComponents": [
+            "Color_Scheme": "primary surface: #2B2B2B, text: #CCCCCC, icons: #CCCCCC, scrollbar thumb: #555555",
+            "Component_Layout_in_Section": "A vertical stack of components with consistent vertical spacing of approximately 16px between each functional group. Alignment is to the start (top/left).",
+            "Contained_Components": [
               {
-                "ComponentColorStyle": "Dark background with white text for menu items. Selected items have a light blue highlight.",
-                "ComponentID": "1.1",
-                "ComponentLayoutStyle": "Menu items are listed vertically with equal spacing. Text is horizontally centered within each item.",
-                "ComponentPosition": "Aligned at the top of the sidebar, taking up the full width of the section.",
-                "ComponentType": "Menu",
-                "Functionality": "Provides navigation options for different projects and settings.",
-                "InformationCarried": "Includes menu items such as 'My Project', 'Sample Image', and other project names."
+                "Color_Scheme": "text: #CCCCCC",
+                "Component_Layout_Style": "Horizontally aligned row containing a label ('My Project') and a chevron-down icon. Full-width component.",
+                "Component_Type": "Dropdown",
+                "Function": "Select the current project or workspace."
+              },
+              {
+                "Color_Scheme": "background: #3C3C3C, text: #CCCCCC, placeholder text: #888888, border: transparent",
+                "Component_Layout_Style": "A standard search input field with a placeholder text and a search icon on the left. Rounded corners with a radius of ~4px.",
+                "Component_Type": "Input.Search",
+                "Function": "Filter the list of assets within the project."
+              },
+              {
+                "Color_Scheme": "background: #2B2B2B, text: #CCCCCC",
+                "Component_Layout_Style": "An accordion-style menu. The top-level item ('Sample Image') is a collapsible header with a label and a chevron icon. Sub-items are indented and consist of a checkbox and a label.",
+                "Component_Type": "Menu",
+                "Function": "Display and manage a hierarchical list of assets."
+              },
+              {
+                "Color_Scheme": "box border: #888888, label text: #CCCCCC",
+                "Component_Layout_Style": "A standard square checkbox followed by a text label, part of a list item within the menu.",
+                "Component_Type": "Checkbox",
+                "Function": "Select or deselect an individual asset."
               }
             ],
-            "LayoutStyleWithinSection": "Vertical layout with components stacked from top to bottom. Components are aligned to the left with consistent spacing between them.",
-            "Location": "Located on the left side of the page, spanning the full height of the page and occupying approximately 20% of the page width.",
-            "SectionID": "1",
-            "SectionName": "Sidebar"
+            "Section_Name": "Project_Navigation_Sidebar",
+            "Section_Position_on_Page": "Fixed left rail, occupying the leftmost ~25% of the viewport height."
           },
           {
-            "BBox": "80, 0, 380, 250",
-            "ContainedComponents": [
+            "Color_Scheme": "primary surface: #2B2B2B, text: #CCCCCC, accent: #BDD163, divider: #3C3C3C",
+            "Component_Layout_in_Section": "Vertically stacked content blocks. A header row contains breadcrumbs and tabs, followed by distinct content sections ('Uploaded Pages', 'Generated Pages') separated by significant vertical spacing (~32px).",
+            "Contained_Components": [
               {
-                "ComponentColorStyle": "Light gray border around the card with a dark background for the image display area.",
-                "ComponentID": "2.1",
-                "ComponentLayoutStyle": "The image is displayed within the card, maintaining its aspect ratio. The label 'Image 1' is positioned below the image.",
-                "ComponentPosition": "Centered within the main content area, taking up a significant portion of the space.",
-                "ComponentType": "Card",
-                "Functionality": "Displays uploaded images for editing.",
-                "InformationCarried": "Shows an image of a squirrel on a mossy surface labeled as 'Image 1'."
+                "Color_Scheme": "icon: #CCCCCC",
+                "Component_Layout_Style": "A horizontal row with a home icon as the first element.",
+                "Component_Type": "Breadcrumb",
+                "Function": "Indicate the user's current location within the application's hierarchy."
               },
               {
-                "ComponentColorStyle": "Green background with white text.",
-                "ComponentID": "2.2",
-                "ComponentLayoutStyle": "The button is rectangular with rounded corners. Text is horizontally and vertically centered within the button.",
-                "ComponentPosition": "Positioned above the card, aligned to the right.",
-                "ComponentType": "Button",
-                "Functionality": "Allows users to add new images or pages.",
-                "InformationCarried": "Text 'Add' indicating the action to add new content."
+                "Color_Scheme": "active text: #FFFFFF, inactive text: #888888, indicator: #FFFFFF",
+                "Component_Layout_Style": "A tab bar with two tabs. The active tab has a white indicator line underneath.",
+                "Component_Type": "Tabs",
+                "Function": "Switch between different editing or composition modes."
+              },
+              {
+                "Color_Scheme": "text: #CCCCCC",
+                "Component_Layout_Style": "A level 3 or 4 heading placed above its corresponding content.",
+                "Component_Type": "Typography.Title",
+                "Function": "Provide a heading for a content section."
+              },
+              {
+                "Color_Scheme": "background: #BDD163, text: #2B2B2B",
+                "Component_Layout_Style": "A solid-fill button with text label 'Add'. Positioned on the same horizontal axis as the 'Uploaded Pages' title, aligned to the right.",
+                "Component_Type": "Button",
+                "Function": "Trigger an action to add new content, such as uploading a page."
+              },
+              {
+                "Color_Scheme": "image background: transparent, arrow button background: #3C3C3C, arrow icon: #CCCCCC",
+                "Component_Layout_Style": "A central image viewer with circular arrow buttons on the left and right for navigation. The image itself occupies the full width of the component.",
+                "Component_Type": "Carousel",
+                "Function": "Display a collection of images with navigation controls."
+              },
+              {
+                "Color_Scheme": "background: rgba(0, 0, 0, 0.5), text: #FFFFFF",
+                "Component_Layout_Style": "A small, rounded-corner tag overlaid on the top-right of the image in the carousel.",
+                "Component_Type": "Tag",
+                "Function": "Provide a small piece of metadata or a label for an item."
+              },
+              {
+                "Color_Scheme": "background: #2B2B2B",
+                "Component_Layout_Style": "This is an implicit component; the area under 'Generated Pages' is currently empty, serving as a placeholder.",
+                "Component_Type": "Empty",
+                "Function": "Indicate an empty state where generated content will appear."
               }
             ],
-            "LayoutStyleWithinSection": "Horizontal layout with two main areas: the uploaded pages display area and the generated pages display area. Components are aligned centrally with consistent spacing.",
-            "Location": "Located in the center of the page, occupying the majority of the page width and height, approximately 60% of the page width and 90% of the page height.",
-            "SectionID": "2",
-            "SectionName": "Main Content Area"
+            "Section_Name": "Main_Content_Canvas",
+            "Section_Position_on_Page": "Center column, occupying the middle ~50% of the viewport width, between the left and right sidebars."
           },
           {
-            "BBox": "380, 0, 476, 250",
-            "ContainedComponents": [
+            "Color_Scheme": "primary surface: #3C3C3C, text: #CCCCCC, accent: #BDD163, placeholder text: #888888",
+            "Component_Layout_in_Section": "A vertical stack of controls on a distinct surface color. Components are grouped logically with vertical spacing of ~16-24px between them.",
+            "Contained_Components": [
               {
-                "ComponentColorStyle": "Dark background with white text for tab labels. The selected tab has a light blue highlight.",
-                "ComponentID": "3.1",
-                "ComponentLayoutStyle": "Tabs are listed horizontally with equal spacing. Text is horizontally centered within each tab.",
-                "ComponentPosition": "Aligned at the top of the settings panel, taking up the full width of the section.",
-                "ComponentType": "Tabs",
-                "Functionality": "Allows users to switch between different settings categories such as Color, Information, and Layout.",
-                "InformationCarried": "Tabs labeled 'Color', 'Information', and 'Layout'."
+                "Color_Scheme": "text: #CCCCCC",
+                "Component_Layout_Style": "A level 4 heading, '设计范式' (Design Specification), at the top of the panel.",
+                "Component_Type": "Typography.Title",
+                "Function": "Provide a heading for the entire control panel."
               },
               {
-                "ComponentColorStyle": "Dark background with white text. The input field has a light gray border.",
-                "ComponentID": "3.2",
-                "ComponentLayoutStyle": "The input field is rectangular with rounded corners. Placeholder text is horizontally and vertically centered within the field.",
-                "ComponentPosition": "Below the tabs, aligned to the left.",
-                "ComponentType": "Input",
-                "Functionality": "Enables users to enter prompts for generating new pages.",
-                "InformationCarried": "Placeholder text 'Type your prompt:' indicating where users should input their text."
+                "Color_Scheme": "text: #888888",
+                "Component_Layout_Style": "A small text block located below the panel title and above the prompt area.",
+                "Component_Type": "Typography.Text",
+                "Function": "Provide instructional helper text to the user."
               },
               {
-                "ComponentColorStyle": "Yellow background with black text.",
-                "ComponentID": "3.3",
-                "ComponentLayoutStyle": "The button is rectangular with rounded corners. Text is horizontally and vertically centered within the button.",
-                "ComponentPosition": "Below the input field, aligned to the left.",
-                "ComponentType": "Button",
-                "Functionality": "Triggers the generation of new pages based on the entered prompt.",
-                "InformationCarried": "Text 'Generate' indicating the action to generate new content."
+                "Color_Scheme": "background: #3C3C3C, icon: #CCCCCC, text: #CCCCCC",
+                "Component_Layout_Style": "A vertically arranged menu. Each item is a row containing an icon and a text label.",
+                "Component_Type": "Menu",
+                "Function": "Select a category of design settings to adjust."
+              },
+              {
+                "Color_Scheme": "background: #2B2B2B, text: #CCCCCC, placeholder text: #888888, border: #555555",
+                "Component_Layout_Style": "A large text area for input, preceded by a 'Type your prompt:' title. It includes placeholder text as a hint.",
+                "Component_Type": "Input.TextArea",
+                "Function": "Allow the user to enter a multi-line text prompt."
+              },
+              {
+                "Color_Scheme": "background: #BDD163, text: #2B2B2B",
+                "Component_Layout_Style": "A full-width, solid-fill button at the bottom of the panel. It is the main call-to-action.",
+                "Component_Type": "Button",
+                "Function": "Initiate the primary action of the panel, which is to generate content."
               }
             ],
-            "LayoutStyleWithinSection": "Vertical layout with components stacked from top to bottom. Components are aligned to the left with consistent spacing between them.",
-            "Location": "Located on the right side of the page, spanning the full height of the page and occupying approximately 20% of the page width.",
-            "SectionID": "3",
-            "SectionName": "Settings Panel"
+            "Section_Name": "Generation_Control_Panel",
+            "Section_Position_on_Page": "Fixed right rail, occupying the rightmost ~25% of the viewport width."
           }
         ]
       },
-      "UIDescription": {
-        "CoreFunctions": [
-          "Uploading images",
-          "Displaying uploaded pages",
-          "Generating new pages based on user prompts",
-          "Adjusting design elements"
-        ],
-        "FunctionSummary": "The main functional features include uploading images, displaying uploaded pages, generating new pages based on prompts, and adjusting design elements such as color, information, and layout.",
-        "OverallDescription": "The page features a clean and modern design with a focus on image editing and generation. The layout is well-structured, dividing the screen into distinct sections for navigation, content display, and settings.",
-        "ProductScenario": "This page is designed for users who need to edit and generate visual content, likely in a creative or design-related context, such as graphic designers or content creators.",
-        "TargetUsers": "The target users are graphic designers, content creators, and anyone involved in visual content creation and editing."
-      },
-      "VisualStyle": {
-        "ColorScheme": "Deep black and dark gray as primary colors, with light gray for borders and highlights. Green and yellow are used for interactive elements like buttons.",
-        "DesignStyle": "Minimalistic and flat design, with clean lines and simple shapes. The layout is organized and easy to navigate.",
-        "OverallTone": "Professional and tech-savvy, with a focus on functionality and ease of use."
+      "UI_Design_Specification": {
+        "Color_System": "The UI is built on a sophisticated dark theme, promoting focus and reducing eye strain. The primary background is a deep charcoal gray (#2B2B2B), which constitutes the majority of the screen real estate. A slightly lighter gray (#3C3C3C) is used for the right control panel surface, creating subtle depth and visual separation. The key accent and primary action color is a vibrant lime green (#BDD163), used for buttons and calls-to-action to draw user attention effectively. Text and icons primarily use a high-contrast light gray (#CCCCCC), ensuring readability against the dark backgrounds. Secondary or placeholder text utilizes a lower-contrast gray (#888888) to de-emphasize helper information. This minimal but high-contrast palette creates a professional, focused environment suitable for creative or technical applications.",
+        "Layout_Structure": "The application employs a three-column fixed-width layout optimized for desktop use, creating a clear task-oriented workspace. The structure is divided into a left navigation sidebar (~25% width), a central content canvas (~50% width), and a right control panel (~25% width). A consistent base spacing unit, likely 8px, governs the padding and margins throughout the interface, with larger gaps (e.g., 24px, 32px) separating major functional blocks. Content within each column is organized in a vertical stack, with elements aligned to the start. The layout prioritizes a logical workflow from left to right: asset selection, primary content interaction, and contextual tool manipulation. This modular structure, built on distinct columns, is highly suitable for a React implementation using a responsive grid system like Ant Design's Grid, ensuring maintainability and scalability.",
+        "Shape_Language": "The shape language is modern and functional, characterized by rectilinear forms with soft, subtle rounding. Buttons, input fields, and tags feature a small, consistent border-radius of approximately 4px, avoiding sharp corners while maintaining a professional look. Icons are rendered in a clean, line-art style with rounded ends, contributing to the interface's approachable feel. The overall geometry is flat, with hierarchy and separation achieved through color and spacing rather than heavy shadows or complex gradients. The main image carousel uses circular buttons for navigation, which adds a touch of organic shape contrast. This understated and consistent use of shape reinforces the UI's purpose as a precise and uncluttered tool.",
+        "Usage_Scenario": "This interface is a design tool, likely an AI-powered image generator or editor. The user journey begins on the left, where they manage projects and select source assets like images from a file tree. The central area serves as the main stage, displaying the selected 'Uploaded Page' and providing a preview space for 'Generated Pages'. The user's primary creative input occurs in the right-hand control panel. Here, they can adjust design parameters like color and layout, and most importantly, input a textual prompt to guide the AI generation process. The workflow is linear and intuitive: select source -> configure parameters -> generate output. It is designed for a user engaged in a focused creative task, requiring clear controls and an unobstructed view of their work."
       }
     },
     {
-      "PageStructure": {
-        "SectionDivision": [
+      "Page_Composition": {
+        "Sections": [
           {
-            "BBox": "0, 0, 500, 50",
-            "ContainedComponents": [
+            "Color_Scheme": "background: #3A3A3A, text: #FFFFFF, input_background: #2C2C2C, icon: #FFFFFF, subtle_text: #8C8C8C",
+            "Component_Layout_in_Section": "A vertical stack layout with components arranged from top to bottom. A dropdown is at the top, followed by a search input, a hierarchical menu, and a link-style button at the very bottom. A consistent margin of ~16px is used between major components.",
+            "Contained_Components": [
               {
-                "ComponentColorStyle": "Dark background with white text. Hover effect changes text color to light gray.",
-                "ComponentID": "1.1",
-                "ComponentLayoutStyle": "Text is horizontally centered within each menu item.",
-                "ComponentPosition": "Aligned to the left side of the section.",
-                "ComponentType": "Menu",
-                "Functionality": "Provides navigation options for different sections of the application.",
-                "InformationCarried": "Menu items: 'My Project', 'Search...', 'Page 1', 'Page 2'.",
-                "selected": true
+                "Color_Scheme": "text: #FFFFFF, icon: #FFFFFF",
+                "Component_Layout_Style": "Horizontal row containing a label ('My Project') and a dropdown indicator icon (chevron-down), left-aligned.",
+                "Component_Type": "Dropdown",
+                "Function": "Select the current project or workspace."
               },
               {
-                "ComponentColorStyle": "Green background with white text. Border is slightly lighter green.",
-                "ComponentID": "1.2",
-                "ComponentLayoutStyle": "Text is vertically and horizontally centered within the button.",
-                "ComponentPosition": "Aligned to the right side of the section.",
-                "ComponentType": "Button",
-                "Functionality": "Generates output based on the current specifications.",
-                "InformationCarried": "Button text: 'Generate'.",
-                "selected": true
+                "Color_Scheme": "background: #2C2C2C, icon: #8C8C8C, text: #FFFFFF, placeholder_text: #8C8C8C",
+                "Component_Layout_Style": "Input field with a search icon prefix. The placeholder text is centered within the remaining space.",
+                "Component_Type": "Input.Search",
+                "Function": "Filter the list of pages or assets within the project."
+              },
+              {
+                "Color_Scheme": "background: #3A3A3A, text: #FFFFFF, icon: #FFFFFF",
+                "Component_Layout_Style": "Vertically stacked menu items. Each item is a horizontal row with a document icon, a text label, and a chevron icon for expandable sub-menus. Follows Ant Design's 'inline' menu mode.",
+                "Component_Type": "Menu",
+                "Function": "Navigate between different pages or specifications within the project."
+              },
+              {
+                "Color_Scheme": "text: #FFFFFF, icon: #FFFFFF",
+                "Component_Layout_Style": "Link-style button with an icon on the left and a text label on the right, horizontally centered within the section.",
+                "Component_Type": "Button",
+                "Function": "Trigger the creation of a new specification level."
               }
             ],
-            "LayoutStyleWithinSection": "Horizontal layout with components aligned to the left and right sides. Components are evenly spaced.",
-            "Location": "Located at the top of the page, spanning 100% width and occupying approximately 10% of the page height.",
-            "SectionID": "1",
-            "SectionName": "Top Navigation Bar",
-            "selected": true
+            "Section_Name": "Project_Navigation_Sidebar",
+            "Section_Position_on_Page": "Fixed-width vertical panel on the far left, occupying approximately 20% of the viewport width."
           },
           {
-            "BBox": "0, 50, 500, 450",
-            "ContainedComponents": [
+            "Color_Scheme": "background: #2C2C2C, text: #FFFFFF, primary_accent: #ADDE75, card_background: #3A3A3A",
+            "Component_Layout_in_Section": "Vertically stacked layout divided into distinct functional blocks. The top block contains a header with tabs, followed by a title and primary action row. Below this are content cards. The bottom block has its own title and a horizontal grid of cards.",
+            "Contained_Components": [
               {
-                "ComponentColorStyle": "Dark background with white text. Active tab has a light gray underline.",
-                "ComponentID": "2.1",
-                "ComponentLayoutStyle": "Tabs are horizontally aligned with equal spacing.",
-                "ComponentPosition": "At the top of the main content area.",
-                "ComponentType": "Tabs",
-                "Functionality": "Allows users to switch between different tabs for viewing and editing project specifications.",
-                "InformationCarried": "Tabs: 'BUILD SPEC', 'HISTORY VERSIONS'.",
-                "selected": true
+                "Color_Scheme": "text: #8C8C8C, active_text: #FFFFFF, active_indicator: #ADDE75",
+                "Component_Layout_Style": "Horizontally arranged tabs. The active tab ('BUILD SPEC') is indicated with a colored underline. The tab group is prepended by a home icon.",
+                "Component_Type": "Tabs",
+                "Function": "Switch between different views or modes of the workspace."
               },
               {
-                "ComponentColorStyle": "Light background with dark text. Cards have colored headers (purple, blue, orange).",
-                "ComponentID": "2.2",
-                "ComponentLayoutStyle": "Cards are arranged in a horizontal row with equal spacing. Text and progress bars are vertically centered within each card.",
-                "ComponentPosition": "Below the tabs, occupying the full width of the content area.",
-                "ComponentType": "Card",
-                "Functionality": "Displays statistical data related to the project.",
-                "InformationCarried": "Cards show total amounts for 'Revenue', 'Expenses', and 'Profit' with corresponding values and progress bars.",
-                "selected": true
+                "Color_Scheme": "text: #FFFFFF",
+                "Component_Layout_Style": "Large heading text ('Build SPEC') aligned to the left, in a row with the primary action button using space-between alignment.",
+                "Component_Type": "Typography.Title",
+                "Function": "Display the title of the current view."
               },
               {
-                "ComponentColorStyle": "Dark background with white text. Input fields have light gray borders.",
-                "ComponentID": "2.3",
-                "ComponentLayoutStyle": "Form fields are arranged in a vertical stack with labels above each input field. Radio buttons are horizontally aligned.",
-                "ComponentPosition": "Below the statistical cards, occupying the full width of the content area.",
-                "ComponentType": "Form",
-                "Functionality": "Allows users to input and edit project specifications.",
-                "InformationCarried": "Form fields for 'Input Page 1' and 'Input Page 2' with corresponding radio buttons and input areas.",
-                "selected": true
+                "Color_Scheme": "background: #ADDE75, text: #2C2C2C",
+                "Component_Layout_Style": "A solid-fill button with text label 'Generate', aligned to the right.",
+                "Component_Type": "Button",
+                "Function": "Trigger the primary action of the page, which is to generate the UI specification."
+              },
+              {
+                "Color_Scheme": "background: #3A3A3A, title_text: #FFFFFF",
+                "Component_Layout_Style": "A container card with a title ('Generated UI') and action icons on the top right. The main content area contains a large image preview.",
+                "Component_Type": "Card",
+                "Function": "Display the main generated UI preview."
+              },
+              {
+                "Color_Scheme": "text: #FFFFFF",
+                "Component_Layout_Style": "Medium heading text ('SPEC Templates') aligned to the left.",
+                "Component_Type": "Typography.Title",
+                "Function": "Display the title for the template selection section."
+              },
+              {
+                "Color_Scheme": "background: #3A3A3A, title_text: #FFFFFF",
+                "Component_Layout_Style": "A container card where the title area contains a Radio button and label ('Input Page 1'). The body contains an image preview of the template.",
+                "Component_Type": "Card",
+                "Function": "Display a selectable input template."
+              },
+              {
+                "Color_Scheme": "background: #3A3A3A, title_text: #FFFFFF",
+                "Component_Layout_Style": "A container card where the title area contains a Radio button and label ('Input Page 2'). The body contains an image preview of the template.",
+                "Component_Type": "Card",
+                "Function": "Display a selectable input template."
               }
             ],
-            "LayoutStyleWithinSection": "Vertical layout with multiple sections stacked on top of each other. Each section has its own header and content area.",
-            "Location": "Located below the top navigation bar, occupying the majority of the page height and width.",
-            "SectionID": "2",
-            "SectionName": "Main Content Area",
-            "selected": true
+            "Section_Name": "Main_Workspace",
+            "Section_Position_on_Page": "Center column, occupying the largest portion of the screen (~55% width), positioned between the left and right sidebars."
           },
           {
-            "BBox": "400, 0, 500, 450",
-            "ContainedComponents": [
+            "Color_Scheme": "background: #3A3A3A, text: #FFFFFF, tab_active_text: #ADDE75",
+            "Component_Layout_in_Section": "A vertical stack layout. A tab bar is at the top, followed by the main content area which contains descriptive information structured in labeled sections. A close button is positioned at the top right corner.",
+            "Contained_Components": [
               {
-                "ComponentColorStyle": "Dark background with white text. Input fields have light gray borders.",
-                "ComponentID": "3.1",
-                "ComponentLayoutStyle": "Form fields are arranged in a vertical stack with labels above each input field. Checkboxes are horizontally aligned with their corresponding labels.",
-                "ComponentPosition": "At the top of the sidebar.",
-                "ComponentType": "Form",
-                "Functionality": "Allows users to customize brand logo and prompt settings.",
-                "InformationCarried": "Form fields for 'Brand Logo' and 'Prompt' with corresponding input areas and checkboxes.",
-                "selected": true
+                "Color_Scheme": "text: #8C8C8C, active_text: #ADDE75",
+                "Component_Layout_Style": "Horizontally arranged tabs. The active tab ('EDIT') is styled differently, likely with a colored text or underline.",
+                "Component_Type": "Tabs",
+                "Function": "Switch between different property views for the selected element (e.g., Edit, Reference, Prompt)."
+              },
+              {
+                "Color_Scheme": "icon: #FFFFFF",
+                "Component_Layout_Style": "Icon-only button with a close (X) icon, placed at the top-right corner of the section.",
+                "Component_Type": "Button",
+                "Function": "Close or dismiss the properties panel."
+              },
+              {
+                "Color_Scheme": "header_text: #FFFFFF, content_text: #E0E0E0, background: #3A3A3A",
+                "Component_Layout_Style": "A collapse panel with a header ('Brand Logo') and a chevron icon for expanding/collapsing. The content within is a list of descriptions.",
+                "Component_Type": "Collapse",
+                "Function": "Display detailed information in a collapsible accordion format."
+              },
+              {
+                "Color_Scheme": "label_text: #8C8C8C, content_text: #FFFFFF",
+                "Component_Layout_Style": "A single-column layout where each row contains a label (e.g., 'Function') and its corresponding text content.",
+                "Component_Type": "Descriptions",
+                "Function": "Display key-value pairs of metadata about the selected component."
               }
             ],
-            "LayoutStyleWithinSection": "Vertical layout with components stacked on top of each other. Components are aligned to the left side of the sidebar.",
-            "Location": "Located on the right side of the page, occupying approximately 20% of the page width.",
-            "SectionID": "3",
-            "SectionName": "Sidebar",
-            "selected": true
+            "Section_Name": "Properties_Panel",
+            "Section_Position_on_Page": "Fixed-width vertical panel on the far right, occupying approximately 25% of the viewport width."
           }
         ]
       },
-      "UIDescription": {
-        "CoreFunctions": [
-          "Navigating through different project pages",
-          "Building specifications using templates",
-          "Displaying statistical data in card-based modules",
-          "Generating outputs based on the built specifications",
-          "Customizing brand logo and prompt settings"
-        ],
-        "FunctionSummary": "The main functional features include navigating through different pages of a project, building specifications with templates, displaying statistical data in card-based modules, and generating outputs. Users can also customize the brand logo and prompt settings.",
-        "OverallDescription": "The page features a clean and modern design with a dark theme, focusing on a structured layout for creating and managing project specifications. The interface is divided into distinct sections for navigation, content creation, and settings.",
-        "ProductScenario": "This page is designed for a project management or design tool where users can create detailed specifications for various projects. It could be used in scenarios such as software development, graphic design, or any field requiring detailed documentation.",
-        "TargetUsers": "The target users are project managers, designers, and developers who need to create and manage detailed project specifications. They require an intuitive interface to navigate through different project pages and build specifications efficiently."
-      },
-      "VisualStyle": {
-        "ColorScheme": "Deep black and dark gray as primary colors, with light gray for borders and highlights. White text is used for contrast. Accents are provided by purple, blue, and orange colors.",
-        "DesignStyle": "Minimalistic and flat design with a focus on functionality and ease of use.",
-        "OverallTone": "Professional and tech-savvy"
+      "UI_Design_Specification": {
+        "Color_System": "The color system is defined by a sophisticated dark theme, promoting focus and clarity. The primary background color is a deep charcoal gray (#2C2C2C), while container surfaces like sidebars and cards use a slightly lighter gray (#3A3A3A) to create subtle depth. Text and icons predominantly use high-contrast white (#FFFFFF) for readability. A vibrant, acidic lime green (#ADDE75) serves as the single, powerful accent color, reserved for primary call-to-action buttons like 'Generate' and for indicating active states in tabs. This creates a clear visual hierarchy, guiding the user's attention to key interactive elements. There are also muted grays (#8C8C8C) for secondary information and icons. The content previews within the cards introduce their own palettes, but these are contained and do not interfere with the application's core color system.",
+        "Layout_Structure": "The application employs a three-column fixed-sidebar layout, common in professional-grade creation tools. A fixed-width left navigation rail occupies approximately 20% of the viewport, the central main workspace takes up a fluid ~55%, and a fixed-width right properties panel fills the remaining ~25%. The entire interface is built on a dark theme, which reduces eye strain and focuses attention on the central content previews. Content is organized into distinct cards with clear headings and visual separation, creating a modular and scannable interface. The vertical rhythm within panels is consistent, with section titles, content blocks, and actions stacked logically. A base spacing unit of 8px appears to be used for padding (e.g., 16px, 24px) and margins between components, ensuring visual consistency and balance across the different functional areas. The structure is optimized for a desktop experience, prioritizing information density and efficient workflows.",
+        "Shape_Language": "The shape language is predominantly rectilinear and sharp, conveying a sense of precision and professionalism suitable for a technical tool. Containers such as cards and sidebars feature sharp, 90-degree corners or a very minimal corner radius (approximately 2-4px), reinforcing the structured, grid-based layout. Buttons have a subtle corner radius (~4px), softening them just enough to be identifiable as interactive elements. Icons are line-based and adhere to a clean, modern style with sharp angles. Active states, particularly for tabs, are indicated by a thick, solid underline rather than a change in the container's shape. This flat design approach avoids heavy shadows, gradients, and excessive ornamentation, resulting in a clean, functional, and uncluttered user interface that prioritizes content over chrome.",
+        "Usage_Scenario": "This UI is a specialized design and development tool for generating UI specifications or front-end code. The user is likely a designer or developer managing a project. The workflow involves navigating project assets in the left sidebar, selecting input templates or viewing generated outputs in the central workspace, and fine-tuning parameters or viewing metadata in the right-hand properties panel. Key interactions include selecting templates via radio buttons, triggering a core 'Generate' action, and inspecting detailed properties in an organized, tabbed interface. The application is designed for a productive, task-oriented session rather than casual browsing. It supports a process of iterative creation: select inputs, generate, review output, and inspect details, facilitating a rapid and efficient development cycle for UI components."
       }
     },
     {
-    "PageStructure": {
-        "SectionDivision": [
-            {
-                "BBox": "0, 0, 475, 30",
-                "ContainedComponents": [
-                    {
-                        "ComponentColorStyle": "Tabs have a dark gray background with white text. The selected tab has a slightly lighter background.",
-                        "ComponentID": "1.1",
-                        "ComponentLayoutStyle": "Tabs are arranged in a horizontal row with equal spacing.",
-                        "ComponentPosition": "Aligned horizontally across the top of the section.",
-                        "ComponentType": "Tabs",
-                        "Functionality": "Navigation between different sections of the about page.",
-                        "InformationCarried": "Tabs include: About, Credits, Translators, License, and Used Software.",
-                        "selected": true
-                    }
-                ],
-                "LayoutStyleWithinSection": "Horizontal layout with evenly spaced tabs.",
-                "Location": "Located at the top of the window, spanning the full width of the page.",
-                "SectionID": "1",
-                "SectionName": "Top Navigation Bar",
-                "selected": true
-            },
-            {
-                "BBox": "0, 30, 475, 300",
-                "ContainedComponents": [
-                    {
-                        "ComponentColorStyle": "The image features bright green colors against a light beige background.",
-                        "ComponentID": "2.1",
-                        "ComponentLayoutStyle": "The image is centered vertically within its allocated space.",
-                        "ComponentPosition": "Aligned to the left side of the section.",
-                        "ComponentType": "Image",
-                        "Functionality": "Displays the qBittorrent logo.",
-                        "InformationCarried": "An image of a green cartoon character hatching from an egg.",
-                        "selected": true
-                    },
-                    {
-                        "ComponentColorStyle": "Text is displayed in white against a dark gray background.",
-                        "ComponentID": "2.2",
-                        "ComponentLayoutStyle": "Text is arranged in a vertical column with appropriate line spacing for readability.",
-                        "ComponentPosition": "Aligned to the right side of the section.",
-                        "ComponentType": "Text",
-                        "Functionality": "Provides information about the qBittorrent application.",
-                        "InformationCarried": "Text includes a brief description of the application, copyright information, and links to the homepage, forum, and bug tracker.",
-                        "selected": true
-                    }
-                ],
-                "LayoutStyleWithinSection": "Vertical layout with an image on the left and text on the right.",
-                "Location": "Located below the navigation bar, occupying the majority of the window space.",
-                "SectionID": "2",
-                "SectionName": "Main Content Area",
-                "selected": true
-            }
+      "Page_Composition": {
+        "Sections": [
+          {
+            "Color_Scheme": "primary surface: #1E1E1E, text: #E0E0E0, selected row background: #004C99, selected row text: #FFFFFF, header background: #2D2D2D, divider: #454545",
+            "Component_Layout_in_Section": "A full-width, multi-column table layout. Columns are defined by headers and separated by 1px vertical dividers. Data is presented in rows, with one row highlighted to indicate selection.",
+            "Contained_Components": [
+              {
+                "Color_Scheme": "background: #1E1E1E, header background: #2D2D2D, text: #E0E0E0, selection background: #004C99",
+                "Component_Layout_Style": "Multi-column layout with fixed headers at the top. Each row represents a single data entity. Column content is primarily left-aligned.",
+                "Component_Type": "Table",
+                "Function": "Display a collection of data items and their associated properties in a structured grid."
+              },
+              {
+                "Color_Scheme": "track color: #454545, progress color: #3399FF, text: #E0E0E0",
+                "Component_Layout_Style": "A horizontal bar contained within a table cell. It displays the fill value and a percentage label.",
+                "Component_Type": "Progress",
+                "Function": "Indicate the completion percentage of a task."
+              }
+            ],
+            "Section_Name": "Data_Grid_View",
+            "Section_Position_on_Page": "Positioned in the background, occupying the full application window behind the modal dialog."
+          },
+          {
+            "Color_Scheme": "primary surface: #2D2D2D, text: #E0E0E0, accent: #3399FF, inactive tab background: #454545",
+            "Component_Layout_in_Section": "A vertically stacked layout containing a header, a tab bar, and a content pane. The header is a horizontal row with an icon, title, and a close button. The content pane uses a two-column grid layout.",
+            "Contained_Components": [
+              {
+                "Color_Scheme": "text color: #E0E0E0, icon background: #0078D4, icon foreground: #FFFFFF",
+                "Component_Layout_Style": "A horizontal layout with an icon on the left and text on the right, separated by an ~8px gap. Aligned to the top-left of the modal, within the header area.",
+                "Component_Type": "Typography.Title",
+                "Function": "Display the primary heading of the modal."
+              },
+              {
+                "Color_Scheme": "icon color: #C0C0C0",
+                "Component_Layout_Style": "An icon-only button positioned at the top-right corner of the modal header, with no visible background or border in its default state.",
+                "Component_Type": "Button",
+                "Function": "Trigger the action to close or dismiss the modal."
+              },
+              {
+                "Color_Scheme": "active tab background: #2D2D2D, inactive tab background: #454545, active text: #E0E0E0, inactive text: #C0C0C0, border: #555555",
+                "Component_Layout_Style": "A horizontal row of tab buttons below the modal header. The active tab has no bottom border and appears connected to the content pane. Inactive tabs have a distinct background color and a bottom border.",
+                "Component_Type": "Tabs",
+                "Function": "Allow navigation between different content views within the modal."
+              },
+              {
+                "Color_Scheme": "not applicable for raster image",
+                "Component_Layout_Style": "Aligned to the top-left within the content area's left column. It is centered horizontally within its column.",
+                "Component_Type": "Image",
+                "Function": "Display a decorative or branding illustration."
+              },
+              {
+                "Color_Scheme": "text color: #E0E0E0",
+                "Component_Layout_Style": "A left-aligned block of text positioned in the right column of the content area. Standard line-height for readability.",
+                "Component_Type": "Typography.Paragraph",
+                "Function": "Display a block of descriptive body text."
+              },
+              {
+                "Color_Scheme": "text color: #C0C0C0",
+                "Component_Layout_Style": "A single, left-aligned line of text with vertical margin spacing (~16px) separating it from elements above and below.",
+                "Component_Type": "Typography.Text",
+                "Function": "Display secondary information, such as a copyright notice."
+              },
+              {
+                "Color_Scheme": "label text: #E0E0E0, link text: #3399FF",
+                "Component_Layout_Style": "A vertical stack of list items. Each item is a two-column layout with a right-aligned label on the left and a left-aligned hyperlink on the right. Spacing between list items is approximately 8px.",
+                "Component_Type": "List",
+                "Function": "Display a set of labeled hyperlinks."
+              }
+            ],
+            "Section_Name": "Information_Modal",
+            "Section_Position_on_Page": "A floating modal dialog centered on top of the main application view."
+          }
         ]
+      },
+      "UI_Design_Specification": {
+        "Color_System": "The application employs a dark-themed color system, creating a high-contrast, professional aesthetic. The primary background color is a deep charcoal gray (#2D2D2D), which covers the modal surface. Text is rendered in a light gray (#E0E0E0) for optimal readability against the dark background. A vibrant system blue (#3399FF) is used as the primary accent color for interactive elements like hyperlinks and the selected state in the background table, drawing user attention to clickable targets. Supporting grays are used for UI chrome, such as the slightly lighter gray for inactive tabs (#454545) and a darker gray for the application's main window background (#1E1E1E). The overall color distribution is dominated by dark tones, with #2D2D2D at ~55%, #1E1E1E at ~25%, light grays for text at ~10%, and the blue accent making up a smaller but impactful percentage.",
+        "Layout_Structure": "The UI is structured as a layered desktop application interface. The base layer consists of a multi-column data table, while the top layer is a fixed-size modal dialog, centrally positioned. This modal follows a classic Z-pattern layout internally: a header at the top, a horizontal tab navigation system below it, and a main content area. The content area is further divided into a two-column grid, with the left column (~30% width) dedicated to a single illustration and the right column (~70%) for structured textual information. The layout relies on a strict grid with consistent spacing, likely an 8px base unit, for padding and margins (e.g., ~16px internal padding). Textual elements are vertically stacked and left-aligned, creating a clear information hierarchy. This structured, hierarchical layout prioritizes clarity and readability for dense informational content within a compact modal view.",
+        "Shape_Language": "The design's shape language is predominantly sharp, rectilinear, and flat, emphasizing a modern, utilitarian feel. The modal window, tabs, and table cells all feature sharp 90-degree corners with no border-radius, projecting a sense of precision and structure. Borders and dividers are defined by subtle, 1px solid lines in a slightly lighter gray (#555555) than the background, creating clear separation without adding visual noise. There is a notable absence of gradients or shadows, reinforcing the flat design principles. In sharp contrast, the circular application icon and the organic, rounded forms of the mascot illustration introduce a soft, humanistic element. This deliberate juxtaposition of rigid geometric frames and soft illustrative content creates a balanced and visually engaging composition. Buttons and interactive controls are rectangular, maintaining the overall geometric consistency.",
+        "Usage_Scenario": "This UI is part of a desktop utility application, likely a power-user tool for managing complex tasks, such as the qBittorrent client shown. The user has triggered an 'About' modal, indicating a secondary informational lookup task, separate from the application's primary workflow of managing torrents. The user's goal is to quickly find software-related information, such as the version number, project homepage, support forums, or licensing details. The tabbed interface allows for efficient browsing of different categories of information without leaving the modal. The interaction is simple and direct: click to open, click tabs to navigate, and click links to access external resources. The design supports quick information retrieval and then a swift return to the main application context by closing the modal."
+      }
     },
-    "UIDescription": {
-        "CoreFunctions": [
-            "Displaying version information",
-            "Providing links to the project's homepage, forum, and bug tracker",
-            "Listing contributors and acknowledgments"
-        ],
-        "FunctionSummary": "The main function of this page is to provide users with detailed information about the qBittorrent application, including version details, contributors, and links to related resources such as the homepage, forum, and bug tracker.",
-        "OverallDescription": "The UI is a simple and functional window for the qBittorrent application, displaying information about the software version and credits. The layout is straightforward with minimalistic design elements.",
-        "ProductScenario": "This page is designed for users who want to learn more about the qBittorrent application, its development team, and where to find additional support or community resources.",
-        "TargetUsers": "The target users are primarily qBittorrent users who are interested in the technical details and background of the application, including developers, power users, and contributors."
-    },
-    "VisualStyle": {
-        "ColorScheme": "Dark gray background with white text, bright green accents from the logo, and orange highlights for links.",
-        "DesignStyle": "Minimalistic and functional, focusing on clear communication of information without unnecessary visual elements.",
-        "OverallTone": "Professional and tech-savvy"
+    {
+      "Page_Composition": {
+        "Sections": [
+          {
+            "Color_Scheme": "background: #FFFFFF; border-bottom: #E7E7E7; text: #212121; primary-accent: #FB7299; secondary-accent: #00A1D6;",
+            "Component_Layout_in_Section": "A horizontal flex container with 'space-between' alignment. It's organized into three groups: a left group for branding and primary navigation, a central group for the search functionality, and a right group for user-specific actions and notifications.",
+            "Contained_Components": [
+              {
+                "Color_Scheme": "background: transparent;",
+                "Component_Layout_Style": "An icon-only button styled as a link, containing the Bilibili logo graphic.",
+                "Component_Type": "Button",
+                "Function": "Navigates to the homepage, serving as the site logo."
+              },
+              {
+                "Color_Scheme": "text: #212121; background: transparent;",
+                "Component_Layout_Style": "A horizontal menu with text-only items. Spacing between items is approximately 16px. The active item is not shown.",
+                "Component_Type": "Menu",
+                "Function": "Provides primary navigation to different categories of the site."
+              },
+              {
+                "Color_Scheme": "background: #F4F4F4; border: #E7E7E7; icon: #999999; text: #212121;",
+                "Component_Layout_Style": "A pill-shaped input field with an integrated search icon button on the right side. The input field has a placeholder text.",
+                "Component_Type": "Input.Search",
+                "Function": "Allows users to search for content across the entire site."
+              },
+              {
+                "Color_Scheme": "border: #CCCCCC;",
+                "Component_Layout_Style": "A circular image with a diameter of approximately 36px.",
+                "Component_Type": "Avatar",
+                "Function": "Displays the current user's profile picture and acts as a trigger to open a user menu."
+              },
+              {
+                "Color_Scheme": "text: #212121; background: transparent;",
+                "Component_Layout_Style": "A group of icon-only text buttons, horizontally arranged with approximately 12px spacing between them.",
+                "Component_Type": "Button",
+                "Function": "Provides access to user-specific areas like messages, activity feed, and favorites."
+              },
+              {
+                "Color_Scheme": "background: #FB7299; text: #FFFFFF;",
+                "Component_Layout_Style": "A rectangular button with rounded corners (radius ~4px), containing an icon and text label.",
+                "Component_Type": "Button",
+                "Function": "Serves as a primary call-to-action for users to upload content."
+              }
+            ],
+            "Section_Name": "Global Header",
+            "Section_Position_on_Page": "A full-width horizontal bar fixed at the top of the viewport, positioned above all other page content."
+          },
+          {
+            "Color_Scheme": "background: #FFFFFF; text: #212121; meta-text: #999999; link: #00A1D6;",
+            "Component_Layout_in_Section": "A single-column, vertical stack. Components are arranged sequentially: Title Block, Video Player, Action Bar, and Description Block, with a vertical gap of approximately 24px between each major component.",
+            "Contained_Components": [
+              {
+                "Color_Scheme": "text: #212121;",
+                "Component_Layout_Style": "A level-1 heading with large font size, positioned at the top of the section.",
+                "Component_Type": "Typography.Title",
+                "Function": "Displays the main title of the video content."
+              },
+              {
+                "Color_Scheme": "text: #999999;",
+                "Component_Layout_Style": "A horizontal row of text elements, likely with small icon prefixes, displayed below the main title.",
+                "Component_Type": "Typography.Text",
+                "Function": "Displays secondary metadata about the video, such as view count and publication date."
+              },
+              {
+                "Color_Scheme": "background: #000000; controls-icon: #FFFFFF;",
+                "Component_Layout_Style": "A large, black rectangular area representing the video screen. It has sharp corners. A control bar is overlaid at the bottom, containing a play/pause button, a progress slider, time display, volume control, and quality/fullscreen settings.",
+                "Component_Type": "Card",
+                "Function": "Container for the video player and its controls."
+              },
+              {
+                "Color_Scheme": "icon: #505050; text: #505050; background: transparent;",
+                "Component_Layout_Style": "A horizontal row of action buttons. Each button consists of an icon and a text label for the count. Actions include Like, Dislike, Coin, Favorite, and Share.",
+                "Component_Type": "Button.Group",
+                "Function": "Allows users to perform social actions related to the video."
+              }
+            ],
+            "Section_Name": "Primary Content Section",
+            "Section_Position_on_Page": "The main content area, occupying the left ~70% of the page width, directly below the Global Header."
+          },
+          {
+            "Color_Scheme": "background: #FFFFFF; card-border: #E7E7E7; text: #212121; link: #00A1D6;",
+            "Component_Layout_in_Section": "A vertical stack of self-contained cards. The first card displays creator information, followed by a card for the video playlist, and a third card for related video recommendations.",
+            "Contained_Components": [
+              {
+                "Color_Scheme": "background: #FFFFFF; border: #E7E7E7; button-background: #00A1D6; button-text: #FFFFFF;",
+                "Component_Layout_Style": "A horizontal layout within the card's header. On the left is a circular Avatar. In the middle is a vertical stack of Typography.Text for the creator's name and bio. On the far right is a primary Button to 'Follow'.",
+                "Component_Type": "Card",
+                "Function": "Displays information about the video creator and a follow action."
+              },
+              {
+                "Color_Scheme": "background: #FFFFFF; text: #212121; active-item-background: #F4F4F4; scrollbar: #CCCCCC;",
+                "Component_Layout_Style": "A vertically scrollable list contained within a Card. The Card has a header with a title like 'Playlist'. Each list item is a clickable row, potentially highlighted for the currently playing video. Each row contains a part number and title.",
+                "Component_Type": "List",
+                "Function": "Displays a playlist or series of related videos."
+              },
+              {
+                "Color_Scheme": "background: #FFFFFF; text: #212121; meta-text: #999999;",
+                "Component_Layout_Style": "A vertical list of items, each representing a video. Each item is a horizontal component with a video thumbnail (Image) on the left, and a vertical stack of text (Typography.Text for title, and smaller text for creator/views) on the right.",
+                "Component_Type": "List",
+                "Function": "Displays a list of recommended videos."
+              }
+            ],
+            "Section_Name": "Sidebar Section",
+            "Section_Position_on_Page": "A vertical column on the right side of the page, occupying ~30% of the width, running parallel to the Primary Content Section."
+          }
+        ]
+      },
+      "UI_Design_Specification": {
+        "Color_System": "The color palette is built on a high-contrast, minimalist foundation. The dominant background is pure white (#FFFFFF), which enhances content clarity and focus. Primary text uses a near-black or very dark gray (#212121) for maximum readability. A signature accent pink (#FB7299) is used sparingly for the most important call-to-action, such as the 'Upload' button, drawing immediate user attention. A secondary accent blue (#00A1D6) is consistently applied for interactive elements like links, tabs, and secondary buttons, serving as a clear signifier for navigation. Neutral grays (#999999, #CCCCCC) are utilized for metadata, borders, and disabled states, creating a subtle visual hierarchy without adding clutter. This strategic color system effectively guides the user's eye and distinguishes between different types of interactive elements.",
+        "Layout_Structure": "The page employs a fluid-width, centered layout with a maximum content width, creating stable margins on larger viewports. Its core structure is an asymmetrical two-column grid, with the main content area occupying approximately 70% of the width on the left, and a supplementary sidebar taking the remaining 30% on the right. A persistent, full-width header is fixed at the top for global navigation and search. The vertical rhythm is established by stacking functional blocks, such as the title, player, and action bar, with consistent vertical spacing of around 16-24px. The layout prioritizes the video player as the primary focal point. Spacing within components and between elements appears to follow an 8px base unit system, ensuring visual consistency and rhythm across the interface. The design is clearly structured to separate primary content consumption from secondary discovery and social interactions.",
+        "Shape_Language": "The shape language is predominantly rectilinear, characterized by sharp-cornered rectangles for major containers like the video player and content cards. This creates a structured and organized feel. This angularity is softened by the selective use of rounded corners on interactive elements. For instance, buttons and input fields feature a subtle corner radius (approximately 4-6px), making them appear more approachable and clickable. Avatars are consistently circular, providing a clear visual distinction for user profiles. Icons are rendered in a simple, outlined style with clean lines, ensuring they are easily recognizable without being distracting. Overall, the design achieves a balance between formal structure and user-friendly softness, guiding interaction through shape differentiation.",
+        "Usage_Scenario": "This interface is a video-watching page, designed primarily for content consumption. The user's main goal is to watch the video, which is given the most prominent placement on the screen. Secondary user tasks include social interaction (liking, sharing), information gathering (reading the description and metadata), and content discovery. The right sidebar facilitates this discovery by presenting a playlist or series episodes, as well as algorithmically recommended videos, encouraging longer user sessions. The persistent header allows users to search for new content or navigate to other parts of the site at any time. The overall experience is optimized for passive viewing combined with low-effort clicks to explore related content or express engagement."
+      }
     }
-}
   ]
 }

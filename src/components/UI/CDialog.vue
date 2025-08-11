@@ -1,12 +1,13 @@
 <template>
-    <div id="mask" v-if="visible_" @click.self="handleClose">
-        <div ref="bg" id="bg">
-            <div id="content">
-                <slot name="content"></slot>
+    <div class="cd-mask" v-if="visible_" @click.self="handleClose">
+        <div ref="bg" class="cd-bg">
+            <div class="cd-header pa-6">
+                <slot name="header"></slot>
             </div>
-            <div id="close" @click="handleClose">
-                <v-icon :size="25" icon="mdi-close"/>
+            <div class="cd-content">
+                <slot name="default"></slot>
             </div>
+            <v-btn class="cd-close" icon="mdi-close" @click="handleClose" variant="plain"/>
         </div>
     </div>
 </template>
@@ -52,9 +53,9 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped>
-#mask {
-    z-index: 500;
+<style scoped>
+.cd-mask {
+    z-index: 2025;
     position: absolute;
     top: 0;
     left: 0;
@@ -64,13 +65,13 @@ onMounted(() => {
     animation: cui-dialog-blur .6s;
 }
 
-#bg {
+.cd-bg {
     position: absolute;
     width: 500px;
     height: 300px;
     max-width: 80%;
-    border: solid var(--bd-color) 1px;
-    background-color: var(--bg-color-solid);
+    border: solid rgba(var(--v-border-color), 0.2) 1px;
+    background-color: rgb(var(--v-theme-background));
     border-radius: 8px;
     transform: translate(-50%, -50%);
     top: 50%;
@@ -78,17 +79,22 @@ onMounted(() => {
     animation: cui-dialog-appear .6s cubic-bezier(0, 0.6, 0.2, 1.0);
 }
 
-#content {
+.cd-content {
     padding: 20px;
-    height: calc(100% - 40px);
-    overflow: auto;
+    height: calc(100% - 60px);
+    overflow: hidden;
 }
 
-#close {
+.cd-close {
     position: absolute;
     right: 0;
     top: 0;
     margin: 15px;
     cursor: pointer;
+}
+
+.cd-header {
+    height: 60px;
+    padding: 10px 20px;
 }
 </style>

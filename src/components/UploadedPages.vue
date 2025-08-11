@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, ref, type ComponentPublicInstance, nextTick } from "vue";
+import type { VCard } from "vuetify/components";
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import { useSpecStore } from "~/store/SpecStore";
+import CDialog from "./UI/CDialog.vue";
+import DetailedDialog from "./DetailedDialog.vue";
 
 const specStore = useSpecStore();
 const currentPage = computed({
@@ -10,8 +13,10 @@ const currentPage = computed({
     specStore.currentUploadedPageIndex = val;
   },
 });
+const viewingPage = ref(0);
 const uploadedPages = computed(() => specStore.uploadedPages);
-const DraggingInfo = computed(() => specStore.draggingInfo);
+const CardRef = ref<InstanceType<typeof Element>[]>([]);
+const dialogOpened = ref(false);
 
 function uploadImage() {
   const input = document.createElement("input");
@@ -21,30 +26,51 @@ function uploadImage() {
     const target = e.target as HTMLInputElement;
     if (target.files && target.files[0]) {
       const file = target.files[0];
-      imageUploadUtil(uploadedPages, file, currentPage);
+      imageUploadUtil(uploadedPages, file, () => {
+        nextTick(() => {
+          currentPage.value = uploadedPages.value.length - 1;
+          updateActiveSlide();
+        });
+      });
     }
   };
   input.click();
 }
 
-function onSelectImage(index: number) {
-  DraggingInfo.value.isDragging = true;
-  DraggingInfo.value.selectedPageIndex = index;
-}
-
-function onDragEnd() {
-  DraggingInfo.value.isDragging = false;
+function openDialog(index: number) {
+  viewingPage.value = index;
+  dialogOpened.value = true;
 }
 
 function nextPageUploaded() {
   currentPage.value = (currentPage.value + 1) % uploadedPages.value.length;
+  updateActiveSlide();
 }
 
 function prevPageUploaded() {
   currentPage.value =
     (currentPage.value - 1 + uploadedPages.value.length) %
     uploadedPages.value.length;
+  updateActiveSlide();
 }
+
+function updateActiveSlide() {
+  CardRef.value[currentPage.value].scrollIntoView({
+    behavior: "smooth",
+    block: "nearest",
+    inline: "center",
+  });
+}
+
+function setCardRef(el: ComponentPublicInstance | Element | null, index: number) {
+  if (el) {
+    CardRef.value[index] = el as Element;
+  }
+}
+
+onMounted(() => {
+  updateActiveSlide();
+});
 </script>
 
 <template>
@@ -63,99 +89,137 @@ function prevPageUploaded() {
       >
     </v-col>
   </v-row>
-  <v-row>
-    <v-col cols="1" class="d-flex align-center justify-center">
-      <v-btn
-        variant="tonal"
-        icon="mdi-arrow-left"
-        @click="prevPageUploaded"
-      ></v-btn>
-    </v-col>
-    <v-col cols="10">
-      <v-carousel
-        v-if="uploadedPages.length > 0"
-        v-model="currentPage"
-        height="400"
-        progress="red"
-        vertical-arrows="left"
-        hide-delimiters
-        :show-arrows="false"
-        class="rounded uploaded-page"
-        @dragstart="() => onSelectImage(currentPage)"
-        @dragend="onDragEnd"
-        draggable="true"
-      >
-        <v-carousel-item v-for="(page, index) in uploadedPages" :key="index">
-          <template v-if="page.analysisComplete">
-            <v-img :src="page.url"></v-img>
-          </template>
-          <template v-else>
-            <v-sheet
-              class="d-flex flex-column align-center justify-center"
-              height="100%"
-            >
-              <v-progress-circular
-                indeterminate
-                color="primary"
+
+  <v-sheet variant="tonal" class="pa-4 rounded-lg">
+    <v-row align="center">
+      <v-col cols="1" class="d-flex justify-center">
+        <v-btn
+          variant="tonal"
+          icon="mdi-arrow-left"
+          @click="prevPageUploaded"
+          class="mx-2"
+        ></v-btn>
+      </v-col>
+      <v-col cols="10" class="slider">
+        <template v-if="uploadedPages.length !== 0">
+          <div class="slide"></div>
+          <div
+            v-for="(page, index) in uploadedPages"
+            :ref="(el)=>setCardRef(el,index)"
+            :key="index"
+            class="slide"
+          >
+            <v-card @click="openDialog(index)" link class="uploaded-page">
+              <template v-if="page.analysisComplete">
+                <v-img :src="page.url" height="400px" cover></v-img>
+              </template>
+              <template v-else>
+                <v-sheet
+                  class="d-flex flex-column align-center justify-center"
+                  height="400px"
+                >
+                  <v-progress-circular
+                    indeterminate
+                    color="primary"
+                    class="mb-2"
+                  ></v-progress-circular>
+                  <span>Analyzing image...</span>
+                </v-sheet>
+              </template>
+              <v-overlay
+                v-if="index === currentPage"
+                :model-value="true"
+                class="d-flex align-end justify-center"
+                scrim="transparent"
+                contained
+              >
+                <v-chip
+                  :text="`${index + 1} / ${uploadedPages.length}`"
+                  size="small"
+                  variant="elevated"
+                  class="mb-2"
+                ></v-chip>
+              </v-overlay>
+            </v-card>
+          </div>
+          <div class="slide"></div>
+        </template>
+
+        <template v-else>
+          <v-sheet
+            height="400"
+            class="rounded d-flex align-center justify-center"
+            color="surface-variant"
+          >
+            <div class="text-center">
+              <v-icon
+                icon="mdi-image-outline"
+                size="large"
                 class="mb-2"
-              ></v-progress-circular>
-              <span>Analyzing image...</span>
-            </v-sheet>
-          </template>
-        </v-carousel-item>
+              ></v-icon>
+              <div>Upload a page to start...</div>
+            </div>
+          </v-sheet>
+        </template>
+      </v-col>
 
-        <v-overlay
-          :scrim="false"
-          content-class="w-100 h-100 d-flex flex-column align-center pointer-pass-through justify-space-between py-3"
-          contained
-          model-value
-          no-click-animation
-          persistent
-        >
-          <v-scroll-x-transition mode="out-in" appear>
-            <v-sheet
-              :key="currentPage"
-              rounded="xl"
-              class="pointer-events-auto d-flex align-center justify-center pa-2 pl-4 pr-4"
-            >
-              Image {{ currentPage + 1 }}
-            </v-sheet>
-          </v-scroll-x-transition>
-          <v-chip
-            :text="`${currentPage + 1} / ${uploadedPages.length}`"
-            size="small"
-            variant="elevated"
-            class="pointer-events-auto"
-          ></v-chip>
-        </v-overlay>
-      </v-carousel>
+      <v-col cols="1" class="d-flex justify-center">
+        <v-btn
+          variant="tonal"
+          icon="mdi-arrow-right"
+          @click="nextPageUploaded"
+          class="mx-2"
+        ></v-btn>
+      </v-col>
+    </v-row>
+  </v-sheet>
 
-      <v-sheet
-        v-else
-        height="400"
-        class="rounded d-flex align-center justify-center"
-        color="surface-variant"
-      >
-        <div class="text-center">
-          <v-icon icon="mdi-image-outline" size="large" class="mb-2"></v-icon>
-          <div>Upload a page to start...</div>
-        </div>
-      </v-sheet>
-    </v-col>
-
-    <v-col cols="1" class="d-flex align-center justify-center">
-      <v-btn
-        variant="tonal"
-        icon="mdi-arrow-right"
-        @click="nextPageUploaded"
-      ></v-btn>
-    </v-col>
-  </v-row>
+  <teleport to="body">
+    <CDialog v-model:visible="dialogOpened" width="80%" height="80%">
+      <template #header>
+        <h2 class="text-h6 ml-4">Reference Page</h2>
+        <h2 class="text-h4 font-weight-bold ml-4">
+          {{ uploadedPages[viewingPage]?.name || "Page Details" }}
+        </h2>
+      </template>
+      <DetailedDialog :page-index="viewingPage" @close="dialogOpened = false">
+      </DetailedDialog>
+    </CDialog>
+  </teleport>
 </template>
 
 <style scoped>
 .uploaded-page:hover {
   background: rgba(var(--v-theme-on-surface), 0.1);
   cursor: grab;
+}
+
+.slider {
+  display: flex;
+  overflow-x: auto;
+
+  scroll-snap-type: x mandatory;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  gap: 30px;
+}
+
+.slider::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  flex-shrink: 0;
+  width: 700px;
+  /* height: 300px; */
+  border-radius: 10px;
+
+  scroll-snap-align: center;
+}
+
+.uploaded-page {
+  border: solid 4px rgba(var(--v-border-color), 0.2);
 }
 </style>

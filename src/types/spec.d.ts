@@ -11,48 +11,36 @@ export interface LayoutArea {
 }
 
 export interface Component {
-  ComponentID: string;
-  ComponentType: string;
-  ComponentPosition: string;
-  Functionality: string;
-  InformationCarried: string;
-  ComponentLayoutStyle: string;
-  ComponentColorStyle?: string;
+  Color_Scheme: string;
+  Component_Layout_Style: string;
+  Component_Type: string;
+  Function: string;
   selected?: boolean;
 }
 
-export interface Region {
-  BBox: string;
-  ContainedComponents: Component[];
-  LayoutStyleWithinSection: string;
-  SectionName: string;
-  SectionID: string;
-  Location: string;
+export interface Section {
+  Color_Scheme: string;
+  Component_Layout_in_Section: string;
+  Contained_Components: Component[];
+  Section_Name: string;
+  Section_Position_on_Page: string;
   selected?: boolean;
-}
-
-export interface UIDescription {
-  ProductScenario: string;
-  FunctionSummary: string;
-  OverallDescription: string;
-  CoreFunctions: string[];
-  TargetUsers: string;
-}
-
-export interface VisualStyle {
-  ColorScheme: string;
-  DesignStyle: string;
-  OverallTone: string;
 }
 
 export interface PageComposition {
-  SectionDivision: Region[];
+  Sections: Section[];
+}
+
+export interface UIDesignSpecification {
+  Color_System: string;
+  Layout_Structure: string;
+  Shape_Language: string;
+  Usage_Scenario: string;
 }
 
 export interface SPEC {
-  UIDescription: UIDescription;
-  VisualStyle: VisualStyle;
-  PageStructure: PageComposition;
+  Page_Composition: PageComposition;
+  UI_Design_Specification: UIDesignSpecification;
 }
 
 export interface UploadImage {
@@ -61,7 +49,6 @@ export interface UploadImage {
   url: string;
   file?: File;
   spec?: SPEC;
-  reference?: Reference;
   analysisComplete: boolean;
   selected?: boolean;
 }
@@ -73,12 +60,16 @@ export interface GeneratedImage {
   generating: boolean;
 }
 
-export interface DesignSpec {
-  [key:string] : {
+export type SpecType = keyof UIDesignSpecification;
+
+export type DesignSpec = Record<
+  SpecType,
+  {
+    label: string;
     icon: string;
     value: number;
   }
-}
+>;
 
 export interface Reference {
   承担的功能: string;

@@ -62,9 +62,9 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BuildSpec from '~/components/BuildSpec.vue'
 import HistoryVersions from '~/components/HistoryVersions.vue'
-import EditPanel from '~/components/RightPanel/EditPanel.vue'
-import PromptPanel from '~/components/RightPanel/PromptPanel.vue'
-import ReferencePanel from '~/components/RightPanel/ReferencePanel.vue'
+import EditPanel from '~/components/SidePanel/EditPanel.vue'
+import PromptPanel from '~/components/SidePanel/PromptPanel.vue'
+import ReferencePanel from '~/components/SidePanel/ReferencePanel.vue'
 
 const tab = ref('build')
 const mode = ref('edit') // 用于切换编辑模式

@@ -2,25 +2,26 @@ import axios from "./RequestHelper";
 import type { Ref } from "vue";
 import type {
   Component,
-  Region,
   PageComposition,
   SPEC,
   GeneratedImage,
   DesignSpec,
   UploadImage,
-  Reference,
+  Section,
+  SpecType,
+  UIDesignSpecification,
 } from "~/types";
 
 function filterSelectedComponents(components: Component[]): Component[] {
   return components.filter((component) => component.selected === true);
 }
 
-function filterSelectedRegions(regions: Region[]): Region[] {
-  return regions
-    .filter((region) => region.selected === true)
-    .map((region) => ({
-      ...region,
-      ContainedComponents: filterSelectedComponents(region.ContainedComponents),
+function filterSelectedSections(sections: Section[]): Section[] {
+  return sections
+    .filter((section) => section.selected === true)
+    .map((section) => ({
+      ...section,
+      Contained_Components: filterSelectedComponents(section.Contained_Components),
     }));
 }
 
@@ -28,13 +29,15 @@ function filterSelectedPageStructure(
   pageStructure: PageComposition
 ): PageComposition {
   return {
-    SectionDivision: filterSelectedRegions(pageStructure.SectionDivision),
+    Sections: filterSelectedSections(pageStructure.Sections),
   };
 }
 
-export function checkMissingSpecs(designSpecs: DesignSpec) {
-  const missingSpecs = [];
-  for (const key in designSpecs) {
+export function checkMissingSpecs(designSpecs: DesignSpec): (SpecType)[] {
+  const missingSpecs: (SpecType)[] = [];
+  const keys = Object.keys(designSpecs) as Array<SpecType>;
+  
+  for (const key of keys) {
     if (designSpecs[key].value < 0) {
       missingSpecs.push(key);
     }
@@ -42,7 +45,7 @@ export function checkMissingSpecs(designSpecs: DesignSpec) {
   return missingSpecs;
 }
 
-export function imageUploadUtil(uploadedPages: Ref<UploadImage[]>, file: File, currentPageIndex: Ref<number>) {
+export function imageUploadUtil(uploadedPages: Ref<UploadImage[]>, file: File, callback: () => void) {
   const imageId = Date.now().toString();
   const newImage: UploadImage = {
     id: imageId,
@@ -52,7 +55,7 @@ export function imageUploadUtil(uploadedPages: Ref<UploadImage[]>, file: File, c
     analysisComplete: false,
   };
   uploadedPages.value.push(newImage);
-  currentPageIndex.value = uploadedPages.value.length - 1;
+  callback();
 
   const reader = new FileReader();
   reader.readAsDataURL(file);
@@ -71,9 +74,9 @@ export function imageUploadUtil(uploadedPages: Ref<UploadImage[]>, file: File, c
           );
           if (imageIndex !== -1) {
             const spec = response.data.data.spec as SPEC;
-            spec.PageStructure.SectionDivision.forEach((region) => {
+            spec.Page_Composition.Sections.forEach((region) => {
               region.selected = true;
-              region.ContainedComponents.forEach((component) => {
+              region.Contained_Components.forEach((component) => {
                 component.selected = true;
               });
             });
@@ -86,26 +89,6 @@ export function imageUploadUtil(uploadedPages: Ref<UploadImage[]>, file: File, c
       .catch((error) => {
         console.error("Error uploading image:", error);
       });
-    axios.post("/image_reference", {
-      image: base64Image,
-      save_name: file.name,
-      spec: ""
-    })
-    .then((response) => {
-      if(response.data.success) {
-        console.log("UI attribute: ", response.data.data.attribute);
-        const imageIndex = uploadedPages.value.findIndex(
-            (img) => img.id === imageId
-          );
-        if (imageIndex !== -1) {
-          const reference = response.data.data.attribute as Reference;
-          uploadedPages.value[imageIndex].reference = reference;
-        }
-      }
-    })
-    .catch(error => {
-      console.error("Error uploading image:", error);
-    });
   };
 }
 
@@ -115,30 +98,24 @@ export function imageGenerationUtil(
   promptText: Ref<string>,
   designSpecs: Ref<DesignSpec>
 ) {
-  const spec: Partial<SPEC> = {};
-
-  for (const key in designSpecs.value) {
-    const designSpec = designSpecs.value[key];
-    const pageIndex = designSpec.value;
-    if (pageIndex >= 0 && pageIndex < uploadedPages.value.length) {
-      const page = uploadedPages.value[pageIndex];
-      if (page && page.spec) {
-        switch (key) {
-          case "Color":
-            spec.VisualStyle = page.spec.VisualStyle;
-            break;
-          case "Information":
-            spec.UIDescription = page.spec.UIDescription;
-            break;
-          case "Layout":
-            spec.PageStructure = filterSelectedPageStructure(
-              page.spec.PageStructure
-            );
-            break;
+  const spec: Partial<SPEC> = {
+  };
+  const keys = Object.keys(designSpecs) as Array<SpecType>;
+  
+  let ui_design_specification:Partial<UIDesignSpecification> = {};
+  for (const key of keys) {
+    if (key === "Page_Composition") {
+      spec.Page_Composition= filterSelectedPageStructure(
+        uploadedPages.value[designSpecs.value[key].value].spec?.Page_Composition || {
+          Sections: [],
         }
-      }
+      );
+    }
+    else {
+      ui_design_specification[key] = uploadedPages.value[designSpecs.value[key].value].spec?.UI_Design_Specification[key] || "";
     }
   }
+  spec.UI_Design_Specification = ui_design_specification as UIDesignSpecification;
 
   const generatedPage: GeneratedImage = {
     spec: spec as SPEC,

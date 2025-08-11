@@ -1,10 +1,6 @@
 <template>
-  <v-row>
-    <v-col class="pa-4 pt-2">
-      <UploadedPages></UploadedPages>
-      <GeneratedPages></GeneratedPages>
-    </v-col>
-  </v-row>
+  <GeneratedPages></GeneratedPages>
+  <UploadedPages></UploadedPages>
 </template>
 
 <script lang="ts" setup>
