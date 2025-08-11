@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useSpecStore } from "~/store/SpecStore";
+import { useSpecStore } from "~/store/specStore";
 import LayerDisplay from "./LayerDisplay.vue";
 
 defineProps({
   currentTab: {
     type: Number,
     required: true,
+  },
+  editable: {
+    type: Boolean,
+    default: true,
   },
 });
 
@@ -30,7 +34,7 @@ const pages = computed(() => specStore.uploadedPages);
 
   <LayerDisplay
     :page="pages[currentTab]"
-    :checkable="true"
+    :checkable="editable"
     :query="keyword"
   ></LayerDisplay>
 </template>

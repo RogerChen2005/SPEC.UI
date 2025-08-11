@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import axios from '~/helpers/RequestHelper';
 import { ref, reactive, computed, watch } from 'vue';
-import { useSpecStore } from '~/store/SpecStore';
+import { useSpecStore } from '~/store/specStore';
 
 const specStore = useSpecStore();
 const selectedImage = computed(() => specStore.selectedUploadedImage)

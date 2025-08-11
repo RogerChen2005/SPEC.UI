@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, type ComponentPublicInstance, nextTick } from "vue";
 import type { VCard } from "vuetify/components";
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
-import { useSpecStore } from "~/store/SpecStore";
+import { useSpecStore } from "~/store/specStore";
 import CDialog from "./UI/CDialog.vue";
 import DetailedDialog from "./DetailedDialog.vue";
 
@@ -31,6 +31,8 @@ function uploadImage() {
           currentPage.value = uploadedPages.value.length - 1;
           updateActiveSlide();
         });
+      },()=>{
+        openDialog(uploadedPages.value.length - 1);
       });
     }
   };
@@ -109,8 +111,10 @@ onMounted(() => {
             :key="index"
             class="slide"
           >
-            <v-card @click="openDialog(index)" link class="uploaded-page">
-              <template v-if="page.analysisComplete">
+            <v-card @click="openDialog(index)" link class="uploaded-page" :class="{
+              'current-page': currentPage === index
+            }">
+              <template v-if="page.complete">
                 <v-img :src="page.url" height="400px" cover></v-img>
               </template>
               <template v-else>
@@ -220,6 +224,10 @@ onMounted(() => {
 }
 
 .uploaded-page {
-  border: solid 4px rgba(var(--v-border-color), 0.2);
+  border: solid 6px rgba(var(--v-border-color), 0);
+}
+
+.current-page{
+  border: solid 6px rgba(var(--v-border-color), 0.2);
 }
 </style>

@@ -42,21 +42,20 @@ export interface SPEC {
   UI_Design_Specification: UIDesignSpecification;
 }
 
-export interface UploadImage {
-  id: string;
-  name: string;
-  url: string;
-  file?: File;
+export interface BaseImage {
   spec?: SPEC;
-  analysisComplete: boolean;
-  selected?: boolean;
+  complete: boolean;
+  url: string;
 }
 
-export interface GeneratedImage {
-  spec: SPEC;
+export interface UploadImage extends BaseImage {
+  id: string;
+  name: string;
+  file?: File;
+}
+
+export interface GeneratedImage extends BaseImage {
   code?: string;
-  render_image?: string;
-  generating: boolean;
   time: Date;
 }
 

@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { ref, computed, toRaw } from 'vue';
-import { useSpecStore } from '~/store/SpecStore';
+import { useSpecStore } from '~/store/specStore';
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import SmoothPicture from '~/components/SmoothPicture.vue';
 import axios from '~/helpers/RequestHelper';

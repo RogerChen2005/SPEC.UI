@@ -13,24 +13,37 @@
     </template>
     <template #content>
       <v-row align="center">
-        <v-btn
-          @click="backHome"
-          variant="plain"
-          value="home"
-          icon="mdi-home"
-          class="ml-4"
-        >
-        </v-btn>
-        <v-col>
-          <v-stepper v-model="tab" color="primary">
+        <v-col cols="2">
+          <v-btn
+            @click="backHome"
+            variant="plain"
+            value="home"
+            icon="mdi-home"
+            class="ml-4"
+          >
+          </v-btn>
+        </v-col>
+        <v-col cols="8">
+          <v-stepper v-model="tab" style="background-color: transparent" flat>
             <v-stepper-header>
-              <v-stepper-item value="1" title="Coarse Comp"></v-stepper-item>
-              <v-divider></v-divider>
-              <v-stepper-item value="2" title="Fine Edit"></v-stepper-item>
+              <v-stepper-item
+                value="1"
+                title="Coarse Comp"
+                color="primary"
+              ></v-stepper-item>
+              <v-divider thickness="3" opacity="0.5" class="mx-2 rounded"></v-divider>
+              <v-stepper-item
+                value="2"
+                title="Fine Edit"
+                color="primary"
+              ></v-stepper-item>
             </v-stepper-header>
           </v-stepper>
         </v-col>
+        <v-spacer></v-spacer>
       </v-row>
+
+      <v-divider></v-divider>
 
       <v-window v-model="tab">
         <v-window-item value="1">

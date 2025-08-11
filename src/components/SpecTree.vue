@@ -107,7 +107,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useSpecStore } from "~/store/SpecStore";
+import { useSpecStore } from "~/store/specStore";
 import type { Component } from "~/types";
 import axios from '~/helpers/RequestHelper'
 

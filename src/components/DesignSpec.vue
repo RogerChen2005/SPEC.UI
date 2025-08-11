@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { checkMissingSpecs } from "~/helpers/ReferenceHelper";
-import { useSpecStore } from "~/store/SpecStore";
+import { useSpecStore } from "~/store/specStore";
 import LayerDisplay from "./LayerDisplay.vue";
 import CDialog from "./UI/CDialog.vue";
 import SelectSpec from "./SelectSpec.vue";
@@ -9,17 +9,20 @@ import type { SpecType } from "~/types";
 
 const specStore = useSpecStore();
 const designSpecs = computed(() => specStore.designSpecs);
-const pageCompositionReference = computed(
-  () => specStore.pageCompositionReference
-);
+const pageCompositionReference = computed({
+  get: () => specStore.pageCompositionReference,
+  set: (val) => {
+    specStore.pageCompositionReference = val;
+  },
+});
 const warningVisible = ref(false);
 const missingLabels = ref<string[]>([]);
 const uploadedPages = computed(() => specStore.uploadedPages);
 const selectDialogVisible = ref(false);
-const selectingType = ref<SpecType>("Color_System");
+const selectingType = ref<SpecType | "Structure">("Color_System");
 
 function generate() {
-  missingLabels.value = checkMissingSpecs(designSpecs.value);
+  missingLabels.value = checkMissingSpecs(designSpecs.value, pageCompositionReference.value);
   if (missingLabels.value.length > 0) {
     warningVisible.value = true;
   } else {
@@ -27,67 +30,122 @@ function generate() {
   }
 }
 
-function addSpec(index: SpecType) {
+function addSpec(index: SpecType | "Structure") {
   selectingType.value = index;
   selectDialogVisible.value = true;
 }
 
 function handleSelection(index: number) {
-  designSpecs.value[selectingType.value].value = index;
+  if (selectingType.value === "Structure") {
+    pageCompositionReference.value = index;
+  } else {
+    designSpecs.value[selectingType.value].value = index;
+  }
   selectDialogVisible.value = false;
 }
 </script>
 
 <template>
-  <v-sheet class="d-flex align-center pa-4 pb-0 pt-6">
-    <v-icon icon="mdi-folder-multiple-outline" class="mr-2"></v-icon>
-    <v-list-item-title class="font-weight-bold">My Project</v-list-item-title>
-    <v-spacer></v-spacer>
-  </v-sheet>
-  <v-card class="pa-4" height="100%">
-    <v-card-title class="font-weight-bold pl-0">设计规范</v-card-title>
-    <v-list variant="text" class="px-2 rounded" style="background: transparent">
-      <v-list-item
-        v-for="(item, index) in designSpecs"
-        :key="index"
-        class="mb-4 border rounded"
-      >
-        <template v-slot:prepend>
-          <v-icon :icon="item.icon"></v-icon>
-        </template>
-        <v-list-item-title>{{ item.label }}</v-list-item-title>
-        <template v-slot:append>
-          <template v-if="item.value >= 0">
-            <v-chip
-              size="small"
-              variant="tonal"
-              closable
-              @click:close="item.value = -1"
-              @click="addSpec(index)"
-              link
-            >
-              Img {{ item.value + 1 }}
-            </v-chip>
-          </template>
-          <template v-else>
-            <v-btn
-              variant="text"
-              size="small"
-              @click="addSpec(index)"
-              icon="mdi-plus"
-            >
-            </v-btn>
-          </template>
-        </template>
-      </v-list-item>
-    </v-list>
+  <v-container fluid class="pa-2">
+    <v-sheet class="d-flex align-center ma-0 mt-4">
+      <v-icon icon="mdi-folder-multiple-outline" class="mr-2"></v-icon>
+      <div class="text-h5 font-weight-bold">My Project</div>
+      <v-spacer></v-spacer>
+    </v-sheet>
+    <div class="mt-4 d-flex align-center">
+      <div class="text-h6 font-weight-bold">Project Structure</div>
+      <v-spacer></v-spacer>
+      <!-- <v-select
+        label="Select Page"
+        :items="uploadedPages.map((p, i) => ({ name: p.name, index: i }))"
+        item-title="name"
+        item-value="index"
+        v-model="pageCompositionReference"
+        variant="plain"
+        density="compact"
+        hide-details
+        style="max-width: 25px"
+      ></v-select> -->
+      <template v-if="pageCompositionReference < 0">
+        <v-btn
+          variant="text"
+          size="small"
+          @click="addSpec('Structure')"
+          icon="mdi-plus"
+        >
+        </v-btn>
+      </template>
+      <template v-else>
+        <v-btn variant="text" @click="addSpec('Structure')" icon="mdi-pencil-outline">
+        </v-btn>
+        <v-btn
+          variant="text"
+          @click="pageCompositionReference = -1"
+          icon="mdi-delete-outline"
+        >
+        </v-btn>
+      </template>
+    </div>
     <template v-if="pageCompositionReference >= 0">
-      <h1 class="text-h6 font-weight-bold">Containing Specs</h1>
       <LayerDisplay
         :page="uploadedPages[pageCompositionReference]"
       ></LayerDisplay>
     </template>
-
+    <div class="text-h6 font-weight-bold mt-4">Design Specs</div>
+    <v-card
+      v-for="(item, index) in designSpecs"
+      :key="index"
+      class="mt-4 rounded-lg"
+      :title="item.label"
+      variant="tonal"
+    >
+      <template v-slot:prepend>
+        <v-icon :icon="item.icon" class="mr-2"></v-icon>
+      </template>
+      <template v-slot:append>
+        <template v-if="item.value >= 0">
+          <!-- <v-chip
+            size="small"
+            variant="tonal"
+            closable
+            @click:close="item.value = -1"
+            @click="addSpec(index)"
+            link
+          >
+            Img {{ item.value + 1 }}
+          </v-chip> -->
+          <v-btn
+            variant="text"
+            @click="addSpec(index)"
+            icon="mdi-pencil-outline"
+          >
+          </v-btn>
+          <v-btn
+            variant="text"
+            @click="item.value = -1"
+            icon="mdi-delete-outline"
+          >
+          </v-btn>
+        </template>
+        <template v-else>
+          <v-btn
+            variant="text"
+            size="small"
+            @click="addSpec(index)"
+            icon="mdi-plus"
+          >
+          </v-btn>
+        </template>
+      </template>
+      <template #subtitle v-if="item.value >= 0">
+        {{ uploadedPages[item.value].name }}
+      </template>
+      <v-card-text v-if="item.value >= 0">
+        <div class="spec-text">
+          {{ uploadedPages[item.value].spec?.UI_Design_Specification[index] }}
+        </div>
+      </v-card-text>
+    </v-card>
     <v-btn
       block
       color="primary"
@@ -97,7 +155,7 @@ function handleSelection(index: number) {
     >
       Generate
     </v-btn>
-  </v-card>
+  </v-container>
 
   <v-dialog v-model="warningVisible" width="35%">
     <template v-slot:default="{ isActive }">
@@ -119,12 +177,20 @@ function handleSelection(index: number) {
   </v-dialog>
 
   <Teleport to="body">
-    <CDialog v-model:visible="selectDialogVisible" width="80%" height="80%">
+    <CDialog v-model:visible="selectDialogVisible" width="70%" height="80%">
       <template #header>
         <h2 class="text-h4 font-weight-bold ml-4">Spec Select</h2>
         <h2 class="text-h6 ml-4">Referencing {{ selectingType }}</h2>
       </template>
-      <SelectSpec :type="selectingType" @selected="handleSelection"/>
+      <SelectSpec :type="selectingType" @selected="handleSelection" />
     </CDialog>
   </Teleport>
 </template>
+
+<style scoped>
+.spec-text {
+  overflow: auto;
+  text-overflow: ellipsis;
+  max-height: 80px;
+}
+</style>

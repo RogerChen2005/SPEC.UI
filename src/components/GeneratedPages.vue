@@ -5,8 +5,9 @@ import {
   nextTick,
   onMounted,
   computed,
+  watch,
 } from "vue";
-import { useSpecStore } from "~/store/SpecStore";
+import { useSpecStore } from "~/store/specStore";
 import CDialog from "./UI/CDialog.vue";
 import DetailedDialog from "./DetailedDialog.vue";
 
@@ -14,26 +15,33 @@ const specStore = useSpecStore();
 const generatedPages = computed(() => specStore.generatedPages);
 
 const slideRefs = ref<InstanceType<typeof Element>[]>([]);
-const activeSlide = ref(0);
+const activeSlide = computed({
+  get: () => specStore.currentGeneratedPageIndex,
+  set: (val) => {
+    specStore.currentGeneratedPageIndex = val;
+  },
+});
 const dialogOpened = ref(false);
 const viewingPage = ref(0);
 
-const setSlideRef = (el: ComponentPublicInstance | Element | null) => {
+watch(activeSlide, () => {
+  updateActiveSlide();
+});
+
+function setSlideRef(el: ComponentPublicInstance | Element | null, index: number) {
   if (el) {
-    slideRefs.value.push(el as Element);
+    slideRefs.value[index] = el as Element;
   }
 };
 
-const scrollPrev = () => {
+function scrollPrev() {
   activeSlide.value =
     (activeSlide.value - 1 + generatedPages.value.length) %
     generatedPages.value.length;
-  updateActiveSlide();
 };
 
-const scrollNext = () => {
+function scrollNext() {
   activeSlide.value = (activeSlide.value + 1) % generatedPages.value.length;
-  updateActiveSlide();
 };
 
 function updateActiveSlide() {
@@ -100,13 +108,13 @@ onMounted(() => {
               'left-slide': activeSlide === index + 1,
               'right-slide': activeSlide === index - 1,
             }"
-            :ref="setSlideRef"
+            :ref="(el) => setSlideRef(el, index)"
             v-ripple="activeSlide === index"
             @click="openDialog(index)"
           >
             <div class="slide-content rounded-lg">
-              <template v-if="!page.generating && page.render_image">
-                <img class="slide-image" :src="page.render_image" />
+              <template v-if="page.complete && page.url">
+                <img class="slide-image" :src="page.url" />
               </template>
               <template v-else>
                 <v-sheet
@@ -143,7 +151,7 @@ onMounted(() => {
         <h2 class="text-h6 ml-4">Generated Page</h2>
         <h2 class="text-h4 font-weight-bold ml-4">Page Details</h2>
       </template>
-      <DetailedDialog :page-index="viewingPage" @close="dialogOpened = false">
+      <DetailedDialog :editable="false" :page-index="viewingPage" @close="dialogOpened = false">
       </DetailedDialog>
     </CDialog>
   </teleport>
