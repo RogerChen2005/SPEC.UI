@@ -145,6 +145,7 @@ export function imageGenerationUtil(
     generating: true,
     code: "",
     render_image: "",
+    time: new Date(),
   };
 
   generatedPages.value.push(generatedPage);
@@ -162,16 +163,7 @@ export function imageGenerationUtil(
         generatedPages.value[index].render_image =
           "data:image/png;base64," + response.data.data.render_image;
         generatedPages.value[index].generating = false;
-        const fileData = JSON.stringify(response.data, null, 2);
-        const blob = new Blob([fileData], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "example.json";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        generatedPages.value[index].spec = response.data.data.spec as SPEC;
       }
     })
     .catch((error) => {

@@ -145,9 +145,30 @@ const applySpecEdit = (text: string) => {
   console.log("start editing spec from detailpane:", JSON.stringify(payload));
   axios.post("/edit_spec", payload).then(response => {
     console.log("Spec edited successfully:", response.data.data.spec);
-    // Optionally, you can emit an event or update the store here
-    specStore.selectedComponent = response.data.data.spec;
-    specStore.updateComponentInCurrentPage(response.data.data.spec);
+    
+    // 创建新的 GeneratedImage 而不是覆盖原有数据
+    const currentPage = specStore.generatedPages[specStore.currentGeneratedPageIndex];
+    const newGeneratedImage = {
+      spec: { ...currentPage.spec },
+      generating: false,
+      code: currentPage.code || "",
+      render_image: currentPage.render_image || "",
+      time: new Date(),
+    };
+    
+    // 更新新页面中的组件
+    newGeneratedImage.spec.PageStructure.SectionDivision.forEach(region => {
+      const componentIndex = region.ContainedComponents.findIndex(
+        comp => comp.ComponentID === response.data.data.spec.ComponentID
+      );
+      
+      if (componentIndex !== -1) {
+        region.ContainedComponents[componentIndex] = response.data.data.spec;
+      }
+    });
+    
+    specStore.generatedPages.push(newGeneratedImage);
+    specStore.currentGeneratedPageIndex = specStore.generatedPages.length - 1;
   }).catch(error => {
     console.error("Error editing spec:", error);
   });
