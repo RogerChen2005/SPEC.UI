@@ -53,7 +53,7 @@ function handleSelection(index: number) {
       <v-spacer></v-spacer>
     </v-sheet>
     <div class="mt-4 d-flex align-center">
-      <div class="text-h6 font-weight-bold">Project Structure</div>
+      <div class="text-h6 font-weight-bold">Page Structure</div>
       <v-spacer></v-spacer>
       <!-- <v-select
         label="Select Page"
@@ -91,7 +91,7 @@ function handleSelection(index: number) {
         :page="uploadedPages[pageCompositionReference]"
       ></LayerDisplay>
     </template>
-    <div class="text-h6 font-weight-bold mt-4">Design Specs</div>
+    <div class="text-h6 font-weight-bold mt-4">Page Specification</div>
     <v-card
       v-for="(item, index) in designSpecs"
       :key="index"
@@ -104,16 +104,6 @@ function handleSelection(index: number) {
       </template>
       <template v-slot:append>
         <template v-if="item.value >= 0">
-          <!-- <v-chip
-            size="small"
-            variant="tonal"
-            closable
-            @click:close="item.value = -1"
-            @click="addSpec(index)"
-            link
-          >
-            Img {{ item.value + 1 }}
-          </v-chip> -->
           <v-btn
             variant="text"
             @click="addSpec(index)"
@@ -142,7 +132,20 @@ function handleSelection(index: number) {
       </template>
       <v-card-text v-if="item.value >= 0">
         <div class="spec-text">
-          {{ uploadedPages[item.value].spec?.UI_Design_Specification[index] }}
+            <div
+            v-html="
+              ((text) =>
+              text
+                ? text.replace(
+                  /#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})/g,
+                  (match) =>
+                  `<span style='display: inline-block; width: 1em; height: 1em; background-color: ${match}; border: 1px solid rgba(var(--v-border-color),0.2); vertical-align: bottom; margin: 3px; border-radius: 2px;'></span>${match}`
+                )
+                : '')(
+              uploadedPages[item.value].spec?.UI_Design_Specification[index]
+              )
+            "
+            ></div>
         </div>
       </v-card-text>
     </v-card>
@@ -191,6 +194,6 @@ function handleSelection(index: number) {
 .spec-text {
   overflow: auto;
   text-overflow: ellipsis;
-  max-height: 80px;
+  max-height: 130px;
 }
 </style>

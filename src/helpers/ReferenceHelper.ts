@@ -138,7 +138,7 @@ export function imageGenerationUtil(
 
   const generatedPage: GeneratedImage = {
     spec: spec as SPEC,
-    complete: true,
+    complete: false,
     code: "",
     url: "",
     time: new Date(),
@@ -163,7 +163,7 @@ export function imageGenerationUtil(
         generatedPages.value[index].code = response.data.data.code;
         generatedPages.value[index].url =
           "data:image/png;base64," + response.data.data.render_image;
-        generatedPages.value[index].complete = false;
+        generatedPages.value[index].complete = true;
         generatedPages.value[index].spec = response.data.data.spec as SPEC;
       }
     })
