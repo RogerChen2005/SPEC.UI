@@ -136,12 +136,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, toRaw } from "vue";
 import { useSpecStore } from "~/store/SpecStore";
 import type { Component, Section } from "~/types";
 import axios from '~/helpers/RequestHelper'
 import ColorTextField from './ColorTextField.vue'
-import { spec } from "node:test/reporters";
 
 const specStore = useSpecStore();
 const currentTab = ref<number>(0);
@@ -163,7 +162,7 @@ const currentPage = computed(() => {
 function selectComponent(component: Component) {
   // 更新 specStore 中的 selectedComponent
   specStore.selectedComponent = component;
-  specStore.selectedSection = null;
+  specStore.selectedSection = undefined;
   updateComponentInput('Function', component.Function);
   updateComponentInput('Color_Scheme', component.Color_Scheme);
   updateComponentInput('Component_Layout_Style', component.Component_Layout_Style);
@@ -173,22 +172,41 @@ function selectComponent(component: Component) {
 function selectSection(section: Section) {
   // 更新 specStore 中的 selectedSection
   specStore.selectedSection = section;
-  specStore.selectedComponent = null;
+  specStore.selectedComponent = undefined;
   console.log('Selected section:', section);
 }
 
 function selectPage() {
-  specStore.selectedSection = null;
-  specStore.selectedComponent = null;
+  specStore.selectedSection = undefined;
+  specStore.selectedComponent = undefined;
+  console.log(specStore.currentGeneratedPageIndex);
 }
 
 
 function edit(component: Component) {
-  // 这里可以添加编辑组件的逻辑
-  component.Color_Scheme = getComponentInput('Color_Scheme');
-  component.Component_Layout_Style = getComponentInput('Component_Layout_Style');
-  component.Function = getComponentInput('Function');
   console.log('Edit component:', component);
+  let text = "User wants to edit ";
+  if(component.Function != getComponentInput('Function')) {
+    text += "Function: " + "with requirements: " + component.Function + ", ";
+  }
+  if(component.Color_Scheme != getComponentInput('Color_Scheme')) {
+    text += "Color Scheme: " + "with requirements: " + component.Color_Scheme + ", ";
+  }
+  if(component.Component_Layout_Style != getComponentInput('Component_Layout_Style')) {
+    text += "Layout Style: " + "with requirements: " + component.Component_Layout_Style + ", ";
+  }
+
+  let payload = {
+    spec: toRaw(component),
+    text: text
+  };
+  axios.post("/edit_spec", payload).then((response) => {
+    if(response.data.success) {
+      console.log("edit spec success:", response.data);
+      Object.assign(component, response.data.data.spec);
+      componentInputs.value = {};
+    }
+  })
 }
 
 function getComponentIcon(componentType: Component["Component_Type"]) {
@@ -239,7 +257,6 @@ function generateCode() {
     if(response.data.success) {
       console.log("generate code success:", response.data);
       specStore.generatedPages[index].code =  response.data.data.code;
-      specStore.generatedPages[index].render_image = response.data.data.render_image;
       specStore.generatedPages[index].complete = true;
       specStore.generatedPages[index].url = "data:image/png;base64," + response.data.data.render_image;
       console.log("Updated generated page:", specStore.generatedPages[index]);

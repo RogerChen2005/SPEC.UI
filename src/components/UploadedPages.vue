@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, type ComponentPublicInstance, nextTick } from "vue";
-import type { VCard } from "vuetify/components";
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import { useSpecStore } from "~/store/SpecStore";
 import CDialog from "./UI/CDialog.vue";

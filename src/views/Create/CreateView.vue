@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import UploadPages from "./CoarseComp.vue";
 import EditSpec from "./EditSpec.vue";
 import { useRouter } from "vue-router";

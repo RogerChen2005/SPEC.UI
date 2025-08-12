@@ -14,29 +14,37 @@
           </v-row>
         </v-card> -->
     <v-row class="mt-2 align-center">
-      <v-col cols="12" md="4">
-      <h2 class="text-h5 font-weight-bold">Generated Pages</h2>
+      <v-col cols="12" md="4" class="d-flex align-center">
+        <v-btn
+          icon="mdi-arrow-left"
+          variant="text"
+          size="small"
+          @click="back"
+          class="ml-1"
+          title="Previous Page"
+        ></v-btn>
+        <h2 class="text-h5 font-weight-bold mr-2">Generated Pages</h2>
       </v-col>
       <v-col cols="12" md="8" class="d-flex justify-end">
-      <div class="d-flex" style="gap: 8px;">
-        <v-btn
-        variant="flat"
-        class="text-none"
-        style="width: 180px;"
-        @click="openMarkDialog"
-        >
-        Mark
-        </v-btn>
-        <v-btn
-        color="primary"
-        variant="outlined"
-        class="text-none"
-        style="width: 180px;"
-        @click="applyExport"
-        >
-        Export
-        </v-btn>
-      </div>
+        <div class="d-flex" style="gap: 8px;">
+          <v-btn
+            variant="flat"
+            class="text-none"
+            style="width: 180px;"
+            @click="openMarkDialog"
+          >
+            Mark
+          </v-btn>
+          <v-btn
+            color="primary"
+            variant="outlined"
+            class="text-none"
+            style="width: 180px;"
+            @click="applyExport"
+          >
+            Export
+          </v-btn>
+        </div>
       </v-col>
     </v-row>
     <v-container class="pa-0 ma-0" fluid>
@@ -141,7 +149,6 @@
               aspect-ratio="1"
               cover
               width="200"
-              @click="selectImageSpec(img.id)"
             ></v-img>
             <v-btn
               icon="mdi-close"
@@ -193,8 +200,6 @@ const currentPage = ref(0);
 const specStore = useSpecStore();
 const uploadedPages = computed(() => specStore.uploadedPages);
 const generatedPages = computed(() => specStore.generatedPages);
-const selectedImage = computed(() => specStore.selectedUploadedImage)
-const page = computed(() => generatedPages.value[specStore.currentGeneratedPageIndex]);
 const markText = ref('');
 const markDialogOpened = ref(false);
 
@@ -272,12 +277,11 @@ function applyExport() {
     const exportData = {
       spec: toRaw(currentPageData.spec),
       code: currentPageData.code,
-      render_image: currentPageData.render_image,
       time: currentPageData.time,
       mark: currentPageData.mark || '',
+      url: currentPageData.url || '',
     };
     console.log("Exporting data:", exportData);
-    // Implement your export logic here, e.g., save to file or send to server
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -296,10 +300,10 @@ function handleRemoveImage(id: string) {
   specStore.uploadedPages = specStore.uploadedPages.filter((img: { id: string }) => img.id !== id);
 }
 
-function selectImageSpec(id: string) {
+// function selectImageSpec(id: string) {
 
-  // Logic to handle image selection
-}
+//   // Logic to handle image selection
+// }
 
 function getCurrentSelection() {
   if (specStore.selectedComponent) {
@@ -345,18 +349,14 @@ function uploadImage() {
 }
 
 function confirmEditSpec()  {
-  let choice = 0;
   let index = specStore.currentGeneratedPageIndex;
   let spec = "";
   if(specStore.selectedComponent) {
-    spec = toRaw(specStore.selectedComponent);
-    choice = 0;
+    spec = JSON.stringify(toRaw(specStore.selectedComponent));
   } else if (specStore.selectedSection) {
-    spec = toRaw(specStore.selectedSection);
-    choice = 1;
+    spec = JSON.stringify(toRaw(specStore.selectedSection));
   } else {
-    spec = toRaw(generatedPages.value[index].spec);
-    choice = 2;
+    spec = JSON.stringify(toRaw(generatedPages.value[index].spec));
   }
 
   console.log("Confirming edit spec with data:", spec);
@@ -373,17 +373,16 @@ function confirmEditSpec()  {
     if(specStore.selectedComponent) {
       specStore.selectedComponent = response.data.data.spec as Component;
     }
-    else if(specStore.selectSection) {
-      specStore.selectSection = response.data.data.spec as Section;
+    else if(specStore.selectedSection) {
+      specStore.selectedSection = response.data.data.spec as Section;
     } else {
       specStore.generatedPages[index].spec = response.data.data.spec as SPEC;
     } 
     // 创建新的 GeneratedImage 而不是覆盖原有数据
     const newGeneratedImage = {
-      spec: generatedPages.value[index].spec,
+      spec: generatedPages.value[index].spec as SPEC,
       complete: false,
       code: generatedPages.value[index].code || "",
-      render_image: generatedPages.value[index].render_image || "",
       url: generatedPages.value[index].url,
       time: new Date(),
     };
@@ -394,6 +393,10 @@ function confirmEditSpec()  {
     console.error("Error editing spec:", error);
   });
 };
+
+function back() {
+  specStore.tab = "1";
+}
 </script>
 
 <style scoped>
