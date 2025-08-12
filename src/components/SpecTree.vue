@@ -211,24 +211,38 @@ function edit(component: Component) {
 
 function getComponentIcon(componentType: Component["Component_Type"]) {
   switch (componentType) {
-    case "Image":
-      return "mdi-image-outline";
-    case "Text":
-      return "mdi-format-text";
     case "Menu":
       return "mdi-menu";
     case "Card":
       return "mdi-card-outline";
+    case "List":
+      return "mdi-format-list-bulleted";
+    case "Statistic":
+      return "mdi-chart-bar";
+    case "Avatar":
+      return "mdi-account-circle";
     case "Button":
       return "mdi-gesture-tap-button";
+    case "Input.Search":
+      return "mdi-magnify";
     case "Tabs":
       return "mdi-tab";
-    case "Input":
-      return "mdi-form-textbox";
-    case "Form":
-      return "mdi-form-select";
-    case "Divider":
-      return "mdi-minus";
+    case "Table":
+      return "mdi-table";
+    case "Tag":
+      return "mdi-tag";
+    case "Empty":
+      return "mdi-folder-remove";
+    case "Pagination":
+      return "mdi-page-next";
+    case "Descriptions":
+      return "mdi-text-box-outline";
+    case "Dropdown":
+      return "mdi-menu-down";
+    case "Typography.Title":
+      return "mdi-format-title";
+    case "Collapse":
+      return "mdi-arrow-collapse";
     default:
       return "mdi-help-box-outline";
   }
