@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import LayerSelect from "~/components/LayerSelect.vue";
-import { useSpecStore } from "~/store/specStore";
+import { useSpecStore } from "~/store/SpecStore";
 import type { BaseImage, SpecType } from "~/types";
 
 const props = defineProps({

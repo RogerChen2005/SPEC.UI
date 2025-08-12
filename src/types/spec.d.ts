@@ -57,6 +57,7 @@ export interface UploadImage extends BaseImage {
 export interface GeneratedImage extends BaseImage {
   code?: string;
   time: Date;
+  mark?: string;
 }
 
 export type SpecType = keyof UIDesignSpecification;
@@ -69,12 +70,3 @@ export type DesignSpec = Record<
     value: number;
   }
 >;
-
-export interface Reference {
-  承担的功能: string;
-  承载的信息: string;
-  布局样式: string;
-  组件的配色样式: string;
-  所处的位置: string;
-  组件内的布局样式: string;
-}

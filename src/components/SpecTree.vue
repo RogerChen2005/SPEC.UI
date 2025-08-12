@@ -26,29 +26,34 @@
     flat
     hide-details
     class="ma-2"
+    @click="selectPage"
   ></v-select>
 
   <div v-if="currentPage">
     <v-list density="compact" nav>
       <template v-if="currentPage.spec">
         <template
-          v-for="region in currentPage.spec.PageStructure.SectionDivision"
-          :key="region.SectionID"
+          v-for="section in currentPage.spec.Page_Composition.Sections"
+          :key="section.Section_Name"
         >
           <v-list-group
-            v-if="!keyword || region.SectionName.includes(keyword)"
-            :value="region.SectionID"
+            v-if="!keyword || section.Section_Name.includes(keyword)"
+            :value="section.Section_Name"
           >
             <template v-slot:activator="{ props }">
-              <v-list-item v-bind="props">
+              <v-list-item 
+                v-bind="props"
+                @click="selectSection(section)"
+                class="section-item"
+              >
                 <template #title>
                   <v-icon>mdi-texture-box</v-icon>
-                  {{ region.SectionName }}
+                  {{ section.Section_Name }}
                 </template>
               </v-list-item>
             </template>
 
-            <template v-for="component in region.ContainedComponents" :key="component.ComponentID">
+            <template v-for="component in section.Contained_Components" :key="component.Function">
               <v-menu
                 location="end"
                 :close-on-content-click="false"
@@ -57,36 +62,62 @@
                 <template v-slot:activator="{ props }">
                   <v-list-item
                     v-bind="props"
-                    :value="component.ComponentID"
-                    :active="specStore.selectedComponent?.ComponentID === component.ComponentID"
+                    :value="component.Function"
                     @click="selectComponent(component)"
                     class="component-item"
                   >
                     <template #title>
-                      <v-icon>{{ getComponentIcon(component.ComponentType) }}</v-icon>
-                      {{ component.InformationCarried }}
+                      <v-icon>{{ getComponentIcon(component.Component_Type) }}</v-icon>
+                      {{ component.Function }}
                     </template>
                   </v-list-item>
                 </template>
 
                 <v-card width="350" elevation="5">
                   <v-card-title class="d-flex align-center text-body-2">
-                    Attributes - {{ component.InformationCarried }}
+                    Attributes - <strong>{{ component.Component_Type }}</strong>
                     <v-spacer></v-spacer>
                     <v-btn icon="mdi-close" variant="text" size="small"></v-btn>
                   </v-card-title>
                   <v-divider></v-divider>
 
                   <v-card-text>
-                    <p class="mb-2"><strong>Function:</strong> Displays product name and brand identity.</p>
-                    <p class="mb-2"><strong>Color:</strong> Displays product name and brand identity.</p>
-                    <p class="mb-2"><strong>Layout:</strong> Displays product name and brand identity.</p>
+                    <v-textarea
+                      :model-value="getComponentInput('Function')"
+                      @update:model-value="updateComponentInput('Function', $event)"
+                      label="Function"
+                      :placeholder="component.Function"
+                      rows="3"
+                      auto-grow
+                      class="mb-2"
+                    ></v-textarea>
+                    
+                    <!-- 使用自定义颜色输入组件 -->
+                    <ColorTextField
+                      :model-value="getComponentInput('Color_Scheme')"
+                      @update:model-value="updateComponentInput('Color_Scheme', $event)"
+                      label="Color"
+                      :placeholder="component.Color_Scheme"
+                      rows="3"
+                      auto-grow
+                      class="mb-2"
+                    />
+                    
+                    <v-textarea
+                      :model-value="getComponentInput('Component_Layout_Style')"
+                      @update:model-value="updateComponentInput('Component_Layout_Style', $event)"
+                      label="Layout"
+                      :placeholder="component.Component_Layout_Style"
+                      rows="3"
+                      auto-grow
+                      class="mb-2"
+                    ></v-textarea>
                   </v-card-text>
 
                   <v-divider></v-divider>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" variant="flat">Apply</v-btn>
+                    <v-btn color="primary" variant="flat" @click="edit(component)">Edit</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-menu>
@@ -100,25 +131,26 @@
   <v-spacer></v-spacer>
 
   <div class="pa-2">
-    <v-btn block color="primary" @click="generateCode" class="mb-2">Use Spec to generate code</v-btn>
-    <v-btn block variant="outlined" @click="preview">Generate Preview</v-btn>
+    <v-btn block color="primary" @click="generateCode" class="mb-2">Generate UI</v-btn>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useSpecStore } from "~/store/specStore";
-import type { Component } from "~/types";
+import { useSpecStore } from "~/store/SpecStore";
+import type { Component, Section } from "~/types";
 import axios from '~/helpers/RequestHelper'
+import ColorTextField from './ColorTextField.vue'
+import { spec } from "node:test/reporters";
 
 const specStore = useSpecStore();
 const currentTab = ref<number>(0);
 const keyword = ref("");
-
+const componentInputs = ref<Partial<Record<keyof Component, string>>>({});
 const pages = computed(() => 
-  specStore.generatedPages.map((page, index) => ({
+  specStore.generatedPages.map((page: any, index: number) => ({
     id: index,
-    name: page.time ? new Date(page.time).toLocaleString() : "",
+    name: page.mark ? page.mark : page.time ? new Date(page.time).toLocaleString() : "",
     ...page
   }))
 );
@@ -131,10 +163,35 @@ const currentPage = computed(() => {
 function selectComponent(component: Component) {
   // 更新 specStore 中的 selectedComponent
   specStore.selectedComponent = component;
+  specStore.selectedSection = null;
+  updateComponentInput('Function', component.Function);
+  updateComponentInput('Color_Scheme', component.Color_Scheme);
+  updateComponentInput('Component_Layout_Style', component.Component_Layout_Style);
   console.log('Selected component:', component);
 }
 
-function getComponentIcon(componentType: Component["ComponentType"]) {
+function selectSection(section: Section) {
+  // 更新 specStore 中的 selectedSection
+  specStore.selectedSection = section;
+  specStore.selectedComponent = null;
+  console.log('Selected section:', section);
+}
+
+function selectPage() {
+  specStore.selectedSection = null;
+  specStore.selectedComponent = null;
+}
+
+
+function edit(component: Component) {
+  // 这里可以添加编辑组件的逻辑
+  component.Color_Scheme = getComponentInput('Color_Scheme');
+  component.Component_Layout_Style = getComponentInput('Component_Layout_Style');
+  component.Function = getComponentInput('Function');
+  console.log('Edit component:', component);
+}
+
+function getComponentIcon(componentType: Component["Component_Type"]) {
   switch (componentType) {
     case "Image":
       return "mdi-image-outline";
@@ -159,6 +216,20 @@ function getComponentIcon(componentType: Component["ComponentType"]) {
   }
 }
 
+function getComponentInput(field: string) {
+  if (!componentInputs.value) {
+    componentInputs.value = {};
+  }
+  return componentInputs.value[field as keyof Component] || '';
+}
+
+function updateComponentInput(field: string, value: string) {
+  if (!componentInputs.value) {
+    componentInputs.value = {};
+  }
+  componentInputs.value[field as keyof Component] = value;
+}
+
 function generateCode() {
   axios.post("/generate_code", {
     spec: specStore.generatedPages[specStore.currentGeneratedPageIndex].spec,
@@ -172,9 +243,6 @@ function generateCode() {
   })
 }
 
-function preview() {
-
-}
 </script>
 
 <style>
@@ -188,5 +256,13 @@ function preview() {
 
 .component-item:hover {
   background-color: rgba(var(--v-theme-primary), 0.08);
+}
+
+.section-item {
+  cursor: pointer;
+}
+
+.section-item:hover {
+  background-color: rgba(var(--v-theme-secondary), 0.08);
 }
 </style>

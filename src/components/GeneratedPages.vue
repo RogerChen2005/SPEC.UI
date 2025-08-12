@@ -7,7 +7,7 @@ import {
   computed,
   watch,
 } from "vue";
-import { useSpecStore } from "~/store/specStore";
+import { useSpecStore } from "~/store/SpecStore";
 import CDialog from "./UI/CDialog.vue";
 import DetailedDialog from "./DetailedDialog.vue";
 

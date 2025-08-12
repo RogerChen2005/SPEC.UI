@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed } from "vue";
-import { useSpecStore } from "~/store/specStore";
+import { useSpecStore } from "~/store/SpecStore";
 import type { SpecType } from "~/types";
 
 const props = defineProps<{

@@ -7,7 +7,6 @@
         </v-window-item>
         <v-window-item value="2">
           <SpecTree></SpecTree>
-          <DetailPane> </DetailPane>
         </v-window-item>
       </v-window>
     </template>
@@ -65,8 +64,7 @@ import { useRouter } from "vue-router";
 import DesignSpec from "~/components/DesignSpec.vue";
 import CreateLayout from "~/layout/CreateLayout.vue";
 import SpecTree from "~/components/SpecTree.vue";
-import DetailPane from "~/components/SidePanel/DetailPane.vue";
-const tab = ref("1");
+const tab = ref("2");
 
 const router = useRouter();
 const backHome = () => {

@@ -6,6 +6,7 @@ import type {
   UploadImage,
   Component,
   DesignSpec,
+  Section,
 } from "~/types/index";
 import upload_spec from "~/example/upload_spec.json";
 import generate_spec from "~/example/generate_spec.json";
@@ -70,6 +71,8 @@ export const useSpecStore = defineStore("spec", () => {
   const selectedUploadedImage = ref<UploadImage>();
   const selectedComponent = ref<Component>();
   const currentUploadedPageIndex = ref<number>(uploadedPages.value.length - 1);
+  const selectedSection = ref<Section>();
+
 
   const designSpecs = ref<DesignSpec>({
     Color_System: {
@@ -118,6 +121,7 @@ export const useSpecStore = defineStore("spec", () => {
     selectedComponent,
     designSpecs,
     pageCompositionReference,
+    selectedSection,
     generateImage,
   };
 });
