@@ -186,6 +186,7 @@ import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import CDialog from '~/components/UI/CDialog.vue';
 import DetailedDialog from '~/components/DetailedDialog.vue';
 import axios from '~/helpers/RequestHelper';
+import type { SPEC, Component, Section } from '~/types';
 
 const textValue = ref('');
 const currentPage = ref(0);
@@ -344,13 +345,18 @@ function uploadImage() {
 }
 
 function confirmEditSpec()  {
+  let choice = 0;
+  let index = specStore.currentGeneratedPageIndex;
   let spec = "";
   if(specStore.selectedComponent) {
     spec = toRaw(specStore.selectedComponent);
+    choice = 0;
   } else if (specStore.selectedSection) {
     spec = toRaw(specStore.selectedSection);
+    choice = 1;
   } else {
-    spec = toRaw(generatedPages.value[specStore.currentGeneratedPageIndex].spec);
+    spec = toRaw(generatedPages.value[index].spec);
+    choice = 2;
   }
 
   console.log("Confirming edit spec with data:", spec);
@@ -362,16 +368,26 @@ function confirmEditSpec()  {
   };
   axios.post("/edit_spec", payload).then(response => {
     console.log("Edit spec response:", response.data);
-    
+    let origin_spec = specStore.generatedPages[index].spec;
+
+    if(specStore.selectedComponent) {
+      specStore.selectedComponent = response.data.data.spec as Component;
+    }
+    else if(specStore.selectSection) {
+      specStore.selectSection = response.data.data.spec as Section;
+    } else {
+      specStore.generatedPages[index].spec = response.data.data.spec as SPEC;
+    } 
     // 创建新的 GeneratedImage 而不是覆盖原有数据
     const newGeneratedImage = {
-      spec: response.data.data.spec,
-      generating: false,
-      code: generatedPages.value[specStore.currentGeneratedPageIndex].code || "",
-      render_image: generatedPages.value[specStore.currentGeneratedPageIndex].render_image || "",
+      spec: generatedPages.value[index].spec,
+      complete: false,
+      code: generatedPages.value[index].code || "",
+      render_image: generatedPages.value[index].render_image || "",
+      url: generatedPages.value[index].url,
       time: new Date(),
     };
-    
+    specStore.generatedPages[index].spec = origin_spec;
     specStore.generatedPages.push(newGeneratedImage);
     specStore.currentGeneratedPageIndex = specStore.generatedPages.length - 1;
   }).catch(error => {

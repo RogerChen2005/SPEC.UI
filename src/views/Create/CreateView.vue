@@ -57,14 +57,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import UploadPages from "./CoarseComp.vue";
 import EditSpec from "./EditSpec.vue";
 import { useRouter } from "vue-router";
 import DesignSpec from "~/components/DesignSpec.vue";
 import CreateLayout from "~/layout/CreateLayout.vue";
 import SpecTree from "~/components/SpecTree.vue";
-const tab = ref("2");
+import { useSpecStore } from "~/store/SpecStore";
+const specStore = useSpecStore();
+const tab = computed(() => specStore.tab);
 
 const router = useRouter();
 const backHome = () => {

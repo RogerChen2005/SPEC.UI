@@ -231,14 +231,18 @@ function updateComponentInput(field: string, value: string) {
 }
 
 function generateCode() {
+  let index = specStore.currentGeneratedPageIndex;
   axios.post("/generate_code", {
-    spec: specStore.generatedPages[specStore.currentGeneratedPageIndex].spec,
+    spec: specStore.generatedPages[index].spec,
     save_name: "generate_1"
   }).then((response) => {
     if(response.data.success) {
       console.log("generate code success:", response.data);
-      specStore.generatedPages[specStore.currentGeneratedPageIndex].code =  response.data.data.code;
-      specStore.generatedPages[specStore.currentGeneratedPageIndex].render_image ="data:image/png;base64," + response.data.data.render_image;
+      specStore.generatedPages[index].code =  response.data.data.code;
+      specStore.generatedPages[index].render_image = response.data.data.render_image;
+      specStore.generatedPages[index].complete = true;
+      specStore.generatedPages[index].url = "data:image/png;base64," + response.data.data.render_image;
+      console.log("Updated generated page:", specStore.generatedPages[index]);
     }
   })
 }

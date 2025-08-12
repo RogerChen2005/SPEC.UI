@@ -66,6 +66,10 @@ function openDialog(index: number) {
   updateActiveSlide();
 }
 
+function switchToEdit() {
+  specStore.tab = "2";
+}
+ 
 onMounted(() => {
   updateActiveSlide();
 });
@@ -82,6 +86,7 @@ onMounted(() => {
         width="150"
         variant="flat"
         class="text-none"
+        @click="switchToEdit"
         >Apply</v-btn
       >
     </v-col>
