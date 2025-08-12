@@ -22,7 +22,10 @@ const selectDialogVisible = ref(false);
 const selectingType = ref<SpecType | "Structure">("Color_System");
 
 function generate() {
-  missingLabels.value = checkMissingSpecs(designSpecs.value, pageCompositionReference.value);
+  missingLabels.value = checkMissingSpecs(
+    designSpecs.value,
+    pageCompositionReference.value
+  );
   if (missingLabels.value.length > 0) {
     warningVisible.value = true;
   } else {
@@ -43,6 +46,41 @@ function handleSelection(index: number) {
   }
   selectDialogVisible.value = false;
 }
+
+function parseSpecText(text?: string) {
+  if (!text) return [];
+
+  const parts = [];
+  let lastIndex = 0;
+  const colorRegex = /#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})/g;
+  let match;
+
+  while ((match = colorRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({
+        type: "text",
+        content: text.slice(lastIndex, match.index),
+      });
+    }
+
+    parts.push({
+      type: "color",
+      content: match[0],
+      color: match[0],
+    });
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push({
+      type: "text",
+      content: text.slice(lastIndex),
+    });
+  }
+
+  return parts;
+}
 </script>
 
 <template>
@@ -55,17 +93,6 @@ function handleSelection(index: number) {
     <div class="mt-4 d-flex align-center">
       <div class="text-h6 font-weight-bold">Page Structure</div>
       <v-spacer></v-spacer>
-      <!-- <v-select
-        label="Select Page"
-        :items="uploadedPages.map((p, i) => ({ name: p.name, index: i }))"
-        item-title="name"
-        item-value="index"
-        v-model="pageCompositionReference"
-        variant="plain"
-        density="compact"
-        hide-details
-        style="max-width: 25px"
-      ></v-select> -->
       <template v-if="pageCompositionReference < 0">
         <v-btn
           variant="text"
@@ -76,7 +103,11 @@ function handleSelection(index: number) {
         </v-btn>
       </template>
       <template v-else>
-        <v-btn variant="text" @click="addSpec('Structure')" icon="mdi-pencil-outline">
+        <v-btn
+          variant="text"
+          @click="addSpec('Structure')"
+          icon="mdi-pencil-outline"
+        >
         </v-btn>
         <v-btn
           variant="text"
@@ -132,20 +163,26 @@ function handleSelection(index: number) {
       </template>
       <v-card-text v-if="item.value >= 0">
         <div class="spec-text">
-            <div
-            v-html="
-              ((text) =>
-              text
-                ? text.replace(
-                  /#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})/g,
-                  (match) =>
-                  `<span style='display: inline-block; width: 1em; height: 1em; background-color: ${match}; border: 1px solid rgba(var(--v-border-color),0.2); vertical-align: bottom; margin: 3px; border-radius: 2px;'></span>${match}`
-                )
-                : '')(
+          <template
+            v-for="(part, partIndex) in parseSpecText(
               uploadedPages[item.value].spec?.UI_Design_Specification[index]
-              )
-            "
-            ></div>
+            )"
+            :key="partIndex"
+          >
+            <span v-if="part.type === 'text'">{{ part.content }}</span>
+            <template v-else>
+              <v-tooltip :text="part.color">
+                <template v-slot:activator="{ props }">
+                  <span
+                    v-bind="props"
+                    :style="`background-color: ${part.color};`"
+                    class="color-span"
+                  ></span>
+                </template>
+              </v-tooltip>
+              {{ part.content }}
+            </template>
+          </template>
         </div>
       </v-card-text>
     </v-card>
@@ -195,5 +232,14 @@ function handleSelection(index: number) {
   overflow: auto;
   text-overflow: ellipsis;
   max-height: 130px;
+}
+.color-span {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 1px solid rgba(var(--v-border-color), 0.1);
+  vertical-align: bottom;
+  margin: 3px;
+  border-radius: 2px;
 }
 </style>
