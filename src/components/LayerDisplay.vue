@@ -103,7 +103,7 @@ function componentFilter(component: Component) {
       </template>
     </template>
     <v-list-item v-else>
-      <v-list-item-subtitle v-if="!page.analysisComplete" class="text-center"
+      <v-list-item-subtitle v-if="!page.complete" class="text-center"
         >Analyzing</v-list-item-subtitle
       >
       <v-list-item-subtitle v-else class="text-center"
