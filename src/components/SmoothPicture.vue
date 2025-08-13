@@ -122,15 +122,6 @@ const containerStyle = computed(() => {
 </script>
 
 <template>
-  <!-- <div class="d-flex justify-center align-cente" :style="containerStyle">
-    <img
-      ref="imgRef"
-      :src="url"
-      @click="handleFullSize"
-      class="smooth-picture"
-    />
-  </div> -->
-
   <v-sheet
     class="rounded-lg smooth-picture-container"
     elevation="5"
@@ -139,7 +130,7 @@ const containerStyle = computed(() => {
   >
     <v-img
       :src="url"
-      class="fill-height"
+      class="smooth-picture"
       cover
       @click="handleFullSize"
       :aspect-ratio="imageAspectRatio"
@@ -160,8 +151,6 @@ const containerStyle = computed(() => {
 
 .smooth-picture {
   cursor: zoom-in;
-  display: inline-block;
-  height: 100%;
 }
 
 .zoomed-picture {
