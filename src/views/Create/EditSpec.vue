@@ -160,8 +160,8 @@
         </div>
 
         <div class="mb-2">
-          <span class="text-subtitle-2 text-medium-emphasis">
-            Current: {{ getCurrentSelection() }}
+          <span class="text-h6 text-medium-emphasis">
+            Current: <strong>{{ getCurrentSelection() }}</strong>
           </span>
         </div>
         <!-- Text input area -->
@@ -172,7 +172,7 @@
           rows="3"
           dense
           class="mt-2"
-        ></v-textarea>
+          ></v-textarea>
 
         <!-- Action buttons -->
         <div class="d-flex justify-space-between align-center mt-2">
@@ -316,11 +316,7 @@ function getCurrentSelection() {
   
   const currentPage = generatedPages.value[specStore.currentGeneratedPageIndex];
   if (currentPage) {
-    return currentPage.mark 
-      ? `Page: ${currentPage.mark}` 
-      : currentPage.time 
-        ? `Page: ${new Date(currentPage.time).toLocaleString()}` 
-        : 'Untitled Page';
+    return 'Full Page';
   }
   
   return 'No selection';
