@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { animate, createSpring } from "animejs";
-import { nextTick, onMounted, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
+import type { VImg } from "vuetify/components";
 
 const props = defineProps({
   url: {
@@ -8,16 +9,20 @@ const props = defineProps({
     required: true,
   },
 });
-const imgRef = ref<HTMLImageElement | null>(null);
+const imgRef = ref<VImg | null>(null);
+const imgContainerRef = ref<InstanceType<typeof VImg> | null>(null);
+const imageLoaded = ref(false);
+const imageAspectRatio = ref(1);
 
 function handleFullSize() {
   const container = document.createElement("div");
   container.style.backgroundImage = `url(${props.url})`;
-  container.classList.add("zoomed-picture");
-  if (imgRef.value) {
-    const rect = imgRef.value.getClientRects()[0];
-    const initialWidth = imgRef.value.width || 0;
-    const initialHeight = imgRef.value.height || 0;
+  container.classList.add("zoomed-picture", "rounded-lg");
+  if (imgContainerRef.value) {
+    const el = imgContainerRef.value.$el as HTMLDivElement;
+    const rect = el.getClientRects()[0];
+    const initialWidth = el.clientWidth || 0;
+    const initialHeight = el.clientHeight || 0;
     const initialTop = rect.top || 0;
     const initialLeft = rect.left || 0;
     container.style.top = `${initialTop}px`;
@@ -25,73 +30,136 @@ function handleFullSize() {
     container.style.width = `${initialWidth}px`;
     container.style.height = `${initialHeight}px`;
     document.body.appendChild(container);
-    imgRef.value.style.display = "none";
     nextTick(() => {
+      let aspect = window.innerWidth / window.innerHeight;
+      let height:number, width:number;
+      if (aspect < imageAspectRatio.value){
+        width = window.innerWidth - 50;
+        height = width / imageAspectRatio.value;
+      }
+      else {
+        height = window.innerHeight - 50;
+        width = height * imageAspectRatio.value;
+      }
       const property = {
-        top: "0",
-        left: "0",
+        top: `${(window.innerHeight - height)/2}px`,
+        left: `${(window.innerWidth - width)/2}px`,
         duration: 500,
-        width: `${window.innerWidth}px`,
-        height: `${window.innerHeight}px`,
-        ease: createSpring(),
-      };
-      animate(container, property);
-    });
-
-    container.addEventListener("click", () => {
-      imgRef.value!.style.display = "inline-block";
-      imgRef.value!.style.opacity = "0";
-      const rect = imgRef.value!.getClientRects()[0];
-      const targetTop = rect.top || 0;
-      const targetLeft = rect.left || 0;
-      const targetWidth = imgRef.value!.width || 0;
-      const targetHeight = imgRef.value!.height || 0;
-      const property = {
-        top: `${targetTop}px`,
-        left: `${targetLeft}px`,
-        width: `${targetWidth}px`,
-        height: `${targetHeight}px`,
-        duration: 500,
-        ease: createSpring(),
+        width: `${width}px`,
+        height: `${height}px`,
+        ease: createSpring({
+          damping: 50,
+          stiffness: 600,
+          mass: 2
+        }),
       };
       animate(container, property).then(() => {
-        document.body.removeChild(container);
-        imgRef.value!.style.opacity = "1";
+        container.style.transition = "box-shadow 0.3s";
+        container.style.boxShadow = "0 0 20px rgba(0,0,0,0.5)";
       });
+    });
+
+    let isZoomed = true;
+
+    container.addEventListener("click", () => {
+      if (isZoomed) {
+        isZoomed = false;
+        el.style.opacity = "0";
+        const rect = el.getClientRects()[0];
+        const targetTop = rect.top || 0;
+        const targetLeft = rect.left || 0;
+        const targetWidth = el.clientWidth || 0;
+        const targetHeight = el.clientHeight || 0;
+        const property = {
+          top: `${targetTop}px`,
+          left: `${targetLeft}px`,
+          width: `${targetWidth}px`,
+          height: `${targetHeight}px`,
+          duration: 500,
+          ease: createSpring({
+            damping: 40,
+            stiffness: 400,
+            mass: 2
+          }),
+        };
+        animate(container, property).then(() => {
+          el.style.opacity = "1";
+          setTimeout(() => {
+            document.body.removeChild(container);
+          }, 100);
+        });
+      }
     });
   }
 }
 
-onMounted(() => {
+const onImageLoad = () => {
   if (imgRef.value) {
-    imgRef.value.addEventListener("mouseenter", () => {
-      imgRef.value!.style.cursor = "zoom-in";
-      imgRef.value!.style.transition = "transform 0.3s ease-in-out";
-      imgRef.value!.style.transform = "scale(1.05)";
-    });
-    imgRef.value.addEventListener("mouseleave", () => {
-      imgRef.value!.style.cursor = "zoom-in";
-      imgRef.value!.style.transition = "transform 0.3s ease-in-out";
-      imgRef.value!.style.transform = "scale(1)";
-    });
+    const { naturalWidth, naturalHeight } = imgRef.value;
+    if (naturalWidth && naturalHeight) {
+      imageAspectRatio.value = naturalWidth / naturalHeight;
+      imageLoaded.value = true;
+    }
   }
+};
+
+const containerStyle = computed(() => {
+  if (!imageLoaded.value) return "height: 90%; width: 90%;";
+
+  const maxWidth = 900;
+  const maxHeight = 600;
+
+  let width = maxWidth;
+  let height = maxWidth / imageAspectRatio.value;
+
+  if (height > maxHeight) {
+    height = maxHeight;
+    width = maxHeight * imageAspectRatio.value;
+  }
+
+  return `height: ${height}px; width: ${width}px;`;
 });
 </script>
 
 <template>
-  <div class="d-flex justify-center align-center smooth-picture-container">
-    <img ref="imgRef" :src="url" @click="handleFullSize" class="smooth-picture" />
-  </div>
+  <!-- <div class="d-flex justify-center align-cente" :style="containerStyle">
+    <img
+      ref="imgRef"
+      :src="url"
+      @click="handleFullSize"
+      class="smooth-picture"
+    />
+  </div> -->
+
+  <v-sheet
+    class="rounded-lg smooth-picture-container"
+    elevation="5"
+    :style="containerStyle + ' overflow: hidden;'"
+    ref="imgContainerRef"
+  >
+    <v-img
+      :src="url"
+      class="fill-height"
+      cover
+      @click="handleFullSize"
+      :aspect-ratio="imageAspectRatio"
+      ref="imgRef"
+      style="border-radius: inherit"
+      @load="onImageLoad"
+    >
+    </v-img>
+  </v-sheet>
 </template>
 
 <style lang="css">
-.smooth-picture-container{
+.smooth-picture-container {
   height: 100%;
   width: 100%;
+  transition: 0.1s;
 }
 
 .smooth-picture {
-  cursor:zoom-in;
+  cursor: zoom-in;
   display: inline-block;
   height: 100%;
 }

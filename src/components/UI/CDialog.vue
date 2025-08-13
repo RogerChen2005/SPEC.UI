@@ -62,7 +62,7 @@ onMounted(() => {
     width: 100%;
     height: 100%;
     backdrop-filter: blur(10px);
-    animation: cui-dialog-blur .6s;
+    animation: cui-dialog-blur .3s;
 }
 
 .cd-bg {
@@ -76,7 +76,7 @@ onMounted(() => {
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
-    animation: cui-dialog-appear .6s cubic-bezier(0, 0.6, 0.2, 1.0);
+    animation: cui-dialog-appear .3s cubic-bezier(0, 0.6, 0.2, 1.0);
 }
 
 .cd-content {
