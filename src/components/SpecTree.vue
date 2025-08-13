@@ -76,8 +76,6 @@
                 <v-card width="350" elevation="5">
                   <v-card-title class="d-flex align-center text-body-2">
                     Attributes - <strong>{{ component.Component_Type }}</strong>
-                    <v-spacer></v-spacer>
-                    <v-btn icon="mdi-close" variant="text" size="small"></v-btn>
                   </v-card-title>
                   <v-divider></v-divider>
 
