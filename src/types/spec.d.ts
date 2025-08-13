@@ -71,3 +71,8 @@ export type DesignSpec = Record<
     value: number;
   }
 >;
+
+export interface EditInfo {
+  sectionIndex: number;
+  componentIndex: number;
+}

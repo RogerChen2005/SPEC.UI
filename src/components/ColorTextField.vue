@@ -1,3 +1,31 @@
+<script setup lang="ts">
+import { computed } from "vue";
+
+const modelValue = defineModel<string>();
+
+const colors = computed(() => {
+  if (modelValue.value) {
+    const colorRegex =
+      /#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})\b|rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)|rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*[\d.]+\s*\)|hsl\(\s*\d+\s*,\s*\d+%\s*,\s*\d+%\s*\)|hsla\(\s*\d+\s*,\s*\d+%\s*,\s*\d+%\s*,\s*[\d.]+\s*\)/gi;
+
+    const matches = modelValue.value.match(colorRegex) || [];
+    return matches.filter((color) => isValidColor(color)).slice(0, 8); // 增加到8个颜色，因为有更多空间
+  } else {
+    return [];
+  }
+});
+
+function isValidColor(color: string): boolean {
+  const style = new Option().style;
+  style.color = color;
+  return style.color !== "";
+}
+
+function copyToClipboard(color: string) {
+  navigator.clipboard.writeText(color);
+}
+</script>
+
 <template>
   <v-textarea
     :model-value="modelValue"
@@ -5,10 +33,10 @@
     v-bind="$attrs"
   >
     <template #prepend-inner>
-      <div 
+      <div
         v-if="colors.length > 0"
         class="d-flex flex-wrap align-start mr-2 mt-1"
-        style="max-width: 100px;"
+        style="max-width: 100px"
       >
         <v-tooltip
           v-for="(color, index) in colors"
@@ -29,38 +57,6 @@
     </template>
   </v-textarea>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-
-interface Props {
-  modelValue: string;
-}
-
-const props = defineProps<Props>();
-defineEmits<{
-  'update:modelValue': [value: string];
-}>();
-
-const colors = computed(() => {
-  if (!props.modelValue) return [];
-  
-  const colorRegex = /#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})\b|rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)|rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*[\d.]+\s*\)|hsl\(\s*\d+\s*,\s*\d+%\s*,\s*\d+%\s*\)|hsla\(\s*\d+\s*,\s*\d+%\s*,\s*\d+%\s*,\s*[\d.]+\s*\)/gi;
-  
-  const matches = props.modelValue.match(colorRegex) || [];
-  return matches.filter(color => isValidColor(color)).slice(0, 8); // 增加到8个颜色，因为有更多空间
-});
-
-function isValidColor(color: string): boolean {
-  const style = new Option().style;
-  style.color = color;
-  return style.color !== '';
-}
-
-function copyToClipboard(color: string) {
-  navigator.clipboard.writeText(color);
-}
-</script>
 
 <style scoped>
 .color-preview {

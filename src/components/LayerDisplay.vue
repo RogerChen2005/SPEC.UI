@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
-import type { Component, Section, UploadImage } from "~/types";
+import { ref, type ComponentPublicInstance } from "vue";
+import type { Component, EditInfo, Section, SPEC } from "~/types";
+import EditComponent from "./EditComponent.vue";
+import EditSection from "./EditSection.vue";
 
 const props = defineProps({
   checkable: {
@@ -11,11 +13,51 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  page: {
-    type: Object as PropType<UploadImage>,
-    required: true,
+  editable: {
+    type: Boolean,
+    default: false,
   },
 });
+
+const spec = defineModel<SPEC>();
+// const emit = defineEmits<{
+//   (e: "section-edit", editInfo: EditInfo, section: Section): void;
+//   (e: "component-edit", editInfo: EditInfo, component: Component): void;
+// }>();
+
+const sectionsRef = ref<Record<string, InstanceType<typeof Element>>>({});
+const componentsRef = ref<Record<string, InstanceType<typeof Element>[]>>({});
+const menuOpen = ref(false);
+const attachedElement = ref<Element>();
+const editingSection = ref<Section | null>(null);
+const editingComponent = ref<Component | null>(null);
+const editInfo = ref<EditInfo>({
+  sectionIndex: -1,
+  componentIndex: -1,
+});
+
+function addSectionRef(
+  el: ComponentPublicInstance | Element | null,
+  index: string
+) {
+  if (el) {
+    sectionsRef.value[index] = (el as ComponentPublicInstance).$el as Element;
+  }
+}
+
+function addComponentRef(
+  el: ComponentPublicInstance | Element | null,
+  sectionName: string,
+  index: number
+) {
+  if (el) {
+    if (!componentsRef.value[sectionName]) {
+      componentsRef.value[sectionName] = [];
+    }
+    componentsRef.value[sectionName][index] = (el as ComponentPublicInstance)
+      .$el as Element;
+  }
+}
 
 function getComponentIcon(componentType: Component["Component_Type"]) {
   switch (componentType) {
@@ -43,7 +85,7 @@ function getComponentIcon(componentType: Component["Component_Type"]) {
 }
 
 function sectionFilter(section: Section, query: string) {
-  if (props.checkable) {
+  if (!props.checkable) {
     return !query || section.Section_Name.includes(query);
   } else {
     return section.selected;
@@ -51,15 +93,69 @@ function sectionFilter(section: Section, query: string) {
 }
 
 function componentFilter(component: Component) {
-  return props.checkable ? true: component.selected;
+  return props.checkable ? true : component.selected;
+}
+
+function onSectionRClick(section: Section, sectionIndex: number) {
+  if (props.editable) {
+    editingComponent.value = null;
+    editingSection.value = section;
+    menuOpen.value = true;
+    editInfo.value.sectionIndex = sectionIndex;
+    attachedElement.value = sectionsRef.value[section.Section_Name];
+  }
+}
+
+function onComponentRClick(
+  sectionIndex: number,
+  section: Section,
+  componentIndex: number,
+  component: Component
+) {
+  if (props.editable) {
+    editingSection.value = null;
+    editingComponent.value = component;
+    editInfo.value.sectionIndex = sectionIndex;
+    editInfo.value.componentIndex = componentIndex;
+    attachedElement.value =
+      componentsRef.value[section.Section_Name][componentIndex];
+    menuOpen.value = true;
+  }
+}
+
+function onSectionEdit(section: Section) {
+  // if (editInfo.value.sectionIndex !== -1) {
+  //   emit("section-edit", editInfo.value, section);
+  //   editingSection.value = null;
+  // }
+  if (spec.value) {
+    spec.value.Page_Composition.Sections[
+      editInfo.value.sectionIndex
+    ] = section;
+  }
+  menuOpen.value = false;
+}
+
+function onComponentEdit(component: Component) {
+  // if (editInfo.value.sectionIndex !== -1 && editInfo.value.componentIndex !== -1) {
+  //   emit("component-edit", editInfo.value, component);
+  //   editingComponent.value = null;
+  // }
+  // menuOpen.value = false;
+  if (spec.value) {
+    spec.value.Page_Composition.Sections[
+      editInfo.value.sectionIndex
+    ].Contained_Components[editInfo.value.componentIndex] = component;
+  }
+  menuOpen.value = false;
 }
 </script>
 
 <template>
   <v-list density="compact" class="rounded-lg">
-    <template v-if="page.spec">
+    <template v-if="spec">
       <template
-        v-for="section in page.spec.Page_Composition.Sections"
+        v-for="(section, sectionIndex) in spec.Page_Composition.Sections"
         :key="section.Section_Name"
       >
         <v-list-group
@@ -67,7 +163,12 @@ function componentFilter(component: Component) {
           :value="section.Section_Name"
         >
           <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props">
+            <v-list-item
+              v-bind="props"
+              :ref="(el) => addSectionRef(el, section.Section_Name)"
+              @contextmenu.prevent="onSectionRClick(section, sectionIndex)"
+              class="selectable-item"
+            >
               <template v-if="checkable" v-slot:prepend>
                 <v-checkbox-btn
                   v-model="section.selected"
@@ -82,13 +183,31 @@ function componentFilter(component: Component) {
           </template>
 
           <template
-            v-for="(component, index) in section.Contained_Components"
-            :key="index"
+            v-for="(component, componentIndex) in section.Contained_Components"
+            :key="componentIndex"
             :value="component.ComponentID"
           >
-            <v-list-item v-if="componentFilter(component)">
+            <v-list-item
+              v-ripple
+              v-if="componentFilter(component)"
+              :ref="
+                (el) =>
+                  addComponentRef(el, section.Section_Name, componentIndex)
+              "
+              @contextmenu.prevent="
+                onComponentRClick(
+                  sectionIndex,
+                  section,
+                  componentIndex,
+                  component
+                )
+              "
+              class="selectable-item"
+            >
               <template #title>
-                <v-icon>{{ getComponentIcon(component.Component_Type) }}</v-icon>
+                <v-icon>{{
+                  getComponentIcon(component.Component_Type)
+                }}</v-icon>
                 {{ component.Function }}
               </template>
               <template v-if="checkable" v-slot:prepend>
@@ -102,13 +221,31 @@ function componentFilter(component: Component) {
         </v-list-group>
       </template>
     </template>
-    <v-list-item v-else>
-      <v-list-item-subtitle v-if="!page.complete" class="text-center"
-        >Analyzing</v-list-item-subtitle
-      >
-      <v-list-item-subtitle v-else class="text-center"
-        >No SPEC data</v-list-item-subtitle
-      >
-    </v-list-item>
   </v-list>
+  <v-menu
+    :target="attachedElement"
+    v-model="menuOpen"
+    location="end"
+    :close-on-content-click="false"
+    z-index="9999"
+  >
+    <EditComponent
+      :edit-component="editingComponent"
+      @edit="onComponentEdit"
+    ></EditComponent>
+    <EditSection
+      :edit-section="editingSection"
+      @edit="onSectionEdit"
+    ></EditSection>
+  </v-menu>
 </template>
+
+<style scoped>
+.selectable-item {
+  cursor: pointer;
+}
+
+.selectable-item:hover {
+  background-color: rgba(var(--v-theme-secondary), 0.08);
+}
+</style>

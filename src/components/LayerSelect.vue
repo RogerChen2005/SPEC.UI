@@ -2,8 +2,9 @@
 import { computed, ref } from "vue";
 import { useSpecStore } from "~/store/specStore";
 import LayerDisplay from "./LayerDisplay.vue";
+import type { BaseImage } from "~/types";
 
-defineProps({
+const props = defineProps({
   currentTab: {
     type: Number,
     required: true,
@@ -17,7 +18,16 @@ defineProps({
 const specStore = useSpecStore();
 const keyword = ref("");
 
-const pages = computed(() => specStore.uploadedPages);
+const pages = computed<BaseImage[]>(() => {
+  if(props.editable) {
+    return specStore.uploadedPages
+  }
+  else {
+    return specStore.generatedPages
+  }
+});
+
+const currentPage = computed(() => pages.value[props.currentTab]);
 </script>
 
 <template>
@@ -32,11 +42,20 @@ const pages = computed(() => specStore.uploadedPages);
     v-model="keyword"
   ></v-text-field>
 
-  <LayerDisplay
-    :page="pages[currentTab]"
-    :checkable="editable"
-    :query="keyword"
-  ></LayerDisplay>
+  <template v-if="currentPage && currentPage.spec">
+    <LayerDisplay
+      v-model="currentPage.spec"
+      :checkable="editable"
+      :query="keyword"
+      :editable="editable"
+    ></LayerDisplay>
+  </template>
+  <template v-else>
+    <div class="text-center">
+      <div v-if="!pages[currentTab].complete" class="text-center">Analyzing</div>
+      <div v-else class="text-center">No SPEC data</div>
+    </div>
+  </template>
 </template>
 
 <style>

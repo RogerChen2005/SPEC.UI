@@ -119,7 +119,7 @@ function parseSpecText(text?: string) {
     </div>
     <template v-if="pageCompositionReference >= 0">
       <LayerDisplay
-        :page="uploadedPages[pageCompositionReference]"
+        :spec="uploadedPages[pageCompositionReference].spec"
       ></LayerDisplay>
     </template>
     <div class="text-h6 font-weight-bold mt-4">Page Specification</div>

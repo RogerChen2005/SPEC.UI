@@ -75,7 +75,7 @@ export const useSpecStore = defineStore("spec", () => {
   const selectedComponent = ref<Component>();
   const currentUploadedPageIndex = ref<number>(uploadedPages.value.length - 1);
   const selectedSection = ref<Section>();
-  const tab = ref("1");
+  const tab = ref("2");
 
   const designSpecs = ref<DesignSpec>({
     Color_System: {
