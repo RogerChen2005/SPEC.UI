@@ -6,9 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SpecUI</title>
     <link rel="stylesheet" crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/misans@4.0.0/lib/Normal/MiSans-Medium.min.css" />
+
+    <!-- Required Libraries for Dynamic React Rendering -->
+    <!-- Make sure these scripts load before your main application script -->
+
+    <!-- 1. React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
+    <!-- 2. Babel Standalone (for compiling JSX in the browser) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- 3. Component & Charting Libraries (Using Ant Design v4 to match legacy code) -->
+    <link rel="stylesheet" href="https://unpkg.com/antd@4.x/dist/antd.min.css" />
+    <script src="https://unpkg.com/moment/min/moment.min.js"></script> <!-- Antd v4 requires Moment.js -->
+    <script src="https://unpkg.com/antd@4.x/dist/antd.min.js"></script>
+    <script src="https://unpkg.com/@ant-design/icons@4.x/dist/index.umd.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.x/umd/Recharts.min.js"></script>
   </head>
   <body>
     <div id="app"></div>
+    <!-- Your Vue app script, which runs after the libraries are loaded -->
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
