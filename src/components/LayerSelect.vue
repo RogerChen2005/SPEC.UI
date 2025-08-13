@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useSpecStore } from "~/store/SpecStore";
+import { useSpecStore } from "~/store/specStore";
 import LayerDisplay from "./LayerDisplay.vue";
 import type { BaseImage } from "~/types";
 
