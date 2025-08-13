@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, type ComponentPublicInstance, nextTick } from "vue";
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
-import { useSpecStore } from "~/store/specStore";
+import { useSpecStore } from "~/store/SpecStore";
 import CDialog from "./UI/CDialog.vue";
 import DetailedDialog from "./DetailedDialog.vue";
 
