@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { checkMissingSpecs } from "~/helpers/ReferenceHelper";
-import { useSpecStore } from "~/store/SpecStore";
+import { useSpecStore } from "~/store/specStore";
 import LayerDisplay from "./LayerDisplay.vue";
 import CDialog from "./UI/CDialog.vue";
 import SelectSpec from "./SelectSpec.vue";

@@ -135,7 +135,7 @@
 
 <script setup lang="ts">
 import { computed, ref, toRaw } from "vue";
-import { useSpecStore } from "~/store/SpecStore";
+import { useSpecStore } from "~/store/specStore";
 import type { Component, Section } from "~/types";
 import axios from '~/helpers/RequestHelper'
 import ColorTextField from './ColorTextField.vue'

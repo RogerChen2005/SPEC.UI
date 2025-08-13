@@ -58,6 +58,7 @@ export interface GeneratedImage extends BaseImage {
   code?: string;
   time: Date;
   mark?: string;
+  reference: number;
 }
 
 export type SpecType = keyof UIDesignSpecification;

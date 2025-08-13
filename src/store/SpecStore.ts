@@ -53,18 +53,21 @@ export const useSpecStore = defineStore("spec", () => {
       complete: true,
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui1.png",
       time: new Date(),
+      reference: 0,
     },
     {
       spec: generate_spec.specs[0]  as SPEC,
       complete: true,
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui2.png",
       time: new Date(),
+      reference: 1,
     },
     {
       spec: generate_spec.specs[0]  as SPEC,
       complete: false,
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui2.png",
       time: new Date(),
+      reference: 1,
     },
   ]);
   const currentGeneratedPageIndex = ref<number>(0);

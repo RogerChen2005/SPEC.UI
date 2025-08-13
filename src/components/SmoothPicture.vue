@@ -8,6 +8,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  maxHeight: {
+    type: Number,
+    default: 570,
+  },
+  maxWidth: {
+    type: Number,
+    default: 800,
+  },
 });
 const imgRef = ref<VImg | null>(null);
 const imgContainerRef = ref<InstanceType<typeof VImg> | null>(null);
@@ -15,10 +23,12 @@ const imageLoaded = ref(false);
 const imageAspectRatio = ref(1);
 
 function handleFullSize() {
-  const container = document.createElement("div");
-  container.style.backgroundImage = `url(${props.url})`;
-  container.classList.add("zoomed-picture", "rounded-lg");
   if (imgContainerRef.value) {
+    const container = document.createElement("div");
+    const mask = document.createElement("div");
+    mask.classList.add("smooth-picutre-mask");
+    container.style.backgroundImage = `url(${props.url})`;
+    container.classList.add("zoomed-picture", "rounded-lg");
     const el = imgContainerRef.value.$el as HTMLDivElement;
     const rect = el.getClientRects()[0];
     const initialWidth = el.clientWidth || 0;
@@ -29,7 +39,9 @@ function handleFullSize() {
     container.style.left = `${initialLeft}px`;
     container.style.width = `${initialWidth}px`;
     container.style.height = `${initialHeight}px`;
-    document.body.appendChild(container);
+    document.body.appendChild(mask);
+    mask.appendChild(container);
+    el.style.opacity = "0";
     nextTick(() => {
       let aspect = window.innerWidth / window.innerHeight;
       let height:number, width:number;
@@ -60,11 +72,9 @@ function handleFullSize() {
     });
 
     let isZoomed = true;
-
-    container.addEventListener("click", () => {
+    const handleZoomOut = () => {
       if (isZoomed) {
         isZoomed = false;
-        el.style.opacity = "0";
         const rect = el.getClientRects()[0];
         const targetTop = rect.top || 0;
         const targetLeft = rect.left || 0;
@@ -85,11 +95,13 @@ function handleFullSize() {
         animate(container, property).then(() => {
           el.style.opacity = "1";
           setTimeout(() => {
-            document.body.removeChild(container);
+            document.body.removeChild(mask);
           }, 100);
         });
       }
-    });
+    }
+
+    mask.addEventListener("click", handleZoomOut);
   }
 }
 
@@ -106,8 +118,8 @@ const onImageLoad = () => {
 const containerStyle = computed(() => {
   if (!imageLoaded.value) return "height: 90%; width: 90%;";
 
-  const maxWidth = 900;
-  const maxHeight = 600;
+  const maxWidth = props.maxWidth;
+  const maxHeight = props.maxHeight;
 
   let width = maxWidth;
   let height = maxWidth / imageAspectRatio.value;
@@ -149,14 +161,22 @@ const containerStyle = computed(() => {
   transition: 0.1s;
 }
 
+.smooth-picutre-mask {
+  position: fixed;
+  cursor: zoom-out;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9998;
+}
+
 .smooth-picture {
   cursor: zoom-in;
 }
 
 .zoomed-picture {
-  cursor: zoom-out;
-  position: fixed;
-  z-index: 9999;
+  position: absolute;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

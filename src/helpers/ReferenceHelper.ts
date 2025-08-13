@@ -142,6 +142,7 @@ export function imageGenerationUtil(
     code: "",
     url: "",
     time: new Date(),
+    reference: pageCompositionReference.value,
   };
 
   generatedPages.value.push(generatedPage);

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import LayerSelect from "~/components/LayerSelect.vue";
-import { useSpecStore } from "~/store/SpecStore";
-import type { BaseImage, SpecType } from "~/types";
+import { useSpecStore } from "~/store/specStore";
+import type { BaseImage, GeneratedImage, SpecType } from "~/types";
 import SmoothPicture from "./SmoothPicture.vue";
 
 const props = defineProps({
@@ -40,10 +40,10 @@ const designSpecsKeys = computed<SpecType[]>(
 <template>
   <v-container class="ma-0 pa-4" fluid style="height: 100%">
     <v-row style="height: 100%">
-      <v-col cols="8" class="d-flex align-center justify-center pa-6">
-        <SmoothPicture :url="currentViewingPage.url"></SmoothPicture>
+      <v-col cols="7" class="d-flex align-center justify-center pa-6 ui-reference">
+        <SmoothPicture :url="currentViewingPage.url" :max-height="500" :max-width="800"></SmoothPicture>
       </v-col>
-      <v-col cols="4" class="overflow-y-auto" style="height: 100%">
+      <v-col cols="5" class="overflow-y-auto pl-8" style="height: 100%">
         <div v-if="currentViewingPage.spec">
           <v-tabs v-model="activeTab" class="mb-4">
             <v-tab value="layers">
@@ -52,6 +52,11 @@ const designSpecsKeys = computed<SpecType[]>(
             <v-tab value="ui">
               <v-icon>mdi-monitor-dashboard</v-icon>
             </v-tab>
+            <template v-if="!editable">
+              <v-tab value="reference">
+                <v-icon>mdi-book-open-page-variant-outline</v-icon>
+              </v-tab>
+            </template>
           </v-tabs>
 
           <v-window v-model="activeTab">
@@ -115,6 +120,24 @@ const designSpecsKeys = computed<SpecType[]>(
                 ></v-textarea>
               </template>
             </v-window-item>
+            <template v-if="!editable">
+              <v-window-item value="reference">
+                <h1 class="font-weight-bold text-h5 mb-3">Reference</h1>
+                <v-img
+                  :src="uploadedPages[(currentViewingPage as GeneratedImage).reference].url"
+                  class="rounded-lg"
+                ></v-img>
+                <v-col class="d-flex align-center justify-center">
+                  <v-chip prepend-icon="mdi-image-outline" class="pa-4">
+                    {{
+                      uploadedPages[
+                        (currentViewingPage as GeneratedImage).reference
+                      ].name
+                    }}
+                  </v-chip>
+                </v-col>
+              </v-window-item>
+            </template>
           </v-window>
         </div>
       </v-col>
@@ -122,4 +145,8 @@ const designSpecsKeys = computed<SpecType[]>(
   </v-container>
 </template>
 
-<style scoped></style>
+<style scoped>
+.ui-reference{
+  border-right: solid 1px rgba(var(--v-border-color),0.2);
+}
+</style>
