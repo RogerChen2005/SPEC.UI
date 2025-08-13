@@ -33,7 +33,7 @@
             style="width: 180px;"
             @click="openMarkDialog"
           >
-            Mark
+            Rename
           </v-btn>
           <v-btn
             color="primary"
@@ -49,59 +49,25 @@
     </v-row>
     <v-container class="pa-0 ma-0" fluid>
       <v-row align="center">
-        <v-col cols="1">
-          <v-btn
-            variant="tonal"
-            icon="mdi-arrow-left"
-            @click="scrollPrev"
-            class="mx-2"
-          ></v-btn>
-        </v-col>
         <v-col cols="10">
-          <div class="generatedPages-wrapper">
-            <div class="slide-item  padder"></div>
-            <div
-              v-for="(page, index) in generatedPages"
-              :key="index"
-              class="slide-item"
-              :class="{
-                'active-slide': activeSlide === index,
-                'left-slide': activeSlide === index + 1,
-                'right-slide': activeSlide === index - 1,
-              }"
-              :ref="(el) => setSlideRef(el, index)"
-              v-ripple="activeSlide === index"
-              @click="openDialog(index)"
-            >
-              <div class="slide-content rounded-lg">
-                <template v-if="page.complete && page.url">
-                  <img class="slide-image" :src="page.url" />
-                </template>
-                <template v-else>
-                  <v-sheet
-                    class="d-flex flex-column align-center justify-center"
-                    height="100%"
-                  >
-                    <v-progress-circular
-                      indeterminate
-                      color="primary"
-                      class="mb-2"
-                    ></v-progress-circular>
-                    <span>Generating UI...</span>
-                  </v-sheet>
-                </template>
-              </div>
-            </div>
-            <div class="slide-item padder"></div>
+          <div class="slide-content rounded-lg" @click="openDialog(specStore.currentGeneratedPageIndex)">
+            <template v-if="currentPage.complete && currentPage.url">
+              <img class="slide-image" :src="currentPage.url" />
+            </template>
+            <template v-else>
+              <v-sheet
+                class="d-flex flex-column align-center justify-center"
+                height="100%"
+              >
+                <v-progress-circular
+                  indeterminate
+                  color="primary"
+                  class="mb-2"
+                ></v-progress-circular>
+                <span>Generating UI...</span>
+              </v-sheet>
+            </template>
           </div>
-        </v-col>
-        <v-col cols="1">
-          <v-btn
-            variant="tonal"
-            icon="mdi-arrow-right"
-            @click="scrollNext"
-            class="mx-2"
-          ></v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -121,12 +87,12 @@
       <template #header>
         <v-row class="align-center">
           <v-col cols="10">
-            <h2 class="text-h6 ml-4">Mark Generated Page</h2>
+            <h2 class="text-h6 ml-4">Rename Generated Page</h2>
           </v-col>
         </v-row>
         <v-text-field
           v-model="markText"
-          label="Mark this page with a name or description"
+          label="Rename this page with a new name or description"
           variant="outlined"
           rows="3"
           dense
@@ -187,8 +153,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, toRaw, nextTick, onMounted, watch,  type ComponentPublicInstance} from 'vue';
-import { useSpecStore } from '~/store/specStore';
+import { ref, computed, toRaw, nextTick} from 'vue';
+import { useSpecStore } from '~/store/SpecStore';
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import CDialog from '~/components/UI/CDialog.vue';
 import DetailedDialog from '~/components/DetailedDialog.vue';
@@ -196,14 +162,13 @@ import axios from '~/helpers/RequestHelper';
 import type { SPEC, Component, Section } from '~/types';
 
 const textValue = ref('');
-const currentPage = ref(0);
 const specStore = useSpecStore();
 const uploadedPages = computed(() => specStore.uploadedPages);
 const generatedPages = computed(() => specStore.generatedPages);
+const currentPage = computed(() => specStore.generatedPages[specStore.currentGeneratedPageIndex]);
 const markText = ref('');
 const markDialogOpened = ref(false);
 
-const slideRefs = ref<InstanceType<typeof Element>[]>([]);
 const activeSlide = computed({
   get: () => specStore.currentGeneratedPageIndex,
   set: (val) => {
@@ -213,35 +178,6 @@ const activeSlide = computed({
 const dialogOpened = ref(false);
 const viewingPage = ref(0);
 
-watch(activeSlide, () => {
-  updateActiveSlide();
-});
-
-function setSlideRef(el: ComponentPublicInstance | Element | null, index: number) {
-  if (el) {
-    slideRefs.value[index] = el as Element;
-  }
-};
-
-function scrollPrev() {
-  activeSlide.value =
-    (activeSlide.value - 1 + generatedPages.value.length) %
-    generatedPages.value.length;
-};
-
-function scrollNext() {
-  activeSlide.value = (activeSlide.value + 1) % generatedPages.value.length;
-};
-
-function updateActiveSlide() {
-  nextTick(() => {
-    slideRefs.value[activeSlide.value]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  });
-}
 
 function openDialog(index: number) {
   console.log("Open dialog for page index:", index);
@@ -253,12 +189,7 @@ function openDialog(index: number) {
   }
   else dialogOpened.value = true;
   activeSlide.value = index;
-  updateActiveSlide();
 }
-
-onMounted(() => {
-  updateActiveSlide();
-});
 
 function openMarkDialog() {
   markText.value = generatedPages.value[specStore.currentGeneratedPageIndex].mark || '';
@@ -333,11 +264,8 @@ function uploadImage() {
       const file = target.files[0];
       imageUploadUtil(uploadedPages, file, () => {
         nextTick(() => {
-          currentPage.value = uploadedPages.value.length - 1;
-          updateActiveSlide();
         });
       },()=>{
-        openDialog(uploadedPages.value.length - 1);
       });
     }
   };
@@ -479,7 +407,9 @@ function back() {
 
 .slide-content {
   width: 100%;
-  height: 100%;
+  height: 60vh;
+  min-height: 400px;
+  max-height: 600px;
   transition: 0.3s ease-in-out;
   border: solid 4px rgba(var(--v-border-color), 0.2);
   overflow: hidden;

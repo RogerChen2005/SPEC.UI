@@ -64,7 +64,7 @@ import { useRouter } from "vue-router";
 import DesignSpec from "~/components/DesignSpec.vue";
 import CreateLayout from "~/layout/CreateLayout.vue";
 import SpecTree from "~/components/SpecTree.vue";
-import { useSpecStore } from "~/store/specStore";
+import { useSpecStore } from "~/store/SpecStore";
 const specStore = useSpecStore();
 const tab = computed(() => specStore.tab);
 
