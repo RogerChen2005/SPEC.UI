@@ -381,6 +381,7 @@ function confirmEditSpec()  {
       code: generatedPages.value[index].code || "",
       url: generatedPages.value[index].url,
       time: new Date(),
+      reference: generatedPages.value[index].reference ,
     };
     specStore.generatedPages[index].spec = origin_spec;
     specStore.generatedPages.push(newGeneratedImage);
