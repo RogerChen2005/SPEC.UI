@@ -10,6 +10,7 @@ import type {
 } from "~/types/index";
 import upload_spec from "~/example/upload_spec.json";
 import generate_spec from "~/example/generate_spec.json";
+import generate_code from "~/example/generate_code.json";
 import { imageGenerationUtil } from "~/helpers/ReferenceHelper";
 
 interface upload_spec {
@@ -54,6 +55,7 @@ export const useSpecStore = defineStore("spec", () => {
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui1.png",
       time: new Date(),
       reference: 0,
+      code: generate_code.code,
     },
     {
       spec: generate_spec.specs[0]  as SPEC,
@@ -61,6 +63,7 @@ export const useSpecStore = defineStore("spec", () => {
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui2.png",
       time: new Date(),
       reference: 1,
+      code: generate_code.code,
     },
     {
       spec: generate_spec.specs[0]  as SPEC,
@@ -68,6 +71,7 @@ export const useSpecStore = defineStore("spec", () => {
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui2.png",
       time: new Date(),
       reference: 1,
+      code: generate_code.code,
     },
   ]);
   const currentGeneratedPageIndex = ref<number>(0);
