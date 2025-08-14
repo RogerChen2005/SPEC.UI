@@ -47,7 +47,7 @@
         </div>
       </v-col>
     </v-row>
-    <!-- <v-container class="pa-0 ma-0" fluid>
+    <v-container class="pa-0 ma-0" fluid>
       <v-row align="center">
         <v-col cols="10">
           <div class="slide-content rounded-lg" @click="openDialog(specStore.currentGeneratedPageIndex)">
@@ -70,10 +70,10 @@
           </div>
         </v-col>
       </v-row>
-    </v-container> -->
-    <div v-if="currentPage.code">
+    </v-container>
+    <!-- <div v-if="currentPage.code" style="width: 100%; height: 60vh;">
       <CodeBar :code="currentPage.code"/>
-    </div>
+    </div> -->
     <teleport to="body">
     <CDialog v-model:visible="dialogOpened" width="80%" height="80%">
       <template #header>
@@ -162,7 +162,7 @@ import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import CDialog from '~/components/UI/CDialog.vue';
 import DetailedDialog from '~/components/DetailedDialog.vue';
 import axios from '~/helpers/RequestHelper';
-import CodeBar  from '~/components/CodePane.vue';
+// import CodeBar  from '~/components/CodePane.vue';
 import type { SPEC, Component, Section } from '~/types';
 
 const textValue = ref('');
@@ -176,17 +176,11 @@ const markDialogOpened = ref(false);
 const dialogOpened = ref(false);
 const viewingPage = ref(0);
 
-// function openDialog(index: number) {
-//   console.log("Open dialog for page index:", index);
-//   viewingPage.value = index;
-//   if (activeSlide.value !== index) {
-//     setTimeout(() => {
-//       dialogOpened.value = true;
-//     }, 400);
-//   }
-//   else dialogOpened.value = true;
-//   activeSlide.value = index;
-// }
+function openDialog(index: number) {
+  console.log("Open dialog for page index:", index);
+  viewingPage.value = index;
+  dialogOpened.value = true;
+}
 
 function openMarkDialog() {
   markText.value = generatedPages.value[specStore.currentGeneratedPageIndex].mark || '';
