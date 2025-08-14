@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useSpecStore } from "~/store/specStore";
+import { useSpecStore } from "~/store/SpecStore";
 import LayerDisplay from "./LayerDisplay.vue";
 import axios from "~/helpers/RequestHelper";
 import CDialog from "./UI/CDialog.vue";

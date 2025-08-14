@@ -157,7 +157,7 @@
 
 <script setup lang="ts">
 import { ref, computed, toRaw, nextTick} from 'vue';
-import { useSpecStore } from '~/store/specStore';
+import { useSpecStore } from '~/store/SpecStore';
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import CDialog from '~/components/UI/CDialog.vue';
 import DetailedDialog from '~/components/DetailedDialog.vue';
