@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, onBeforeUnmount, nextTick, computed } from 'vue';
+import { ref, onMounted, watch, onBeforeUnmount, nextTick, computed, watchEffect } from 'vue';
 import { createRoot, type Root } from 'react-dom/client';
 import { useSpecStore } from '~/store/SpecStore';
 import React from 'react';
@@ -77,6 +77,34 @@ let libraries: Awaited<ReturnType<typeof loadLibraries>> | null = null;
 const isVoidElement = computed(() => {
     if (!selectedElRef.value) return false;
     return VOID_ELEMENTS.has(selectedElRef.value.tagName);
+});
+
+// --- Highlighting Logic ---
+watchEffect(async () => {
+    // 等待DOM更新
+    await nextTick(); 
+
+    const container = containerRef.value;
+    if (!container) return;
+
+    // 1. 移除所有旧的高亮
+    container.querySelectorAll('.spec-highlight').forEach(el => {
+        el.classList.remove('spec-highlight');
+    });
+
+    // 2. 高亮选中的 Section
+    if (selectedSection.value?.Data_Section_Id) {
+        const sectionEl = container.querySelector(`[data-spec="${selectedSection.value.Data_Section_Id}"]`);
+        sectionEl?.classList.add('spec-highlight');
+    }
+
+    // 3. 高亮选中的 Component (通常更具体，会覆盖section的高亮)
+    if (selectedComponent.value?.Data_Component_Id) {
+        const componentEl = container.querySelector(`[data-spec="${selectedComponent.value.Data_Component_Id}"]`);
+        // 如果已经有高亮，先移除，确保样式统一
+        container.querySelector('.spec-highlight')?.classList.remove('spec-highlight');
+        componentEl?.classList.add('spec-highlight');
+    }
 });
 
 
@@ -337,5 +365,12 @@ onBeforeUnmount((): void => {
     align-items: center;
     justify-content: center;
     padding: 20px;
+}
+
+.rendered-ui :deep(.spec-highlight) {
+    outline: 2px solid #1E88E5 !important; /* Vuetify primary blue */
+    box-shadow: 0 0 8px rgba(30, 136, 229, 0.5) !important;
+    background-color: rgba(30, 136, 229, 0.1) !important;
+    border-radius: 4px;
 }
 </style>

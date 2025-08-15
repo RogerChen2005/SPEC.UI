@@ -3,6 +3,9 @@ import { ref, type ComponentPublicInstance } from "vue";
 import type { Component, EditInfo, Section, SPEC } from "~/types";
 import EditComponent from "./EditComponent.vue";
 import EditSection from "./EditSection.vue";
+import { useSpecStore } from "~/store/SpecStore";
+
+const specStore = useSpecStore();
 
 const props = defineProps({
   checkable: {
@@ -96,6 +99,19 @@ function componentFilter(component: Component) {
   return props.checkable ? true : component.selected;
 }
 
+
+function onSectionLClick(section: Section) {
+  specStore.selectedComponent = undefined;
+  specStore.selectedSection = section;
+  console.log("Selected section:", section);
+}
+
+function onComponentLClick(component: Component) {
+  specStore.selectedSection = undefined;
+  specStore.selectedComponent = component;
+  console.log("Selected component:", component);
+}
+
 function onSectionRClick(section: Section, sectionIndex: number) {
   if (props.editable) {
     editingComponent.value = null;
@@ -166,6 +182,7 @@ function onComponentEdit(component: Component) {
             <v-list-item
               v-bind="props"
               :ref="(el) => addSectionRef(el, section.Section_Name)"
+              @click="onSectionLClick(section)"
               @contextmenu.prevent="onSectionRClick(section, sectionIndex)"
               class="selectable-item"
             >
@@ -194,6 +211,7 @@ function onComponentEdit(component: Component) {
                 (el) =>
                   addComponentRef(el, section.Section_Name, componentIndex)
               "
+              @click="onComponentLClick(component)"
               @contextmenu.prevent="
                 onComponentRClick(
                   sectionIndex,
