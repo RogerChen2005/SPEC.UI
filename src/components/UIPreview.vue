@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, onBeforeUnmount, nextTick, computed } from 'vue';
 import { createRoot, type Root } from 'react-dom/client';
+import { useSpecStore } from '~/store/SpecStore';
 import React from 'react';
 
 // Define the shape of our editable attribute objects
@@ -55,6 +56,10 @@ interface Emits {
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
+
+const specStore = useSpecStore();
+const selectedComponent = computed(() => specStore.selectedComponent);
+const selectedSection = computed(() => specStore.selectedSection);
 
 // --- State for Element Inspector ---
 const selectedElRef = ref<HTMLElement | null>(null);
@@ -126,13 +131,14 @@ function parseImports(code: string, LIBRARY_MAP: any): { imports: Record<string,
 const handleClick = (event: Event): void => {
     // When an element is clicked, update our selectedElRef
     selectedElRef.value = event.target as HTMLElement;
-    
+    console.log(selectedElRef.value   )
     const target = (event.target as Element).closest('[data-spec]');
     if (target) {
         event.preventDefault();
         event.stopPropagation();
         const specValue = target.getAttribute('data-spec');
         if (specValue) {
+            console.log(specValue);
             emit('spec-click', specValue);
         }
     }

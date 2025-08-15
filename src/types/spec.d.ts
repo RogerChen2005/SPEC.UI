@@ -15,6 +15,7 @@ export interface Component {
   Component_Type: string;
   Function: string;
   selected?: boolean;
+  Data_Component_Id: string;
 }
 
 export interface Section {
@@ -24,6 +25,7 @@ export interface Section {
   Section_Name: string;
   Section_Position_on_Page: string;
   selected?: boolean;
+  Data_Section_Id: string;
 }
 
 export interface PageComposition {
