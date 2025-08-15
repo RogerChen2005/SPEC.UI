@@ -70,7 +70,7 @@
       </v-row> -->
     <v-row v-if="currentPage.code" class="mt-2">
       <v-col class="d-flex justify-center align-center px-8">
-        <UIPreview :code="currentPage.code"></UIPreview>
+        <UIPreview :code="currentPage.code" @spec-click="handleSpecClick"></UIPreview>
       </v-col>
     </v-row>
   </v-container>
@@ -195,12 +195,17 @@ const markDialogOpened = ref(false);
 
 const dialogOpened = ref(false);
 const viewingPage = ref(0);
-
 // function openDialog(index: number) {
 //   console.log("Open dialog for page index:", index);
 //   viewingPage.value = index;
 //   dialogOpened.value = true;
 // }
+
+function handleSpecClick(value: string | null) {
+  if(value) {
+
+  }
+}
 
 function openMarkDialog() {
   markText.value =
