@@ -109,50 +109,53 @@ watchEffect(async () => {
 
 
 function parseImports(code: string, LIBRARY_MAP: any): { imports: Record<string, any>, cleanCode: string } {
-    // ... (function is unchanged)
-    const importRegex = /import\s+([\s\S]*?)\s+from\s+['"]([^'"]+)['"];?/g;
+    const importRegex = /import\s+(.*?)\s+from\s+['"]([^'"]+)['"];?/g;
     const imports: Record<string, any> = {};
     let match;
 
-    while ((match = importRegex.exec(code))) {
-        const vars = match[1].trim();
-        const lib = match[2] as keyof typeof LIBRARY_MAP;
-        const libModule = LIBRARY_MAP[lib];
+    console.log(code);
+
+    while ((match = importRegex.exec(code)) !== null) {
+        let specifiers = match[1].trim();
+        const libName = match[2] as keyof typeof LIBRARY_MAP;
+        const libModule = LIBRARY_MAP[libName];
+
         if (!libModule) {
-            console.warn(`Library not found: ${String(lib)}`);
+            console.warn(`Library not found: ${String(libName)}`);
             continue;
         }
-        let defaultName = null;
-        let namedList = null;
 
-        if (vars.includes("{")) {
-            const [beforeBrace, afterBrace] = vars.split("{", 2);
-            const before = beforeBrace.replace(/,$/, "").trim();
-            if (before) defaultName = before;
-            namedList = "{" + afterBrace;
-        } else {
-            defaultName = vars;
-        }
-
-        if (defaultName) {
-            imports[defaultName] = libModule;
-        }
-        if (namedList) {
-            const names = namedList
-                .replace(/[{}]/g, "")
-                .split(",")
-                .map((v) => v.trim())
+        // 检查是否有命名导入
+        const namedImportMatch = specifiers.match(/{([^}]+)}/);
+        if (namedImportMatch) {
+            const namedSpecifiers = namedImportMatch[1].split(',')
+                .map(s => s.trim())
                 .filter(Boolean);
-            names.forEach((name) => {
-                const [orig, alias] = name.split(" as ").map((s) => s.trim());
+
+            namedSpecifiers.forEach(spec => {
+                const [orig, alias] = spec.split(' as ').map(s => s.trim());
                 imports[alias || orig] = libModule[orig as keyof typeof libModule];
             });
+
+            // 从描述符中移除命名导入部分
+            specifiers = specifiers.replace(namedImportMatch[0], '').trim();
+        }
+
+        // 剩下的部分应该是默认导入
+        if (specifiers.length > 0) {
+            // 移除末尾的逗号
+            const defaultName = specifiers.replace(/,$/, '').trim();
+            if (defaultName) {
+                imports[defaultName] = libModule.default || libModule;
+            }
         }
     }
+
     const cleanCode = code
         .replace(importRegex, "")
         .replace(/export\s+default\s+/, "")
         .replace(/export\s+{[^}]*}/, "");
+
     return { imports, cleanCode };
 }
 
@@ -219,7 +222,7 @@ const renderReact = async (): Promise<void> => {
 
     try {
         const { imports, cleanCode } = parseImports(props.code, libraries.LIBRARY_MAP);
-
+        
         const transformResult = libraries.transform(cleanCode, {
             presets: ['react']
         });

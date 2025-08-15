@@ -15,6 +15,7 @@ const component = ref<Component>({
   Function: "",
   Color_Scheme: "",
   Component_Layout_Style: "",
+  Data_Component_Id: "",
 });
 
 watch(
@@ -25,6 +26,7 @@ watch(
       Function: "",
       Color_Scheme: "",
       Component_Layout_Style: "",
+      Data_Component_Id: "",
     };
   },
   { immediate: true }

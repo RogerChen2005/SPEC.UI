@@ -16,6 +16,7 @@ const section = ref<Section>({
   Component_Layout_in_Section: "",
   Color_Scheme: "",
   Contained_Components: [],
+  Data_Section_Id: "",
 });
 
 watch(
@@ -27,6 +28,7 @@ watch(
       Component_Layout_in_Section: "",
       Color_Scheme: "",
       Contained_Components: [],
+      Data_Section_Id: "",
     };
   },
   { immediate: true }
