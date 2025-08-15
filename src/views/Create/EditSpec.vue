@@ -319,7 +319,7 @@ function confirmEditSpec() {
   console.log("Confirming edit spec with data:", spec);
 
   const payload = {
-    save_name: "edit_spec_01",
+    save_name: new Date().toLocaleString(),
     text: textValue.value,
     spec: spec,
   };

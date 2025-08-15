@@ -42,7 +42,7 @@ function generateCode() {
   axios
     .post("/generate_code", {
       spec: specStore.generatedPages[index].spec,
-      save_name: "generate_1",
+      save_name: specStore.generatedPages[index].time.toLocaleString(),
     })
     .then((response) => {
       if (response.data.success) {
