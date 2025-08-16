@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch, onBeforeUnmount, nextTick, computed, watchEffect } from 'vue';
+import { ref, onMounted, watch, onBeforeUnmount, nextTick, computed } from 'vue';
 import { createRoot, type Root } from 'react-dom/client';
 import { useSpecStore } from '~/store/SpecStore';
 import React from 'react';
@@ -79,37 +79,8 @@ const isVoidElement = computed(() => {
     return VOID_ELEMENTS.has(selectedElRef.value.tagName);
 });
 
-// --- Highlighting Logic ---
-watchEffect(async () => {
-    // 等待DOM更新
-    await nextTick(); 
-
-    const container = containerRef.value;
-    if (!container) return;
-
-    // 1. 移除所有旧的高亮
-    container.querySelectorAll('.spec-highlight').forEach(el => {
-        el.classList.remove('spec-highlight');
-    });
-
-    // 2. 高亮选中的 Section
-    if (selectedSection.value?.Data_Section_Id) {
-        const sectionEl = container.querySelector(`[data-spec="${selectedSection.value.Data_Section_Id}"]`);
-        sectionEl?.classList.add('spec-highlight');
-    }
-
-    // 3. 高亮选中的 Component (通常更具体，会覆盖section的高亮)
-    if (selectedComponent.value?.Data_Component_Id) {
-        const componentEl = container.querySelector(`[data-spec="${selectedComponent.value.Data_Component_Id}"]`);
-        // 如果已经有高亮，先移除，确保样式统一
-        container.querySelector('.spec-highlight')?.classList.remove('spec-highlight');
-        componentEl?.classList.add('spec-highlight');
-    }
-});
-
-
 function parseImports(code: string, LIBRARY_MAP: any): { imports: Record<string, any>, cleanCode: string } {
-    const importRegex = /import\s+(.*?)\s+from\s+['"]([^'"]+)['"];?/g;
+    const importRegex = /import\s+([\s\S]*?)\s+from\s+['"]([^'"]+)['"];?/g;
     const imports: Record<string, any> = {};
     let match;
 
@@ -155,7 +126,8 @@ function parseImports(code: string, LIBRARY_MAP: any): { imports: Record<string,
         .replace(importRegex, "")
         .replace(/export\s+default\s+/, "")
         .replace(/export\s+{[^}]*}/, "");
-
+    console.log(imports);
+    console.log(cleanCode);
     return { imports, cleanCode };
 }
 
@@ -209,6 +181,45 @@ watch(selectedElRef, (newEl) => {
     editableInnerText.value = null;
   }
 }, { deep: true });
+
+watch(selectedComponent, (newComp) => {
+    if(newComp) {
+        const container = containerRef.value;
+        if (!container) return;
+
+        container.querySelectorAll('.spec-highlight').forEach(el => {
+            el.classList.remove('spec-highlight');
+        });
+        if (newComp.Data_Component_Id) {
+            let componentEl = container.querySelector(`[data-spec="${newComp.Data_Component_Id}"]`);
+            if (!componentEl) {
+                componentEl = Array.from(container.querySelectorAll('[data-spec]'))
+                    .find(el => el.getAttribute('data-spec')?.includes(newComp.Data_Component_Id)) ?? null;
+            }
+            container.querySelector('.spec-highlight')?.classList.remove('spec-highlight');
+            componentEl?.classList.add('spec-highlight');
+        }
+    }
+});
+
+watch(selectedSection, (newSection) => {
+    if(newSection) {
+        const container = containerRef.value;
+        if (!container) return;
+
+        container.querySelectorAll('.spec-highlight').forEach(el => {
+            el.classList.remove('spec-highlight');
+        });
+        if (newSection.Data_Section_Id) {
+            let sectionEl = container.querySelector(`[data-spec="${newSection.Data_Section_Id}"]`);
+            if(!sectionEl) {
+                sectionEl = Array.from(container.querySelectorAll('[data-spec]'))
+                    .find(el => el.getAttribute('data-spec')?.includes(newSection.Data_Section_Id)) ?? null;
+            }
+            sectionEl?.classList.add('spec-highlight');
+        }
+    }
+});
 
 const renderReact = async (): Promise<void> => {
     // ... (function is unchanged)

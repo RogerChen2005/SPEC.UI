@@ -48,7 +48,7 @@ function edit(component: Component) {
 
   for (let key of editKeys) {
     if ((component[key] as string).trim() != "") {
-      text += `${key}: with requirements: ${component[key]}, `;
+      text += `${key}: with suggestion: ${component[key]}, `;
     }
   }
 
@@ -56,6 +56,7 @@ function edit(component: Component) {
     spec: props.editComponent,
     text: text,
   };
+  console.log(payload);
   axios.post("/edit_spec", payload).then((response) => {
     if (response.data.success) {
       console.log("edit spec success:", response.data);

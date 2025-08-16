@@ -51,14 +51,16 @@ function edit(section: Section) {
       text += `${key}: with requirements: ${section[key]}, `;
     }
   }
+  text += "if necessary, you can edit the components belong to this section.";
   let payload = {
-    spec: section,
+    spec: props.editSection,
     text: text,
   };
+  console.log(payload);
   axios.post("/edit_spec", payload).then((response) => {
     if (response.data.success) {
       console.log("edit spec success:", response.data);
-      emit("edit", section);
+      emit("edit", response.data.data.spec);
     }
   });
 }
