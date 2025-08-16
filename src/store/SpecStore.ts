@@ -10,7 +10,7 @@ import type {
 } from "~/types/index";
 import upload_spec from "~/example/upload_spec.json";
 import generate_spec from "~/example/generate_spec.json";
-import generate_code from "~/example/generate_code.json";
+import generate_code from "~/example/generate_code_1.json";
 import { imageGenerationUtil } from "~/helpers/ReferenceHelper";
 
 interface upload_spec {
