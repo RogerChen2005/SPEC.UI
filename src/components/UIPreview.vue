@@ -191,7 +191,11 @@ watch(selectedComponent, (newComp) => {
             el.classList.remove('spec-highlight');
         });
         if (newComp.Data_Component_Id) {
-            const componentEl = container.querySelector(`[data-spec="${newComp.Data_Component_Id}"]`);
+            let componentEl = container.querySelector(`[data-spec="${newComp.Data_Component_Id}"]`);
+            if (!componentEl) {
+                componentEl = Array.from(container.querySelectorAll('[data-spec]'))
+                    .find(el => el.getAttribute('data-spec')?.includes(newComp.Data_Component_Id)) ?? null;
+            }
             container.querySelector('.spec-highlight')?.classList.remove('spec-highlight');
             componentEl?.classList.add('spec-highlight');
         }
@@ -207,7 +211,11 @@ watch(selectedSection, (newSection) => {
             el.classList.remove('spec-highlight');
         });
         if (newSection.Data_Section_Id) {
-            const sectionEl = container.querySelector(`[data-spec="${newSection.Data_Section_Id}"]`);
+            let sectionEl = container.querySelector(`[data-spec="${newSection.Data_Section_Id}"]`);
+            if(!sectionEl) {
+                sectionEl = Array.from(container.querySelectorAll('[data-spec]'))
+                    .find(el => el.getAttribute('data-spec')?.includes(newSection.Data_Section_Id)) ?? null;
+            }
             sectionEl?.classList.add('spec-highlight');
         }
     }
