@@ -69,7 +69,7 @@ function edit(component: Component) {
 </script>
 
 <template>
-  <v-container v-if="editComponent" style="max-height: 60vh;">
+  <v-container v-if="editComponent">
     <v-card width="350" elevation="5">
       <v-card-title class="d-flex align-center text-body-2">
         Attributes - &nbsp

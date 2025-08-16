@@ -4,6 +4,7 @@ import type { Component, EditInfo, Section, SPEC } from "~/types";
 import EditComponent from "./EditComponent.vue";
 import EditSection from "./EditSection.vue";
 import { useSpecStore } from "~/store/SpecStore";
+import type { LocationStrategyFunction } from "vuetify";
 
 const specStore = useSpecStore();
 
@@ -99,7 +100,6 @@ function componentFilter(component: Component) {
   return props.checkable ? true : component.selected;
 }
 
-
 function onSectionLClick(section: Section) {
   specStore.selectedComponent = undefined;
   specStore.selectedSection = section;
@@ -145,9 +145,7 @@ function onSectionEdit(section: Section) {
   //   editingSection.value = null;
   // }
   if (spec.value) {
-    spec.value.Page_Composition.Sections[
-      editInfo.value.sectionIndex
-    ] = section;
+    spec.value.Page_Composition.Sections[editInfo.value.sectionIndex] = section;
   }
   menuOpen.value = false;
 }
@@ -165,6 +163,7 @@ function onComponentEdit(component: Component) {
   }
   menuOpen.value = false;
 }
+
 </script>
 
 <template>
@@ -243,8 +242,7 @@ function onComponentEdit(component: Component) {
   <v-menu
     :target="attachedElement"
     v-model="menuOpen"
-    location="end center"
-    location-strategy="static"
+    location="end"
     :close-on-content-click="false"
     z-index="9999"
     :offset="10"
