@@ -9,8 +9,10 @@ export interface LayoutArea {
   height: number;
 }
 
+export type Color_Scheme = Record<string, string>;
+
 export interface Component {
-  Color_Scheme: string;
+  Color_Scheme: Color_Scheme;
   Component_Layout_Style: string;
   Component_Type: string;
   Function: string;
@@ -19,7 +21,7 @@ export interface Component {
 }
 
 export interface Section {
-  Color_Scheme: string;
+  Color_Scheme: Color_Scheme;
   Component_Layout_in_Section: string;
   Contained_Components: Component[];
   Section_Name: string;

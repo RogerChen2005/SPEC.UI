@@ -84,8 +84,6 @@ function parseImports(code: string, LIBRARY_MAP: any): { imports: Record<string,
     const imports: Record<string, any> = {};
     let match;
 
-    console.log(code);
-
     while ((match = importRegex.exec(code)) !== null) {
         let specifiers = match[1].trim();
         const libName = match[2] as keyof typeof LIBRARY_MAP;
@@ -126,22 +124,18 @@ function parseImports(code: string, LIBRARY_MAP: any): { imports: Record<string,
         .replace(importRegex, "")
         .replace(/export\s+default\s+/, "")
         .replace(/export\s+{[^}]*}/, "");
-    console.log(imports);
-    console.log(cleanCode);
     return { imports, cleanCode };
 }
 
 const handleClick = (event: Event): void => {
     // When an element is clicked, update our selectedElRef
     selectedElRef.value = event.target as HTMLElement;
-    console.log(selectedElRef.value   )
     const target = (event.target as Element).closest('[data-spec]');
     if (target) {
         event.preventDefault();
         event.stopPropagation();
         const specValue = target.getAttribute('data-spec');
         if (specValue) {
-            console.log(specValue);
             emit('spec-click', specValue);
         }
     }
@@ -296,8 +290,8 @@ onBeforeUnmount((): void => {
 
 <template>
     <v-row no-gutters>
-        <v-col cols="8">
-            <div class="rendered-ui" ref="containerRef">
+        <v-col cols="12" class="pa-4">
+            <div class="rendered-ui rounded-lg" ref="containerRef">
                 <div v-if="loading" class="loading-container">
                     <v-progress-circular indeterminate></v-progress-circular>
                     <span class="ml-2">Loading libraries...</span>
@@ -305,7 +299,7 @@ onBeforeUnmount((): void => {
             </div>
         </v-col>
         <v-divider vertical></v-divider>
-        <v-col>
+        <!-- <v-col>
             <div class="element-inspector">
                 <v-card flat>
                     <v-card-title>
@@ -356,16 +350,15 @@ onBeforeUnmount((): void => {
                     </v-card-text>
                 </v-card>
             </div>
-        </v-col>
+        </v-col> -->
     </v-row>
 </template>
 
 <style scoped>
 .rendered-ui {
-    height: 80vh;
+    max-height: 75vh;
     overflow: auto;
     position: relative;
-    padding: 16px;
 }
 
 .element-inspector {

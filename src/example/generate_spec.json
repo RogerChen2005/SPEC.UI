@@ -4,135 +4,206 @@
       "Page_Composition": {
         "Sections": [
           {
-            "Color_Scheme": "background: #3A3A3A, text: #FFFFFF, input_background: #2C2C2C, icon: #FFFFFF, subtle_text: #8C8C8C",
-            "Component_Layout_in_Section": "A vertical stack layout with components arranged from top to bottom. A dropdown is at the top, followed by a search input, a hierarchical menu, and a link-style button at the very bottom. A consistent margin of ~16px is used between major components.",
+            "Color_Scheme": {
+              "primary_surface": "#2B2B2B",
+              "text": "#CCCCCC",
+              "icons": "#CCCCCC",
+              "scrollbar_thumb": "#555555"
+            },
+            "Component_Layout_in_Section": "A vertical stack of components with consistent vertical spacing of approximately 16px between each functional group. Alignment is to the start (top/left).",
             "Contained_Components": [
               {
-                "Color_Scheme": "text: #FFFFFF, icon: #FFFFFF",
-                "Component_Layout_Style": "Horizontal row containing a label ('My Project') and a dropdown indicator icon (chevron-down), left-aligned.",
+                "Color_Scheme": {
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "Horizontally aligned row containing a label ('My Project') and a chevron-down icon. Full-width component.",
                 "Component_Type": "Dropdown",
                 "Function": "Select the current project or workspace.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #2C2C2C, icon: #8C8C8C, text: #FFFFFF, placeholder_text: #8C8C8C",
-                "Component_Layout_Style": "Input field with a search icon prefix. The placeholder text is centered within the remaining space.",
+                "Color_Scheme": {
+                  "background": "#3C3C3C",
+                  "text": "#CCCCCC",
+                  "placeholder_text": "#888888",
+                  "border": "transparent"
+                },
+                "Component_Layout_Style": "A standard search input field with a placeholder text and a search icon on the left. Rounded corners with a radius of ~4px.",
                 "Component_Type": "Input.Search",
-                "Function": "Filter the list of pages or assets within the project.",
+                "Function": "Filter the list of assets within the project.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #3A3A3A, text: #FFFFFF, icon: #FFFFFF",
-                "Component_Layout_Style": "Vertically stacked menu items. Each item is a horizontal row with a document icon, a text label, and a chevron icon for expandable sub-menus. Follows Ant Design's 'inline' menu mode.",
+                "Color_Scheme": {
+                  "background": "#2B2B2B",
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "An accordion-style menu. The top-level item ('Sample Image') is a collapsible header with a label and a chevron icon. Sub-items are indented and consist of a checkbox and a label.",
                 "Component_Type": "Menu",
-                "Function": "Navigate between different pages or specifications within the project.",
+                "Function": "Display and manage a hierarchical list of assets.",
                 "selected": true
               },
               {
-                "Color_Scheme": "text: #FFFFFF, icon: #FFFFFF",
-                "Component_Layout_Style": "Link-style button with an icon on the left and a text label on the right, horizontally centered within the section.",
-                "Component_Type": "Button",
-                "Function": "Trigger the creation of a new specification level.",
+                "Color_Scheme": {
+                  "box_border": "#888888",
+                  "label_text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A standard square checkbox followed by a text label, part of a list item within the menu.",
+                "Component_Type": "Checkbox",
+                "Function": "Select or deselect an individual asset.",
                 "selected": true
               }
             ],
             "Section_Name": "Project_Navigation_Sidebar",
-            "Section_Position_on_Page": "Fixed-width vertical panel on the far left, occupying approximately 20% of the viewport width.",
+            "Section_Position_on_Page": "Fixed left rail, occupying the leftmost ~25% of the viewport height.",
             "selected": true
           },
           {
-            "Color_Scheme": "background: #2C2C2C, text: #FFFFFF, primary_accent: #ADDE75, card_background: #3A3A3A",
-            "Component_Layout_in_Section": "Vertically stacked layout divided into distinct functional blocks. The top block contains a header with tabs, followed by a title and primary action row. Below this are content cards. The bottom block has its own title and a horizontal grid of cards.",
+            "Color_Scheme": {
+              "primary_surface": "#2B2B2B",
+              "text": "#CCCCCC",
+              "accent": "#BDD163",
+              "divider": "#3C3C3C"
+            },
+            "Component_Layout_in_Section": "Vertically stacked content blocks. A header row contains breadcrumbs and tabs, followed by distinct content sections ('Uploaded Pages', 'Generated Pages') separated by significant vertical spacing (~32px).",
             "Contained_Components": [
               {
-                "Color_Scheme": "text: #8C8C8C, active_text: #FFFFFF, active_indicator: #ADDE75",
-                "Component_Layout_Style": "Horizontally arranged tabs. The active tab ('BUILD SPEC') is indicated with a colored underline. The tab group is prepended by a home icon.",
+                "Color_Scheme": {
+                  "icon": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A horizontal row with a home icon as the first element.",
+                "Component_Type": "Breadcrumb",
+                "Function": "Indicate the user's current location within the application's hierarchy.",
+                "selected": true
+              },
+              {
+                "Color_Scheme": {
+                  "active_text": "#FFFFFF",
+                  "inactive_text": "#888888",
+                  "indicator": "#FFFFFF"
+                },
+                "Component_Layout_Style": "A tab bar with two tabs. The active tab has a white indicator line underneath.",
                 "Component_Type": "Tabs",
-                "Function": "Switch between different views or modes of the workspace.",
+                "Function": "Switch between different editing or composition modes.",
                 "selected": true
               },
               {
-                "Color_Scheme": "text: #FFFFFF",
-                "Component_Layout_Style": "Large heading text ('Build SPEC') aligned to the left, in a row with the primary action button using space-between alignment.",
+                "Color_Scheme": {
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A level 3 or 4 heading placed above its corresponding content.",
                 "Component_Type": "Typography.Title",
-                "Function": "Display the title of the current view.",
+                "Function": "Provide a heading for a content section.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #ADDE75, text: #2C2C2C",
-                "Component_Layout_Style": "A solid-fill button with text label 'Generate', aligned to the right.",
+                "Color_Scheme": {
+                  "background": "#BDD163",
+                  "text": "#2B2B2B"
+                },
+                "Component_Layout_Style": "A solid-fill button with text label 'Add'. Positioned on the same horizontal axis as the 'Uploaded Pages' title, aligned to the right.",
                 "Component_Type": "Button",
-                "Function": "Trigger the primary action of the page, which is to generate the UI specification.",
+                "Function": "Trigger an action to add new content, such as uploading a page.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #3A3A3A, title_text: #FFFFFF",
-                "Component_Layout_Style": "A container card with a title ('Generated UI') and action icons on the top right. The main content area contains a large image preview.",
-                "Component_Type": "Card",
-                "Function": "Display the main generated UI preview.",
+                "Color_Scheme": {
+                  "image_background": "transparent",
+                  "arrow_button_background": "#3C3C3C",
+                  "arrow_icon": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A central image viewer with circular arrow buttons on the left and right for navigation. The image itself occupies the full width of the component.",
+                "Component_Type": "Carousel",
+                "Function": "Display a collection of images with navigation controls.",
                 "selected": true
               },
               {
-                "Color_Scheme": "text: #FFFFFF",
-                "Component_Layout_Style": "Medium heading text ('SPEC Templates') aligned to the left.",
-                "Component_Type": "Typography.Title",
-                "Function": "Display the title for the template selection section.",
+                "Color_Scheme": {
+                  "background": "rgba(0, 0, 0, 0.5)",
+                  "text": "#FFFFFF"
+                },
+                "Component_Layout_Style": "A small, rounded-corner tag overlaid on the top-right of the image in the carousel.",
+                "Component_Type": "Tag",
+                "Function": "Provide a small piece of metadata or a label for an item.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #3A3A3A, title_text: #FFFFFF",
-                "Component_Layout_Style": "A container card where the title area contains a Radio button and label ('Input Page 1'). The body contains an image preview of the template.",
-                "Component_Type": "Card",
-                "Function": "Display a selectable input template.",
-                "selected": true
-              },
-              {
-                "Color_Scheme": "background: #3A3A3A, title_text: #FFFFFF",
-                "Component_Layout_Style": "A container card where the title area contains a Radio button and label ('Input Page 2'). The body contains an image preview of the template.",
-                "Component_Type": "Card",
-                "Function": "Display a selectable input template.",
+                "Color_Scheme": {
+                  "background": "#2B2B2B"
+                },
+                "Component_Layout_Style": "This is an implicit component; the area under 'Generated Pages' is currently empty, serving as a placeholder.",
+                "Component_Type": "Empty",
+                "Function": "Indicate an empty state where generated content will appear.",
                 "selected": true
               }
             ],
-            "Section_Name": "Main_Workspace",
-            "Section_Position_on_Page": "Center column, occupying the largest portion of the screen (~55% width), positioned between the left and right sidebars.",
+            "Section_Name": "Main_Content_Canvas",
+            "Section_Position_on_Page": "Center column, occupying the middle ~50% of the viewport width, between the left and right sidebars.",
             "selected": true
           },
           {
-            "Color_Scheme": "background: #3A3A3A, text: #FFFFFF, tab_active_text: #ADDE75",
-            "Component_Layout_in_Section": "A vertical stack layout. A tab bar is at the top, followed by the main content area which contains descriptive information structured in labeled sections. A close button is positioned at the top right corner.",
+            "Color_Scheme": {
+              "primary_surface": "#3C3C3C",
+              "text": "#CCCCCC",
+              "accent": "#BDD163",
+              "placeholder_text": "#888888"
+            },
+            "Component_Layout_in_Section": "A vertical stack of controls on a distinct surface color. Components are grouped logically with vertical spacing of ~16-24px between them.",
             "Contained_Components": [
               {
-                "Color_Scheme": "text: #8C8C8C, active_text: #ADDE75",
-                "Component_Layout_Style": "Horizontally arranged tabs. The active tab ('EDIT') is styled differently, likely with a colored text or underline.",
-                "Component_Type": "Tabs",
-                "Function": "Switch between different property views for the selected element (e.g., Edit, Reference, Prompt).",
+                "Color_Scheme": {
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A level 4 heading, '设计范式' (Design Specification), at the top of the panel.",
+                "Component_Type": "Typography.Title",
+                "Function": "Provide a heading for the entire control panel.",
                 "selected": true
               },
               {
-                "Color_Scheme": "icon: #FFFFFF",
-                "Component_Layout_Style": "Icon-only button with a close (X) icon, placed at the top-right corner of the section.",
+                "Color_Scheme": {
+                  "text": "#888888"
+                },
+                "Component_Layout_Style": "A small text block located below the panel title and above the prompt area.",
+                "Component_Type": "Typography.Text",
+                "Function": "Provide instructional helper text to the user.",
+                "selected": true
+              },
+              {
+                "Color_Scheme": {
+                  "background": "#3C3C3C",
+                  "icon": "#CCCCCC",
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A vertically arranged menu. Each item is a row containing an icon and a text label.",
+                "Component_Type": "Menu",
+                "Function": "Select a category of design settings to adjust.",
+                "selected": true
+              },
+              {
+                "Color_Scheme": {
+                  "background": "#2B2B2B",
+                  "text": "#CCCCCC",
+                  "placeholder_text": "#888888",
+                  "border": "#555555"
+                },
+                "Component_Layout_Style": "A large text area for input, preceded by a 'Type your prompt:' title. It includes placeholder text as a hint.",
+                "Component_Type": "Input.TextArea",
+                "Function": "Allow the user to enter a multi-line text prompt.",
+                "selected": true
+              },
+              {
+                "Color_Scheme": {
+                  "background": "#BDD163",
+                  "text": "#2B2B2B"
+                },
+                "Component_Layout_Style": "A full-width, solid-fill button at the bottom of the panel. It is the main call-to-action.",
                 "Component_Type": "Button",
-                "Function": "Close or dismiss the properties panel.",
-                "selected": true
-              },
-              {
-                "Color_Scheme": "header_text: #FFFFFF, content_text: #E0E0E0, background: #3A3A3A",
-                "Component_Layout_Style": "A collapse panel with a header ('Brand Logo') and a chevron icon for expanding/collapsing. The content within is a list of descriptions.",
-                "Component_Type": "Collapse",
-                "Function": "Display detailed information in a collapsible accordion format.",
-                "selected": true
-              },
-              {
-                "Color_Scheme": "label_text: #8C8C8C, content_text: #FFFFFF",
-                "Component_Layout_Style": "A single-column layout where each row contains a label (e.g., 'Function') and its corresponding text content.",
-                "Component_Type": "Descriptions",
-                "Function": "Display key-value pairs of metadata about the selected component.",
+                "Function": "Initiate the primary action of the panel, which is to generate content.",
                 "selected": true
               }
             ],
-            "Section_Name": "Properties_Panel",
-            "Section_Position_on_Page": "Fixed-width vertical panel on the far right, occupying approximately 25% of the viewport width.",
+            "Section_Name": "Generation_Control_Panel",
+            "Section_Position_on_Page": "Fixed right rail, occupying the rightmost ~25% of the viewport width.",
             "selected": true
           }
         ]
@@ -148,135 +219,206 @@
       "Page_Composition": {
         "Sections": [
           {
-            "Color_Scheme": "background: #3A3A3A, text: #FFFFFF, input_background: #2C2C2C, icon: #FFFFFF, subtle_text: #8C8C8C",
-            "Component_Layout_in_Section": "A vertical stack layout with components arranged from top to bottom. A dropdown is at the top, followed by a search input, a hierarchical menu, and a link-style button at the very bottom. A consistent margin of ~16px is used between major components.",
+            "Color_Scheme": {
+              "primary_surface": "#2B2B2B",
+              "text": "#CCCCCC",
+              "icons": "#CCCCCC",
+              "scrollbar_thumb": "#555555"
+            },
+            "Component_Layout_in_Section": "A vertical stack of components with consistent vertical spacing of approximately 16px between each functional group. Alignment is to the start (top/left).",
             "Contained_Components": [
               {
-                "Color_Scheme": "text: #FFFFFF, icon: #FFFFFF",
-                "Component_Layout_Style": "Horizontal row containing a label ('My Project') and a dropdown indicator icon (chevron-down), left-aligned.",
+                "Color_Scheme": {
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "Horizontally aligned row containing a label ('My Project') and a chevron-down icon. Full-width component.",
                 "Component_Type": "Dropdown",
                 "Function": "Select the current project or workspace.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #2C2C2C, icon: #8C8C8C, text: #FFFFFF, placeholder_text: #8C8C8C",
-                "Component_Layout_Style": "Input field with a search icon prefix. The placeholder text is centered within the remaining space.",
+                "Color_Scheme": {
+                  "background": "#3C3C3C",
+                  "text": "#CCCCCC",
+                  "placeholder_text": "#888888",
+                  "border": "transparent"
+                },
+                "Component_Layout_Style": "A standard search input field with a placeholder text and a search icon on the left. Rounded corners with a radius of ~4px.",
                 "Component_Type": "Input.Search",
-                "Function": "Filter the list of pages or assets within the project.",
+                "Function": "Filter the list of assets within the project.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #3A3A3A, text: #FFFFFF, icon: #FFFFFF",
-                "Component_Layout_Style": "Vertically stacked menu items. Each item is a horizontal row with a document icon, a text label, and a chevron icon for expandable sub-menus. Follows Ant Design's 'inline' menu mode.",
+                "Color_Scheme": {
+                  "background": "#2B2B2B",
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "An accordion-style menu. The top-level item ('Sample Image') is a collapsible header with a label and a chevron icon. Sub-items are indented and consist of a checkbox and a label.",
                 "Component_Type": "Menu",
-                "Function": "Navigate between different pages or specifications within the project.",
+                "Function": "Display and manage a hierarchical list of assets.",
                 "selected": true
               },
               {
-                "Color_Scheme": "text: #FFFFFF, icon: #FFFFFF",
-                "Component_Layout_Style": "Link-style button with an icon on the left and a text label on the right, horizontally centered within the section.",
-                "Component_Type": "Button",
-                "Function": "Trigger the creation of a new specification level.",
+                "Color_Scheme": {
+                  "box_border": "#888888",
+                  "label_text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A standard square checkbox followed by a text label, part of a list item within the menu.",
+                "Component_Type": "Checkbox",
+                "Function": "Select or deselect an individual asset.",
                 "selected": true
               }
             ],
             "Section_Name": "Project_Navigation_Sidebar",
-            "Section_Position_on_Page": "Fixed-width vertical panel on the far left, occupying approximately 20% of the viewport width.",
+            "Section_Position_on_Page": "Fixed left rail, occupying the leftmost ~25% of the viewport height.",
             "selected": true
           },
           {
-            "Color_Scheme": "background: #2C2C2C, text: #FFFFFF, primary_accent: #ADDE75, card_background: #3A3A3A",
-            "Component_Layout_in_Section": "Vertically stacked layout divided into distinct functional blocks. The top block contains a header with tabs, followed by a title and primary action row. Below this are content cards. The bottom block has its own title and a horizontal grid of cards.",
+            "Color_Scheme": {
+              "primary_surface": "#2B2B2B",
+              "text": "#CCCCCC",
+              "accent": "#BDD163",
+              "divider": "#3C3C3C"
+            },
+            "Component_Layout_in_Section": "Vertically stacked content blocks. A header row contains breadcrumbs and tabs, followed by distinct content sections ('Uploaded Pages', 'Generated Pages') separated by significant vertical spacing (~32px).",
             "Contained_Components": [
               {
-                "Color_Scheme": "text: #8C8C8C, active_text: #FFFFFF, active_indicator: #ADDE75",
-                "Component_Layout_Style": "Horizontally arranged tabs. The active tab ('BUILD SPEC') is indicated with a colored underline. The tab group is prepended by a home icon.",
+                "Color_Scheme": {
+                  "icon": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A horizontal row with a home icon as the first element.",
+                "Component_Type": "Breadcrumb",
+                "Function": "Indicate the user's current location within the application's hierarchy.",
+                "selected": true
+              },
+              {
+                "Color_Scheme": {
+                  "active_text": "#FFFFFF",
+                  "inactive_text": "#888888",
+                  "indicator": "#FFFFFF"
+                },
+                "Component_Layout_Style": "A tab bar with two tabs. The active tab has a white indicator line underneath.",
                 "Component_Type": "Tabs",
-                "Function": "Switch between different views or modes of the workspace.",
+                "Function": "Switch between different editing or composition modes.",
                 "selected": true
               },
               {
-                "Color_Scheme": "text: #FFFFFF",
-                "Component_Layout_Style": "Large heading text ('Build SPEC') aligned to the left, in a row with the primary action button using space-between alignment.",
+                "Color_Scheme": {
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A level 3 or 4 heading placed above its corresponding content.",
                 "Component_Type": "Typography.Title",
-                "Function": "Display the title of the current view.",
+                "Function": "Provide a heading for a content section.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #ADDE75, text: #2C2C2C",
-                "Component_Layout_Style": "A solid-fill button with text label 'Generate', aligned to the right.",
+                "Color_Scheme": {
+                  "background": "#BDD163",
+                  "text": "#2B2B2B"
+                },
+                "Component_Layout_Style": "A solid-fill button with text label 'Add'. Positioned on the same horizontal axis as the 'Uploaded Pages' title, aligned to the right.",
                 "Component_Type": "Button",
-                "Function": "Trigger the primary action of the page, which is to generate the UI specification.",
+                "Function": "Trigger an action to add new content, such as uploading a page.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #3A3A3A, title_text: #FFFFFF",
-                "Component_Layout_Style": "A container card with a title ('Generated UI') and action icons on the top right. The main content area contains a large image preview.",
-                "Component_Type": "Card",
-                "Function": "Display the main generated UI preview.",
+                "Color_Scheme": {
+                  "image_background": "transparent",
+                  "arrow_button_background": "#3C3C3C",
+                  "arrow_icon": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A central image viewer with circular arrow buttons on the left and right for navigation. The image itself occupies the full width of the component.",
+                "Component_Type": "Carousel",
+                "Function": "Display a collection of images with navigation controls.",
                 "selected": true
               },
               {
-                "Color_Scheme": "text: #FFFFFF",
-                "Component_Layout_Style": "Medium heading text ('SPEC Templates') aligned to the left.",
-                "Component_Type": "Typography.Title",
-                "Function": "Display the title for the template selection section.",
+                "Color_Scheme": {
+                  "background": "rgba(0, 0, 0, 0.5)",
+                  "text": "#FFFFFF"
+                },
+                "Component_Layout_Style": "A small, rounded-corner tag overlaid on the top-right of the image in the carousel.",
+                "Component_Type": "Tag",
+                "Function": "Provide a small piece of metadata or a label for an item.",
                 "selected": true
               },
               {
-                "Color_Scheme": "background: #3A3A3A, title_text: #FFFFFF",
-                "Component_Layout_Style": "A container card where the title area contains a Radio button and label ('Input Page 1'). The body contains an image preview of the template.",
-                "Component_Type": "Card",
-                "Function": "Display a selectable input template.",
-                "selected": true
-              },
-              {
-                "Color_Scheme": "background: #3A3A3A, title_text: #FFFFFF",
-                "Component_Layout_Style": "A container card where the title area contains a Radio button and label ('Input Page 2'). The body contains an image preview of the template.",
-                "Component_Type": "Card",
-                "Function": "Display a selectable input template.",
+                "Color_Scheme": {
+                  "background": "#2B2B2B"
+                },
+                "Component_Layout_Style": "This is an implicit component; the area under 'Generated Pages' is currently empty, serving as a placeholder.",
+                "Component_Type": "Empty",
+                "Function": "Indicate an empty state where generated content will appear.",
                 "selected": true
               }
             ],
-            "Section_Name": "Main_Workspace",
-            "Section_Position_on_Page": "Center column, occupying the largest portion of the screen (~55% width), positioned between the left and right sidebars.",
+            "Section_Name": "Main_Content_Canvas",
+            "Section_Position_on_Page": "Center column, occupying the middle ~50% of the viewport width, between the left and right sidebars.",
             "selected": true
           },
           {
-            "Color_Scheme": "background: #3A3A3A, text: #FFFFFF, tab_active_text: #ADDE75",
-            "Component_Layout_in_Section": "A vertical stack layout. A tab bar is at the top, followed by the main content area which contains descriptive information structured in labeled sections. A close button is positioned at the top right corner.",
+            "Color_Scheme": {
+              "primary_surface": "#3C3C3C",
+              "text": "#CCCCCC",
+              "accent": "#BDD163",
+              "placeholder_text": "#888888"
+            },
+            "Component_Layout_in_Section": "A vertical stack of controls on a distinct surface color. Components are grouped logically with vertical spacing of ~16-24px between them.",
             "Contained_Components": [
               {
-                "Color_Scheme": "text: #8C8C8C, active_text: #ADDE75",
-                "Component_Layout_Style": "Horizontally arranged tabs. The active tab ('EDIT') is styled differently, likely with a colored text or underline.",
-                "Component_Type": "Tabs",
-                "Function": "Switch between different property views for the selected element (e.g., Edit, Reference, Prompt).",
+                "Color_Scheme": {
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A level 4 heading, '设计范式' (Design Specification), at the top of the panel.",
+                "Component_Type": "Typography.Title",
+                "Function": "Provide a heading for the entire control panel.",
                 "selected": true
               },
               {
-                "Color_Scheme": "icon: #FFFFFF",
-                "Component_Layout_Style": "Icon-only button with a close (X) icon, placed at the top-right corner of the section.",
+                "Color_Scheme": {
+                  "text": "#888888"
+                },
+                "Component_Layout_Style": "A small text block located below the panel title and above the prompt area.",
+                "Component_Type": "Typography.Text",
+                "Function": "Provide instructional helper text to the user.",
+                "selected": true
+              },
+              {
+                "Color_Scheme": {
+                  "background": "#3C3C3C",
+                  "icon": "#CCCCCC",
+                  "text": "#CCCCCC"
+                },
+                "Component_Layout_Style": "A vertically arranged menu. Each item is a row containing an icon and a text label.",
+                "Component_Type": "Menu",
+                "Function": "Select a category of design settings to adjust.",
+                "selected": true
+              },
+              {
+                "Color_Scheme": {
+                  "background": "#2B2B2B",
+                  "text": "#CCCCCC",
+                  "placeholder_text": "#888888",
+                  "border": "#555555"
+                },
+                "Component_Layout_Style": "A large text area for input, preceded by a 'Type your prompt:' title. It includes placeholder text as a hint.",
+                "Component_Type": "Input.TextArea",
+                "Function": "Allow the user to enter a multi-line text prompt.",
+                "selected": true
+              },
+              {
+                "Color_Scheme": {
+                  "background": "#BDD163",
+                  "text": "#2B2B2B"
+                },
+                "Component_Layout_Style": "A full-width, solid-fill button at the bottom of the panel. It is the main call-to-action.",
                 "Component_Type": "Button",
-                "Function": "Close or dismiss the properties panel.",
-                "selected": true
-              },
-              {
-                "Color_Scheme": "header_text: #FFFFFF, content_text: #E0E0E0, background: #3A3A3A",
-                "Component_Layout_Style": "A collapse panel with a header ('Brand Logo') and a chevron icon for expanding/collapsing. The content within is a list of descriptions.",
-                "Component_Type": "Collapse",
-                "Function": "Display detailed information in a collapsible accordion format.",
-                "selected": true
-              },
-              {
-                "Color_Scheme": "label_text: #8C8C8C, content_text: #FFFFFF",
-                "Component_Layout_Style": "A single-column layout where each row contains a label (e.g., 'Function') and its corresponding text content.",
-                "Component_Type": "Descriptions",
-                "Function": "Display key-value pairs of metadata about the selected component.",
+                "Function": "Initiate the primary action of the panel, which is to generate content.",
                 "selected": true
               }
             ],
-            "Section_Name": "Properties_Panel",
-            "Section_Position_on_Page": "Fixed-width vertical panel on the far right, occupying approximately 25% of the viewport width.",
+            "Section_Name": "Generation_Control_Panel",
+            "Section_Position_on_Page": "Fixed right rail, occupying the rightmost ~25% of the viewport width.",
             "selected": true
           }
         ]

@@ -70,7 +70,7 @@ function setCardRef(el: ComponentPublicInstance | Element | null, index: number)
 }
 
 onMounted(() => {
-  updateActiveSlide();
+  nextTick(()=>updateActiveSlide());
 });
 </script>
 

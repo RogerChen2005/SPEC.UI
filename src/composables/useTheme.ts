@@ -31,7 +31,7 @@ function createDarkTheme(color: any): ThemeDefinition {
       info: color.base,
       background: colors.grey.darken4,
       surface: colors.grey.darken3,
-      "surface-light": colors.grey.darken3,
+      "surface-light": colors.grey.darken2,
       "on-background": color.lighten5,
       "on-surface": color.lighten5,
       "on-surface-light": color.lighten4,

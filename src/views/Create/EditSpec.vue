@@ -69,14 +69,74 @@
         </v-col>
       </v-row> -->
     <v-row v-if="currentPage.code" class="mt-2">
-      <v-col class="d-flex justify-center align-center px-8">
-        <UIPreview :code="currentPage.code" @spec-click="handleSpecClick"></UIPreview>
+      <v-col
+        cols="10"
+        class="d-flex justify-center align-center fill-height"
+      >
+        <UIPreview
+          :code="currentPage.code"
+          @spec-click="handleSpecClick"
+        ></UIPreview>
+      </v-col>
+      <v-col cols="2" class="fill-height">
+        <h1 class="text-h5 font-weight-bold">Reference</h1>
+        <div class="reference-panel mt-2">
+          <div
+            v-for="(img, index) in uploadedPages"
+            :key="img.id"
+            class="mb-2 image-wrapper"
+          >
+            <v-img
+              :src="img.url"
+              class="rounded-lg cursor-pointer image-content"
+              aspect-ratio="1"
+              cover
+              width="200"
+              @click="openDialog(index)"
+              ><div class="image-close-btn">
+                <v-btn
+                icon="mdi-close"
+                size="x-small"
+                class="close-button"
+                @click.stop="handleRemoveImage(img.id)"
+              ></v-btn
+            >
+              </div></v-img>
+          </div>
+        </div>
       </v-col>
     </v-row>
   </v-container>
-  <!-- <div v-if="currentPage.code" style="width: 100%; height: 60vh;">
-      <CodeBar :code="currentPage.code"/>
-    </div> -->
+
+  <v-sheet color="background" class="pa-3">
+    <!-- Image display area -->
+
+    <div class="input-area">
+      <div class="mb-2 input-area-header">
+        <span class="text-h6 text-medium-emphasis">
+          Current: <strong>{{ getCurrentSelection() }}</strong>
+        </span>
+      </div>
+      <!-- Text input area -->
+      <v-textarea
+        v-model="textValue"
+        placeholder="请输入内容"
+        variant="solo"
+        flat
+        rows="1"
+        dense
+        class="pa-0"
+        auto-grow
+      ></v-textarea>
+
+      <!-- Action buttons -->
+      <div class="d-flex justify-space-between align-center input-area-actions">
+        <v-btn icon="mdi-plus" size="small" variant="tonal" @click="uploadImage"> </v-btn>
+        <v-btn variant="tonal" icon="mdi-send" size="small" @click="confirmEditSpec"></v-btn>
+      </div>
+    </div>
+  </v-sheet>
+
   <teleport to="body">
     <CDialog v-model:visible="dialogOpened" width="80%" height="80%">
       <template #header>
@@ -84,7 +144,7 @@
         <h2 class="text-h4 font-weight-bold ml-4">Page Details</h2>
       </template>
       <DetailedDialog
-        :editable="false"
+        :editable="true"
         :page-index="viewingPage"
         @close="dialogOpened = false"
       >
@@ -93,7 +153,7 @@
   </teleport>
 
   <teleport to="body">
-    <CDialog v-model:visible="markDialogOpened" width="60%" height="20%">
+    <CDialog v-model:visible="markDialogOpened" width="60%" height="230px">
       <template #header>
         <v-row class="align-center">
           <v-col cols="10">
@@ -114,61 +174,6 @@
       </template>
     </CDialog>
   </teleport>
-  <v-sheet color="background" class="pa-3">
-    <!-- Image display area -->
-    <div
-      v-if="uploadedPages.length > 0"
-      class="image-container pa-1 d-flex"
-      style="overflow-x: auto"
-    >
-      <div
-        v-for="img in uploadedPages"
-        :key="img.id"
-        class="image-wrapper mr-2 flex-shrink-0"
-      >
-        <v-img
-          :src="img.url"
-          class="rounded-lg cursor-pointer"
-          aspect-ratio="1"
-          cover
-          width="200"
-        ></v-img>
-        <v-btn
-          icon="mdi-close"
-          size="x-small"
-          class="close-button"
-          @click="handleRemoveImage(img.id)"
-        ></v-btn>
-      </div>
-    </div>
-
-    <div class="mb-2">
-      <span class="text-h6 text-medium-emphasis">
-        Current: <strong>{{ getCurrentSelection() }}</strong>
-      </span>
-    </div>
-    <!-- Text input area -->
-    <v-textarea
-      v-model="textValue"
-      label="请输入内容"
-      variant="outlined"
-      rows="3"
-      dense
-      class="mt-2"
-    ></v-textarea>
-
-    <!-- Action buttons -->
-    <div class="d-flex justify-space-between align-center mt-2">
-      <v-btn
-        icon="mdi-plus"
-        variant="outlined"
-        @click="uploadImage"
-        color="black"
-      >
-      </v-btn>
-      <v-btn variant="tonal" @click="confirmEditSpec"> Confirm Edit </v-btn>
-    </div>
-  </v-sheet>
 </template>
 
 <script setup lang="ts">
@@ -181,7 +186,9 @@ import axios from "~/helpers/RequestHelper";
 // import CodeBar  from '~/components/CodePane.vue';
 import type { SPEC, Component, Section } from "~/types";
 import { defineAsyncComponent } from "vue";
-const UIPreview = defineAsyncComponent(() => import("~/components/UIPreview.vue"));
+const UIPreview = defineAsyncComponent(
+  () => import("~/components/UIPreview.vue")
+);
 
 const textValue = ref("");
 const specStore = useSpecStore();
@@ -195,15 +202,16 @@ const markDialogOpened = ref(false);
 
 const dialogOpened = ref(false);
 const viewingPage = ref(0);
-// function openDialog(index: number) {
-//   console.log("Open dialog for page index:", index);
-//   viewingPage.value = index;
-//   dialogOpened.value = true;
-// }
+
+
+function openDialog(index: number) {
+  console.log("Open dialog for page index:", index);
+  viewingPage.value = index;
+  dialogOpened.value = true;
+}
 
 function handleSpecClick(value: string | null) {
-  if(value) {
-
+  if (value) {
   }
 }
 
@@ -373,92 +381,42 @@ function back() {
   overflow-y: auto;
   height: 100%;
 }
-.fill-height {
-  height: 100%;
-}
-.generatedPages-wrapper {
-  flex-wrap: nowrap;
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  padding: 1rem 0;
+
+.input-area {
+  background-color: rgb(var(--v-theme-surface));
+  padding: 20px;
+  border-radius: 30px;
+  margin-top: 30px;
+  position: relative;
 }
 
-.generatedPages-wrapper::-webkit-scrollbar {
-  display: none; /* for Chrome, Safari, and Opera */
+.input-area-header {
+  position: absolute;
+  top: -40px;
+  left: 30px;
+  background-color: rgb(var(--v-theme-surface-light));
+  height: 40px;
+  padding: 3px 20px 0 20px;
+  border-radius: 15px 15px 0 0;
 }
 
-.slide-item {
-  flex-shrink: 0;
-  height: 530px;
-  width: 800px;
-  margin: 0 16px;
-  scroll-snap-align: center;
-  filter: blur(4px);
-  opacity: 0;
-  transition: 0.3s ease-in-out;
-  cursor: pointer;
-  perspective: 1000px;
+.reference-panel {
+  max-height: calc(75vh - 30px);
+  overflow-y: auto;
 }
 
-.slide-item.active-slide {
-  opacity: 1;
-  transform: scale(1);
-  filter: blur(0);
-  z-index: 100;
+.image-wrapper{
+  gap: 12px;
 }
 
-.slide-item.active-slide:hover {
-  transform: scale(1.03);
+.image-content{
+  position: relative;
+  border: 5px solid rgba(var(--v-border-color), 0.1);
 }
 
-.slide-item.left-slide {
-  opacity: 1;
-  transform: scale(0.8);
-  filter: blur(5px);
-}
-
-.slide-item.left-slide:hover {
-  transform: scale(0.83);
-}
-
-.slide-item.right-slide {
-  opacity: 1;
-  transform: scale(0.8);
-  filter: blur(5px);
-}
-
-.slide-item.right-slide:hover {
-  transform: scale(0.83);
-}
-
-.slide-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.slide-content {
-  width: 100%;
-  height: 60vh;
-  min-height: 400px;
-  max-height: 600px;
-  transition: 0.3s ease-in-out;
-  border: solid 4px rgba(var(--v-border-color), 0.2);
-  overflow: hidden;
-}
-
-.slide-item.left-slide .slide-content {
-  transform: translateX(90%) rotateY(10deg);
-}
-
-.slide-item.right-slide .slide-content {
-  transform: translateX(-90%) rotateY(-10deg);
-}
-
-.padder {
-  cursor: default;
+.image-close-btn{
+  position: absolute;
+  right: 5px;
+  top: 5px;
 }
 </style>

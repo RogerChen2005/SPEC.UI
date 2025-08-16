@@ -243,9 +243,11 @@ function onComponentEdit(component: Component) {
   <v-menu
     :target="attachedElement"
     v-model="menuOpen"
-    location="end"
+    location="end center"
+    location-strategy="static"
     :close-on-content-click="false"
     z-index="9999"
+    :offset="10"
   >
     <EditComponent
       :edit-component="editingComponent"

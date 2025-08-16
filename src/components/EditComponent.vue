@@ -13,7 +13,7 @@ const props = defineProps({
 const component = ref<Component>({
   Component_Type: "",
   Function: "",
-  Color_Scheme: "",
+  Color_Scheme: {},
   Component_Layout_Style: "",
   Data_Component_Id: "",
 });
@@ -24,7 +24,7 @@ watch(
     component.value = {
       Component_Type: "",
       Function: "",
-      Color_Scheme: "",
+      Color_Scheme: {},
       Component_Layout_Style: "",
       Data_Component_Id: "",
     };
@@ -67,7 +67,7 @@ function edit(component: Component) {
 </script>
 
 <template>
-  <v-container v-if="editComponent">
+  <v-container v-if="editComponent" style="max-height: 60vh;">
     <v-card width="350" elevation="5">
       <v-card-title class="d-flex align-center text-body-2">
         Attributes - &nbsp
@@ -75,7 +75,7 @@ function edit(component: Component) {
       </v-card-title>
       <v-divider></v-divider>
 
-      <v-card-text>
+      <v-card-text style="max-height: 80vh; overflow: auto;">
         <h1 class="text-h6 font-weight-bold mb-2">Function</h1>
         <v-textarea
           v-model="editComponent.Function"
@@ -98,10 +98,7 @@ function edit(component: Component) {
 
         <ColorTextField
           v-model="editComponent.Color_Scheme"
-          rows="1"
-          auto-grow
-          variant="solo-filled"
-          readonly
+          class="mb-4"
         />
 
         <v-text-field

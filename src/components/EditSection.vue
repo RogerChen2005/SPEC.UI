@@ -14,7 +14,7 @@ const section = ref<Section>({
   Section_Name: "",
   Section_Position_on_Page: "",
   Component_Layout_in_Section: "",
-  Color_Scheme: "",
+  Color_Scheme: {},
   Contained_Components: [],
   Data_Section_Id: "",
 });
@@ -26,7 +26,7 @@ watch(
       Section_Name: "",
       Section_Position_on_Page: "",
       Component_Layout_in_Section: "",
-      Color_Scheme: "",
+      Color_Scheme: {},
       Contained_Components: [],
       Data_Section_Id: "",
     };
@@ -75,7 +75,7 @@ function edit(section: Section) {
       </v-card-title>
       <v-divider></v-divider>
 
-      <v-card-text>
+      <v-card-text style="max-height: 80vh; overflow: auto;">
         <h1 class="text-h6 font-weight-bold mb-2">Component Layout</h1>
         <v-textarea
           v-model="editSection.Component_Layout_in_Section"
@@ -96,13 +96,7 @@ function edit(section: Section) {
 
         <h1 class="text-h6 font-weight-bold mb-2">Color Scheme</h1>
 
-        <ColorTextField
-          v-model="editSection.Color_Scheme"
-          rows="1"
-          auto-grow
-          variant="solo-filled"
-          readonly
-        />
+        <ColorTextField v-model="editSection.Color_Scheme" class="mb-4" />
 
         <v-text-field
           v-model="section.Color_Scheme"
@@ -113,7 +107,7 @@ function edit(section: Section) {
         ></v-text-field>
 
         <h1 class="text-h6 font-weight-bold mb-2">Layout Style</h1>
-        
+
         <v-textarea
           v-model="editSection.Section_Position_on_Page"
           rows="1"
