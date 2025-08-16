@@ -4,29 +4,31 @@ import { type PropType, ref, watch } from "vue";
 import type { Component } from "~/types";
 import axios from "~/helpers/RequestHelper";
 
+interface ComponentSuggestion {
+  Function: string;
+  Color_Scheme: string;
+  Component_Layout_Style: string;
+}
+
 const props = defineProps({
   editComponent: {
     type: Object as PropType<Component | null>,
   },
 });
 
-const component = ref<Component>({
-  Component_Type: "",
+const component = ref<ComponentSuggestion>({
   Function: "",
-  Color_Scheme: {},
+  Color_Scheme: "",
   Component_Layout_Style: "",
-  Data_Component_Id: "",
 });
 
 watch(
   () => props.editComponent,
   () => {
     component.value = {
-      Component_Type: "",
       Function: "",
-      Color_Scheme: {},
+      Color_Scheme: "",
       Component_Layout_Style: "",
-      Data_Component_Id: "",
     };
   },
   { immediate: true }
@@ -36,13 +38,13 @@ const emit = defineEmits<{
   (e: "edit", component: Component): void;
 }>();
 
-const editKeys: (keyof Component)[] = [
+const editKeys: (keyof ComponentSuggestion)[] = [
   "Function",
   "Color_Scheme",
   "Component_Layout_Style",
 ];
 
-function edit(component: Component) {
+function edit(component: ComponentSuggestion) {
   console.log("Edit component:", component);
   let text = "User wants to edit ";
 
@@ -52,7 +54,8 @@ function edit(component: Component) {
     }
   }
 
-  text += "if necessary, you can edit other attributes to better follow the suggestion."
+  text +=
+    "if necessary, you can edit other attributes to better follow the suggestion.";
 
   let payload = {
     spec: props.editComponent,
@@ -77,7 +80,7 @@ function edit(component: Component) {
       </v-card-title>
       <v-divider></v-divider>
 
-      <v-card-text style="max-height: 80vh; overflow: auto;">
+      <v-card-text style="max-height: 80vh; overflow: auto">
         <h1 class="text-h6 font-weight-bold mb-2">Function</h1>
         <v-textarea
           v-model="editComponent.Function"
@@ -98,10 +101,7 @@ function edit(component: Component) {
 
         <h1 class="text-h6 font-weight-bold mb-2">Color Scheme</h1>
 
-        <ColorTextField
-          v-model="editComponent.Color_Scheme"
-          class="mb-4"
-        />
+        <ColorTextField v-model="editComponent.Color_Scheme" class="mb-4" />
 
         <v-text-field
           v-model="component.Color_Scheme"

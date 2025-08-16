@@ -10,25 +10,25 @@ const props = defineProps({
   },
 });
 
-const section = ref<Section>({
-  Section_Name: "",
+interface SectionSuggestion {
+  Section_Position_on_Page: string;
+  Component_Layout_in_Section: string;
+  Color_Scheme: string;
+}
+
+const section = ref<SectionSuggestion>({
   Section_Position_on_Page: "",
   Component_Layout_in_Section: "",
-  Color_Scheme: {},
-  Contained_Components: [],
-  Data_Section_Id: "",
+  Color_Scheme: ""
 });
 
 watch(
   () => props.editSection,
   () => {
     section.value = {
-      Section_Name: "",
       Section_Position_on_Page: "",
       Component_Layout_in_Section: "",
-      Color_Scheme: {},
-      Contained_Components: [],
-      Data_Section_Id: "",
+      Color_Scheme: ""
     };
   },
   { immediate: true }
@@ -36,13 +36,13 @@ watch(
 
 const emit = defineEmits<(e: "edit", section: Section) => void>();
 
-const editKeys: (keyof Section)[] = [
+const editKeys: (keyof SectionSuggestion)[] = [
   "Section_Position_on_Page",
   "Component_Layout_in_Section",
   "Color_Scheme",
 ];
 
-function edit(section: Section) {
+function edit(section: SectionSuggestion) {
   console.log("Edit section:", section);
   let text = "User wants to edit ";
 
