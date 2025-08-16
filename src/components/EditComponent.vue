@@ -52,6 +52,8 @@ function edit(component: Component) {
     }
   }
 
+  text += "if necessary, you can edit other attributes to better follow the suggestion."
+
   let payload = {
     spec: props.editComponent,
     text: text,
