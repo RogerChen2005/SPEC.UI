@@ -108,7 +108,7 @@
     </v-row>
   </v-container>
 
-  <v-sheet color="background" class="pa-3">
+  <v-sheet color="background" class="pa-1">
     <!-- Image display area -->
 
     <div class="input-area">
@@ -124,8 +124,10 @@
         variant="solo"
         flat
         rows="1"
-        dense
         class="pa-0"
+        bg-color="transparent"
+        hide-details
+        hide-spin-buttons
         auto-grow
       ></v-textarea>
 
@@ -383,8 +385,8 @@ function back() {
 }
 
 .input-area {
-  background-color: rgb(var(--v-theme-surface));
-  padding: 20px;
+  background-color: rgba(var(--v-theme-on-surface),0.08);
+  padding: 10px;
   border-radius: 30px;
   margin-top: 30px;
   position: relative;
@@ -393,11 +395,17 @@ function back() {
 .input-area-header {
   position: absolute;
   top: -40px;
-  left: 30px;
-  background-color: rgb(var(--v-theme-surface-light));
+  left: 50px;
+  background-color: rgba(var(--v-theme-on-surface),0.05);
+  box-shadow: inset 0 0 5px rgba(var(--v-border-color), 0.1);
   height: 40px;
   padding: 3px 20px 0 20px;
   border-radius: 15px 15px 0 0;
+}
+
+.input-area-actions {
+  padding: 10px;
+  padding-top: 0;
 }
 
 .reference-panel {
