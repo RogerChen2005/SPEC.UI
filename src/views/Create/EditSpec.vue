@@ -188,8 +188,7 @@ import axios from "~/helpers/RequestHelper";
 // import CodeBar  from '~/components/CodePane.vue';
 import type { SPEC, Component, Section } from "~/types";
 import { defineAsyncComponent } from "vue";
-import { v4 } from "uuid";
-import { CompleteStatus } from "~/enums";
+
 const UIPreview = defineAsyncComponent(
   () => import("~/components/UIPreview.vue")
 );
@@ -319,13 +318,13 @@ function uploadImage() {
 
 function confirmEditSpec() {
   let index = specStore.currentGeneratedPageIndex;
-  let spec = "";
+  let spec: SPEC | Component | Section | undefined = undefined;
   if (specStore.selectedComponent) {
-    spec = JSON.stringify(toRaw(specStore.selectedComponent));
+    spec = specStore.selectedComponent;
   } else if (specStore.selectedSection) {
-    spec = JSON.stringify(toRaw(specStore.selectedSection));
-  } else {
-    spec = JSON.stringify(toRaw(generatedPages.value[index].spec));
+    spec = specStore.selectedSection;
+  } else if (generatedPages.value[index].spec){
+    spec = generatedPages.value[index].spec;
   }
 
   console.log("Confirming edit spec with data:", spec);
@@ -339,28 +338,18 @@ function confirmEditSpec() {
     .post("/edit_spec", payload)
     .then((response) => {
       console.log("Edit spec response:", response.data);
-      let origin_spec = specStore.generatedPages[index].spec;
 
       if (specStore.selectedComponent) {
-        specStore.selectedComponent = response.data.data.spec as Component;
+        Object.assign(specStore.selectedComponent, response.data.data.spec as Component);
+        console.log(specStore.selectedComponent);
       } else if (specStore.selectedSection) {
-        specStore.selectedSection = response.data.data.spec as Section;
+        Object.assign(specStore.selectedSection, response.data.data.spec as Section);
+        console.log("selected section: ",specStore.selectedSection);
       } else {
         specStore.generatedPages[index].spec = response.data.data.spec as SPEC;
+        console.log(specStore.generatedPages[index].spec);
       }
-      // 创建新的 GeneratedImage 而不是覆盖原有数据
-      const newGeneratedImage = {
-        id: v4(),
-        spec: generatedPages.value[index].spec as SPEC,
-        complete: CompleteStatus.Incomplete,
-        code: generatedPages.value[index].code || "",
-        url: generatedPages.value[index].url,
-        time: new Date(),
-        reference: generatedPages.value[index].reference,
-      };
-      specStore.generatedPages[index].spec = origin_spec;
-      specStore.generatedPages.push(newGeneratedImage);
-      specStore.currentGeneratedPageIndex = specStore.generatedPages.length - 1;
+      
     })
     .catch((error) => {
       console.error("Error editing spec:", error);

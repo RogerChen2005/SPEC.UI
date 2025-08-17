@@ -12,7 +12,7 @@ const currentTab = ref<number>(0);
 const keyword = ref("");
 const pages = computed(() =>
   specStore.generatedPages.map((page: any, index: number) => ({
-    id: index,
+    index: index,
     name: page.mark
       ? page.mark
       : page.time
@@ -35,7 +35,7 @@ const currentPage = computed(() => {
 function selectPage() {
   specStore.selectedSection = undefined;
   specStore.selectedComponent = undefined;
-  console.log(specStore.currentGeneratedPageIndex);
+  console.log( specStore.currentGeneratedPageIndex);
 }
 
 function generateCode() {
@@ -64,7 +64,7 @@ function generateCode() {
       v-model="currentTab"
       :items="pages"
       item-title="name"
-      item-value="id"
+      item-value="index"
       variant="underlined"
       flat
       hide-details
@@ -95,6 +95,7 @@ function generateCode() {
     ></v-text-field>
 
     <LayerDisplay
+      v-if="currentPage"
       v-model="currentPage.spec"
       :checkable="false"
       :query="keyword"
