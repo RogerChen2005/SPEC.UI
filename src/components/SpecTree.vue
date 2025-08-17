@@ -5,6 +5,7 @@ import LayerDisplay from "./LayerDisplay.vue";
 import axios from "~/helpers/RequestHelper";
 import CDialog from "./UI/CDialog.vue";
 import type { SpecType } from "~/types";
+import { CompleteStatus } from "~/enums";
 
 const specStore = useSpecStore();
 const currentTab = ref<number>(0);
@@ -48,7 +49,7 @@ function generateCode() {
       if (response.data.success) {
         console.log("generate code success:", response.data);
         specStore.generatedPages[index].code = response.data.data.code;
-        specStore.generatedPages[index].complete = true;
+        specStore.generatedPages[index].complete = CompleteStatus.Complete;
         specStore.generatedPages[index].url =
           "data:image/png;base64," + response.data.data.render_image;
         console.log("Updated generated page:", specStore.generatedPages[index]);
@@ -59,12 +60,6 @@ function generateCode() {
 
 <template>
   <v-container fluid class="pa-2">
-    <v-sheet class="d-flex align-center ma-0 mt-4">
-      <v-icon icon="mdi-folder-multiple-outline" class="mr-2"></v-icon>
-      <div class="text-h5 font-weight-bold">My Project</div>
-      <v-spacer></v-spacer>
-    </v-sheet>
-
     <v-select
       v-model="currentTab"
       :items="pages"

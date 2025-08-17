@@ -4,6 +4,7 @@ import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import { useSpecStore } from "~/store/SpecStore";
 import CDialog from "./UI/CDialog.vue";
 import DetailedDialog from "./DetailedDialog.vue";
+import { CompleteStatus } from "~/enums";
 
 const specStore = useSpecStore();
 const currentPage = computed({
@@ -14,7 +15,7 @@ const currentPage = computed({
 });
 const viewingPage = ref(0);
 const uploadedPages = computed(() => specStore.uploadedPages);
-const CardRef = ref<InstanceType<typeof Element>[]>([]);
+const CardRef = ref<Record<string,InstanceType<typeof Element>>>({});
 const dialogOpened = ref(false);
 
 function uploadImage() {
@@ -56,14 +57,15 @@ function prevPageUploaded() {
 }
 
 function updateActiveSlide() {
-  CardRef.value[currentPage.value].scrollIntoView({
+  const currentImage = uploadedPages.value[currentPage.value];
+  CardRef.value[currentImage.id].scrollIntoView({
     behavior: "smooth",
     block: "nearest",
     inline: "center",
   });
 }
 
-function setCardRef(el: ComponentPublicInstance | Element | null, index: number) {
+function setCardRef(el: ComponentPublicInstance | Element | null, index: string) {
   if (el) {
     CardRef.value[index] = el as Element;
   }
@@ -106,17 +108,17 @@ onMounted(() => {
           <div class="slide"></div>
           <div
             v-for="(page, index) in uploadedPages"
-            :ref="(el)=>setCardRef(el,index)"
+            :ref="(el)=>setCardRef(el,page.id)"
             :key="index"
             class="slide"
           >
             <v-card @click="openDialog(index)" link class="uploaded-page" :class="{
               'current-page': currentPage === index
             }">
-              <template v-if="page.complete">
+              <template v-if="page.complete == CompleteStatus.Complete">
                 <v-img :src="page.url" height="400px" cover></v-img>
               </template>
-              <template v-else>
+              <template v-else-if="page.complete == CompleteStatus.Incomplete">
                 <v-sheet
                   class="d-flex flex-column align-center justify-center"
                   height="400px"
@@ -127,6 +129,15 @@ onMounted(() => {
                     class="mb-2"
                   ></v-progress-circular>
                   <span>Analyzing image...</span>
+                </v-sheet>
+              </template>
+              <template v-else>
+                <v-sheet
+                  class="d-flex flex-column align-center justify-center"
+                  height="400px"
+                >
+                  <v-icon class="mb-2">mdi-alert-circle</v-icon>
+                  <span>UI Generation Failed</span>
                 </v-sheet>
               </template>
               <v-overlay

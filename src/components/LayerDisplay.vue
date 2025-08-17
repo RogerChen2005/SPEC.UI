@@ -4,7 +4,6 @@ import type { Component, EditInfo, Section, SPEC } from "~/types";
 import EditComponent from "./EditComponent.vue";
 import EditSection from "./EditSection.vue";
 import { useSpecStore } from "~/store/SpecStore";
-import type { LocationStrategyFunction } from "vuetify";
 
 const specStore = useSpecStore();
 
@@ -89,11 +88,7 @@ function getComponentIcon(componentType: Component["Component_Type"]) {
 }
 
 function sectionFilter(section: Section, query: string) {
-  if (!props.checkable) {
-    return !query || section.Section_Name.includes(query);
-  } else {
-    return section.selected;
-  }
+  return (props.checkable? true: section.selected) && (query? section.Section_Name.toLowerCase().includes(query.toLowerCase()):true);
 }
 
 function componentFilter(component: Component) {
@@ -140,10 +135,6 @@ function onComponentRClick(
 }
 
 function onSectionEdit(section: Section) {
-  // if (editInfo.value.sectionIndex !== -1) {
-  //   emit("section-edit", editInfo.value, section);
-  //   editingSection.value = null;
-  // }
   if (spec.value) {
     spec.value.Page_Composition.Sections[editInfo.value.sectionIndex] = section;
   }
@@ -151,11 +142,6 @@ function onSectionEdit(section: Section) {
 }
 
 function onComponentEdit(component: Component) {
-  // if (editInfo.value.sectionIndex !== -1 && editInfo.value.componentIndex !== -1) {
-  //   emit("component-edit", editInfo.value, component);
-  //   editingComponent.value = null;
-  // }
-  // menuOpen.value = false;
   if (spec.value) {
     spec.value.Page_Composition.Sections[
       editInfo.value.sectionIndex

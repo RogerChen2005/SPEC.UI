@@ -11,10 +11,10 @@ interface EditableAttribute {
 }
 
 // Set of HTML void elements that cannot have inner content.
-const VOID_ELEMENTS = new Set([
-  'AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 
-  'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'
-]);
+// const VOID_ELEMENTS = new Set([
+//   'AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 
+//   'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'
+// ]);
 
 
 // 动态导入大型库
@@ -74,10 +74,10 @@ let reactRoot: Root | null = null;
 let libraries: Awaited<ReturnType<typeof loadLibraries>> | null = null;
 
 // Computed property to check if the selected element is a void element
-const isVoidElement = computed(() => {
-    if (!selectedElRef.value) return false;
-    return VOID_ELEMENTS.has(selectedElRef.value.tagName);
-});
+// const isVoidElement = computed(() => {
+//     if (!selectedElRef.value) return false;
+//     return VOID_ELEMENTS.has(selectedElRef.value.tagName);
+// });
 
 function parseImports(code: string, LIBRARY_MAP: any): { imports: Record<string, any>, cleanCode: string } {
     const importRegex = /import\s+([\s\S]*?)\s+from\s+['"]([^'"]+)['"];?/g;
@@ -144,20 +144,20 @@ const handleClick = (event: Event): void => {
 /**
  * Handles changes to attributes from the text fields and applies them to the actual DOM element.
  */
-const handleAttributeChange = (name: string, newValue: string) => {
-  if (selectedElRef.value) {
-    selectedElRef.value.setAttribute(name, newValue);
-  }
-};
+// const handleAttributeChange = (name: string, newValue: string) => {
+//   if (selectedElRef.value) {
+//     selectedElRef.value.setAttribute(name, newValue);
+//   }
+// };
 
 /**
  * Handles changes to inner text from the textarea and applies them to the actual DOM element.
  */
-const handleInnerTextChange = (newText: string) => {
-    if (selectedElRef.value) {
-        selectedElRef.value.innerText = newText;
-    }
-};
+// const handleInnerTextChange = (newText: string) => {
+//     if (selectedElRef.value) {
+//         selectedElRef.value.innerText = newText;
+//     }
+// };
 
 // --- Watch for changes to the selected element ---
 watch(selectedElRef, (newEl) => {
@@ -357,7 +357,8 @@ onBeforeUnmount((): void => {
 <style scoped>
 .rendered-ui {
     max-height: 75vh;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
 }
 

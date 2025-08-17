@@ -14,6 +14,7 @@ const emit = defineEmits<{
 const specStore = useSpecStore();
 
 const uploadedPages = computed(() => specStore.uploadedPages);
+const designSpecs = computed(() => specStore.designSpecs);
 
 const selectedIndex = computed(() =>
   props.type === "Structure"
@@ -24,14 +25,39 @@ const selectedIndex = computed(() =>
 function selectImage(index: number) {
   emit("selected", index);
 }
+
+function useCustomPrompt() {
+  if (props.type !== 'Structure' && designSpecs.value[props.type].customPrompt)
+    selectImage(-1);
+}
 </script>
 
 <template>
   <v-container class="pa-6 overflow-y-auto mt-6" fluid height="100%">
+    <template v-if="props.type !== 'Structure'">
+      <h1 class="text-h6 font-weight-bold mb-4">Enter Your Custom Prompt:</h1>
+      <v-row class="mb-4">
+        <v-col cols="11">
+          <v-text-field
+            v-model="designSpecs[props.type].customPrompt"
+            placeholder="Enter your custom prompt here..."
+            variants="tonal"
+            clearable
+            hide-details
+            hide-spin-buttons
+            @change="useCustomPrompt"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="1" class="d-flex align-center justify-center">
+          <v-btn icon="mdi-check" size="small" @click="useCustomPrompt"></v-btn>
+        </v-col>
+      </v-row>
+    </template>
+    <h1 class="text-h6 font-weight-bold mb-4">Select From Reference Image:</h1>
     <v-row class="d-flex flex-wrap">
       <v-col
         v-for="(page, index) in uploadedPages"
-        :key="page.id"
+        :key="index"
         cols="12"
         :md="type === 'Structure' ? 4 : 6"
       >

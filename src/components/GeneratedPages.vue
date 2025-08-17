@@ -10,6 +10,7 @@ import {
 import { useSpecStore } from "~/store/SpecStore";
 import CDialog from "./UI/CDialog.vue";
 import DetailedDialog from "./DetailedDialog.vue";
+import { CompleteStatus } from "~/enums";
 
 const specStore = useSpecStore();
 const generatedPages = computed(() => specStore.generatedPages);
@@ -118,10 +119,10 @@ onMounted(() => {
             @click="openDialog(index)"
           >
             <div class="slide-content rounded-lg">
-              <template v-if="page.complete && page.url">
+              <template v-if="page.complete == CompleteStatus.Complete && page.url">
                 <img class="slide-image" :src="page.url" />
               </template>
-              <template v-else>
+              <template v-else-if="page.complete == CompleteStatus.Incomplete">
                 <v-sheet
                   class="d-flex flex-column align-center justify-center"
                   height="100%"
@@ -132,6 +133,15 @@ onMounted(() => {
                     class="mb-2"
                   ></v-progress-circular>
                   <span>Generating UI...</span>
+                </v-sheet>
+              </template>
+              <template v-else>
+                <v-sheet
+                  class="d-flex flex-column align-center justify-center"
+                  height="100%"
+                >
+                  <v-icon class="mb-2">mdi-alert-circle</v-icon>
+                  <span>UI Generation Failed</span>
                 </v-sheet>
               </template>
             </div>

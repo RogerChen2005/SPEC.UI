@@ -12,6 +12,8 @@ import type {
   SpecType,
   UIDesignSpecification,
 } from "~/types";
+import { v4 } from "uuid";
+import { CompleteStatus } from "~/enums";
 
 function filterSelectedComponents(components: Component[]): Component[] {
   return components.filter((component) => component.selected === true);
@@ -36,12 +38,15 @@ function filterSelectedPageStructure(
   };
 }
 
-export function checkMissingSpecs(designSpecs: DesignSpec, pageCompositionReference: number): string[] {
+export function checkMissingSpecs(
+  designSpecs: DesignSpec,
+  pageCompositionReference: number
+): string[] {
   const missingSpecs: string[] = [];
   const keys = Object.keys(designSpecs) as Array<SpecType>;
 
   for (const key of keys) {
-    if (designSpecs[key].value < 0) {
+    if (designSpecs[key].value < -1) {
       missingSpecs.push(designSpecs[key].label);
     }
   }
@@ -59,13 +64,13 @@ export function imageUploadUtil(
   added: () => void,
   end: () => void
 ) {
-  const imageId = Date.now().toString();
+  let id = v4();
   const newImage: UploadImage = {
-    id: imageId,
+    id,
     name: file.name,
     url: URL.createObjectURL(file),
     file: file,
-    complete: false,
+    complete: CompleteStatus.Incomplete,
   };
   uploadedPages.value.push(newImage);
   added();
@@ -86,26 +91,28 @@ export function imageUploadUtil(
       .then((response) => {
         if (response.data.success) {
           console.log("Generated UI Spec:", response.data.data.spec);
-          const imageIndex = uploadedPages.value.findIndex(
-            (img) => img.id === imageId
-          );
-          if (imageIndex !== -1) {
-            const spec = response.data.data.spec as SPEC;
-            spec.Page_Composition.Sections.forEach((section) => {
-              section.selected = true;
-              section.Contained_Components.forEach((component) => {
-                component.selected = true;
-              });
+          const spec = response.data.data.spec as SPEC;
+          spec.Page_Composition.Sections.forEach((section) => {
+            section.selected = true;
+            section.Contained_Components.forEach((component) => {
+              component.selected = true;
             });
-            uploadedPages.value[imageIndex].spec = spec;
-            uploadedPages.value[imageIndex].complete = true;
-            messageStore.add("Image analysis complete", "success");
-            end();
-          }
+          });
+          const imageIndex = uploadedPages.value.findIndex(
+            (img) => img.id === id
+          );
+          uploadedPages.value[imageIndex].spec = spec;
+          uploadedPages.value[imageIndex].complete = CompleteStatus.Complete;
+          messageStore.add("Image analysis complete", "success");
+          end();
         }
       })
       .catch((error) => {
         console.error("Error uploading image:", error);
+        const imageIndex = uploadedPages.value.findIndex(
+          (img) => img.id === id
+        );
+        uploadedPages.value[imageIndex].complete = CompleteStatus.Error;
       });
   };
 }
@@ -115,7 +122,7 @@ export function imageGenerationUtil(
   generatedPages: Ref<GeneratedImage[]>,
   pageCompositionReference: Ref<number>,
   designSpecs: Ref<DesignSpec>,
-  added: () => void,
+  added: () => void
 ) {
   const spec: Partial<SPEC> = {};
   const keys = Object.keys(designSpecs.value) as Array<SpecType>;
@@ -123,8 +130,10 @@ export function imageGenerationUtil(
   let ui_design_specification: Partial<UIDesignSpecification> = {};
   for (const key of keys) {
     ui_design_specification[key] =
-      uploadedPages.value[designSpecs.value[key].value].spec
-        ?.UI_Design_Specification[key] || "";
+      designSpecs.value[key].value == -1
+        ? designSpecs.value[key].customPrompt
+        : uploadedPages.value[designSpecs.value[key].value].spec
+            ?.UI_Design_Specification[key] || "";
   }
 
   spec.Page_Composition = filterSelectedPageStructure(
@@ -136,9 +145,12 @@ export function imageGenerationUtil(
   spec.UI_Design_Specification =
     ui_design_specification as UIDesignSpecification;
 
+  let id = v4();
+
   const generatedPage: GeneratedImage = {
+    id,
     spec: spec as SPEC,
-    complete: false,
+    complete: CompleteStatus.Incomplete,
     code: "",
     url: "",
     time: new Date(),
@@ -148,8 +160,6 @@ export function imageGenerationUtil(
   generatedPages.value.push(generatedPage);
 
   added();
-
-  let index = generatedPages.value.length - 1;
 
   const messageStore = useMessageStore();
   messageStore.add("Generating image...", "info");
@@ -161,15 +171,23 @@ export function imageGenerationUtil(
       if (response.data.success) {
         messageStore.add("Image generation started", "success");
         console.log("Image generation response:", response.data.data);
-        generatedPages.value[index].code = response.data.data.code;
-        generatedPages.value[index].url =
+        const generatedIndex = generatedPages.value.findIndex(
+          (img) => img.id === id
+        );
+        generatedPages.value[generatedIndex].code = response.data.data.code;
+        generatedPages.value[generatedIndex].url =
           "data:image/png;base64," + response.data.data.render_image;
-        generatedPages.value[index].complete = true;
-        generatedPages.value[index].spec = response.data.data.spec as SPEC;
+        generatedPages.value[generatedIndex].complete = CompleteStatus.Complete;
+        generatedPages.value[generatedIndex].spec = response.data.data
+          .spec as SPEC;
       }
     })
     .catch((error) => {
+      const generatedIndex = generatedPages.value.findIndex(
+        (img) => img.id === id
+      );
       messageStore.add("Error generating image", "error");
+      generatedPages.value[generatedIndex].complete = CompleteStatus.Error;
       console.error("Error generating image:", error);
     });
 }

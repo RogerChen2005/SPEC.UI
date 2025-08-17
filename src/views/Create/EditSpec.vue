@@ -83,7 +83,7 @@
         <div class="reference-panel mt-2">
           <div
             v-for="(img, index) in uploadedPages"
-            :key="img.id"
+            :key="index"
             class="mb-2 image-wrapper"
           >
             <v-img
@@ -188,6 +188,8 @@ import axios from "~/helpers/RequestHelper";
 // import CodeBar  from '~/components/CodePane.vue';
 import type { SPEC, Component, Section } from "~/types";
 import { defineAsyncComponent } from "vue";
+import { v4 } from "uuid";
+import { CompleteStatus } from "~/enums";
 const UIPreview = defineAsyncComponent(
   () => import("~/components/UIPreview.vue")
 );
@@ -348,8 +350,9 @@ function confirmEditSpec() {
       }
       // 创建新的 GeneratedImage 而不是覆盖原有数据
       const newGeneratedImage = {
+        id: v4(),
         spec: generatedPages.value[index].spec as SPEC,
-        complete: false,
+        complete: CompleteStatus.Incomplete,
         code: generatedPages.value[index].code || "",
         url: generatedPages.value[index].url,
         time: new Date(),

@@ -1,4 +1,5 @@
-import type exp from "constants";
+import { CompleteStatus } from "~/enums";
+
 export interface LayoutArea {
   id: number;
   title: string;
@@ -47,13 +48,13 @@ export interface SPEC {
 }
 
 export interface BaseImage {
+  id: string
   spec?: SPEC;
-  complete: boolean;
+  complete: CompleteStatus;
   url: string;
 }
 
 export interface UploadImage extends BaseImage {
-  id: string;
   name: string;
   file?: File;
 }
@@ -73,6 +74,7 @@ export type DesignSpec = Record<
     label: string;
     icon: string;
     value: number;
+    customPrompt?: string;
   }
 >;
 

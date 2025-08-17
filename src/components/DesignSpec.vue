@@ -81,15 +81,15 @@ function parseSpecText(text?: string) {
 
   return parts;
 }
+
+function deleteSpec(index: SpecType) {
+  designSpecs.value[index].customPrompt = "";
+  designSpecs.value[index].value = -2; 
+}
 </script>
 
 <template>
   <v-container fluid class="pa-2">
-    <v-sheet class="d-flex align-center ma-0 mt-4">
-      <v-icon icon="mdi-folder-multiple-outline" class="mr-2"></v-icon>
-      <div class="text-h5 font-weight-bold">My Project</div>
-      <v-spacer></v-spacer>
-    </v-sheet>
     <div class="mt-4 d-flex align-center">
       <div class="text-h6 font-weight-bold">Page Structure</div>
       <v-spacer></v-spacer>
@@ -105,14 +105,8 @@ function parseSpecText(text?: string) {
       <template v-else>
         <v-btn
           variant="text"
-          @click="addSpec('Structure')"
-          icon="mdi-pencil-outline"
-        >
-        </v-btn>
-        <v-btn
-          variant="text"
           @click="pageCompositionReference = -1"
-          icon="mdi-delete-outline"
+          icon="mdi-cancel"
         >
         </v-btn>
       </template>
@@ -136,7 +130,7 @@ function parseSpecText(text?: string) {
         <v-icon :icon="item.icon" class="mr-2"></v-icon>
       </template>
       <template v-slot:append>
-        <template v-if="item.value >= 0">
+        <template v-if="item.value >= -1">
           <v-btn
             variant="text"
             @click="addSpec(index)"
@@ -145,7 +139,7 @@ function parseSpecText(text?: string) {
           </v-btn>
           <v-btn
             variant="text"
-            @click="item.value = -1"
+            @click="deleteSpec(index)"
             icon="mdi-delete-outline"
           >
           </v-btn>
@@ -163,11 +157,16 @@ function parseSpecText(text?: string) {
       <template #subtitle v-if="item.value >= 0">
         {{ uploadedPages[item.value].name }}
       </template>
-      <v-card-text v-if="item.value >= 0">
+      <template #subtitle v-else-if="item.value == -1">
+        Custom Prompt
+      </template>
+      <v-card-text v-if="item.value >= -1">
         <div class="spec-text">
           <template
             v-for="(part, partIndex) in parseSpecText(
-              uploadedPages[item.value].spec?.UI_Design_Specification[index]
+              item.value == -1
+                ? item.customPrompt
+                : uploadedPages[item.value].spec?.UI_Design_Specification[index]
             )"
             :key="partIndex"
           >
