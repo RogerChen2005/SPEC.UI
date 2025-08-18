@@ -93,6 +93,7 @@ export function imageUploadUtil(
             (img) => img.id === id
           );
           uploadedPages.value[imageIndex].spec = spec;
+          uploadedPages.value[imageIndex].attribute = uploadedPages.value[imageIndex].spec.UI_Design_Specification;
           uploadedPages.value[imageIndex].complete = CompleteStatus.Complete;
           messageStore.add("Image analysis complete", "success");
           end();

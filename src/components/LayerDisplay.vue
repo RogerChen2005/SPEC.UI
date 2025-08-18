@@ -134,22 +134,6 @@ function onComponentRClick(
   }
 }
 
-function onSectionEdit(section: Section) {
-  if (spec.value) {
-    spec.value.Page_Composition.Sections[editInfo.value.sectionIndex] = section;
-  }
-  menuOpen.value = false;
-}
-
-function onComponentEdit(component: Component) {
-  if (spec.value) {
-    spec.value.Page_Composition.Sections[
-      editInfo.value.sectionIndex
-    ].Contained_Components[editInfo.value.componentIndex] = component;
-  }
-  menuOpen.value = false;
-}
-
 </script>
 
 <template>
@@ -235,11 +219,9 @@ function onComponentEdit(component: Component) {
   >
     <EditComponent
       :edit-component="editingComponent"
-      @edit="onComponentEdit"
     ></EditComponent>
     <EditSection
       :edit-section="editingSection"
-      @edit="onSectionEdit"
     ></EditSection>
   </v-menu>
 </template>

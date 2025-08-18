@@ -69,7 +69,7 @@ function generateCode() {
       flat
       hide-details
       class="ma-2"
-      @update:model-value="selectPage"
+      @click="selectPage"
     >
     </v-select>
 
@@ -97,7 +97,7 @@ function generateCode() {
     <LayerDisplay
       v-if="currentPage"
       v-model="currentPage.spec"
-      :checkable="true"
+      :checkable="false"
       :query="keyword"
       :editable="true"
     >

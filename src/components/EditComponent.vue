@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import ColorTextField from "./ColorTextField.vue";
-import { type PropType, ref, watch } from "vue";
+import { type PropType, ref, watch, computed } from "vue";
 import type { Component } from "~/types";
 import axios from "~/helpers/RequestHelper";
+import { useSpecStore } from "~/store/SpecStore";
 
 interface ComponentSuggestion {
   Function: string;
   Color_Scheme: string;
   Component_Layout_Style: string;
 }
+
+const specStore = useSpecStore();
+
+const currentPage = computed(() => {
+  return specStore.generatedPages[specStore.currentGeneratedPageIndex];
+});
 
 const props = defineProps({
   editComponent: {
@@ -34,10 +41,6 @@ watch(
   { immediate: true }
 );
 
-const emit = defineEmits<{
-  (e: "edit", component: Component): void;
-}>();
-
 const editKeys: (keyof ComponentSuggestion)[] = [
   "Function",
   "Color_Scheme",
@@ -46,26 +49,24 @@ const editKeys: (keyof ComponentSuggestion)[] = [
 
 function edit(component: ComponentSuggestion) {
   console.log("Edit component:", component);
-  let text = "User wants to edit ";
+  let text = `用户想要更改path为Page_Composition/Sections/Components中Data_Component_Id为${specStore.selectedComponent?.Data_Component_Id}的组件，`;
 
   for (let key of editKeys) {
     if ((component[key] as string).trim() != "") {
-      text += `${key}: with suggestion: ${component[key]}, `;
+      text += `${key}的更改意图为: ${component[key]}, `;
     }
   }
 
-  text +=
-    "if necessary, you can edit other attributes to better follow the suggestion.";
-
   let payload = {
-    spec: props.editComponent,
+    spec: currentPage.value.spec,
     text: text,
   };
   console.log(payload);
   axios.post("/edit_spec", payload).then((response) => {
     if (response.data.success) {
       console.log("edit spec success:", response.data);
-      emit("edit", response.data.data.spec);
+      currentPage.value.spec = response.data.data.spec;
+      currentPage.value.code = response.data.data.extracted_code;
     }
   });
 }

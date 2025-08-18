@@ -41,6 +41,12 @@ function toggleReference() {
   if (index !== -1) pageCompositionReference.value.splice(index, 1);
   else pageCompositionReference.value.push(props.pageIndex);
 }
+
+function copyText(text: string) {
+  navigator.clipboard.writeText(text).then(() => {
+    console.log("Text copied to clipboard:", text);
+  });
+}
 </script>
 
 <template>
@@ -57,7 +63,7 @@ function toggleReference() {
         ></SmoothPicture>
       </v-col>
       <v-col cols="5" class="overflow-y-auto pl-8" style="height: 100%">
-        <div v-if="currentViewingPage.spec">
+        <div v-if="currentViewingPage.spec || currentViewingPage.attribute">
           <v-tabs v-model="activeTab" class="mb-4">
             <v-tab value="layers">
               <v-icon>mdi-layers</v-icon>
@@ -73,7 +79,7 @@ function toggleReference() {
           </v-tabs>
 
           <v-window v-model="activeTab">
-            <v-window-item value="layers">
+            <v-window-item value="layers" v-if="currentViewingPage.spec">
               <div class="d-flex align-center justify-between mb-2">
                 <h1 class="font-weight-bold text-h5 mb-2">Page Structure</h1>
                 <v-spacer></v-spacer>
@@ -96,7 +102,7 @@ function toggleReference() {
               ></LayerSelect>
             </v-window-item>
 
-            <v-window-item value="ui">
+            <v-window-item value="ui" v-if="currentViewingPage.attribute">
               <h1 class="font-weight-bold text-h5 mb-2">
                 UI Design Specification
               </h1>
@@ -106,6 +112,55 @@ function toggleReference() {
                     {{ designSpecs[key].label }}
                   </h2>
                   <v-spacer></v-spacer>
+                  <v-btn
+                    variant="tonal"
+                    @click="copyText(currentViewingPage.attribute[key])"
+                    v-if="editable"
+                  >
+                  Copy
+                  </v-btn>
+                  <v-btn
+                    variant="tonal"
+                    @click="designSpecs[key].value = props.pageIndex"
+                    v-if="editable"
+                  >
+                    <template v-if="designSpecs[key].value != props.pageIndex">
+                      <v-icon>mdi-plus</v-icon>
+                      Apply
+                    </template>
+                    <template v-else>
+                      <v-icon>mdi-check</v-icon>
+                      Applied
+                    </template>
+                  </v-btn>
+                </div>
+                <v-textarea
+                  v-model="currentViewingPage.attribute[key]"
+                  variants="tonal"
+                  rows="3"
+                  auto-grow
+                  class="spec-edit"
+                  :readonly="!editable"
+                ></v-textarea>
+              </template>
+            </v-window-item>
+            <v-window-item value="ui" v-else-if="currentViewingPage.spec">
+              <h1 class="font-weight-bold text-h5 mb-2">
+                UI Design Specification
+              </h1>
+              <template v-for="key in designSpecsKeys" :key="key">
+                <div class="d-flex align-center justify-between mb-2">
+                  <h2 class="font-weight-bold text-h6">
+                    {{ designSpecs[key].label }}
+                  </h2>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    variant="tonal"
+                    @click="copyText(currentViewingPage.spec.UI_Design_Specification[key])"
+                    v-if="editable"
+                  >
+                  Copy
+                  </v-btn>
                   <v-btn
                     variant="tonal"
                     @click="designSpecs[key].value = props.pageIndex"

@@ -194,15 +194,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, toRaw, nextTick } from "vue";
+import { ref, computed, toRaw } from "vue";
 import { useSpecStore } from "~/store/SpecStore";
-import { imageUploadUtil } from "~/helpers/ReferenceHelper";
+import { useMessageStore } from "~/store/messageStore";
 import CDialog from "~/components/UI/CDialog.vue";
 import DetailedDialog from "~/components/DetailedDialog.vue";
 import axios from "~/helpers/RequestHelper";
-// import CodeBar  from '~/components/CodePane.vue';
-import type { SPEC, Component, Section } from "~/types";
+import { CompleteStatus } from "~/enums";
+import type { SPEC, UploadImage, UIDesignSpecification, PageComposition } from "~/types";
 import { defineAsyncComponent } from "vue";
+import { v4 } from "uuid";
 
 const UIPreview = defineAsyncComponent(
   () => import("~/components/UIPreview.vue")
@@ -319,14 +320,44 @@ function uploadImage() {
     const target = e.target as HTMLInputElement;
     if (target.files && target.files[0]) {
       const file = target.files[0];
-      imageUploadUtil(
-        uploadedPages,
-        file,
-        () => {
-          nextTick(() => {});
-        },
-        () => {}
-      );
+      let id = v4();
+      const newImage: UploadImage = {
+        id,
+        name: file.name,
+        url: URL.createObjectURL(file),
+        file: file,
+        complete: CompleteStatus.Incomplete,
+      };
+      uploadedPages.value.push(newImage);
+
+      const messageStore = useMessageStore();
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64Image = (reader.result as string).split(",")[1];
+
+        messageStore.add("Uploading image for analysis...", "info");
+
+        const payload = {
+          image: base64Image,
+          spec: ""
+        };
+        axios.post("/image_reference", payload)
+        .then((response) => {
+          console.log("Image upload response:", response.data);
+          if(response.data.success) {
+            newImage.complete = CompleteStatus.Complete;
+            newImage.attribute = response.data as UIDesignSpecification;
+            specStore.uploadedPages.push(newImage);
+            messageStore.add("Image uploaded successfully!", "success");
+          } else {
+            messageStore.add("Image upload failed: " + response.data.message, "error");
+          }
+        })
+      }
+      
+      
     }
   };
   input.click();
@@ -334,21 +365,19 @@ function uploadImage() {
 
 function confirmEditSpec() {
   let index = specStore.currentGeneratedPageIndex;
-  let spec: SPEC | Component | Section | undefined = undefined;
+  let prompt = "";
   if (specStore.selectedComponent) {
-    spec = specStore.selectedComponent;
+    prompt += `用户想要更改path为Page_Composition/Sections/Components中Data_Component_Id为${specStore.selectedComponent.Data_Component_Id}的组件，意图为：`;
   } else if (specStore.selectedSection) {
-    spec = specStore.selectedSection;
-  } else if (generatedPages.value[index].spec){
-    spec = generatedPages.value[index].spec;
-  }
+    prompt += `用户想要更改path为Page_Composition/Sections中Data_Section_Id为${specStore.selectedSection.Data_Section_Id}的组件，意图为：`;
+  } 
 
-  console.log("Confirming edit spec with data:", spec);
+  console.log("Confirming edit spec with prompt:", prompt + textValue.value);
 
   const payload = {
     save_name: "edit_spec_01",
-    text: textValue.value,
-    spec: spec,
+    text: prompt + textValue.value,
+    spec: generatedPages.value[index].spec,
   };
 
   textValue.value = "";
@@ -356,17 +385,8 @@ function confirmEditSpec() {
     .post("/edit_spec", payload)
     .then((response) => {
       console.log("Edit spec response:", response.data);
-
-      if (specStore.selectedComponent) {
-        Object.assign(specStore.selectedComponent, response.data.data.spec as Component);
-        console.log(specStore.selectedComponent);
-      } else if (specStore.selectedSection) {
-        Object.assign(specStore.selectedSection, response.data.data.spec as Section);
-        console.log("selected section: ",specStore.selectedSection);
-      } else {
-        specStore.generatedPages[index].spec = response.data.data.spec as SPEC;
-        console.log(specStore.generatedPages[index].spec);
-      }
+      specStore.generatedPages[index].spec = response.data.data.spec as SPEC;
+      console.log(specStore.generatedPages[index].spec);
       specStore.generatedPages[index].code = response.data.data.extracted_code;
       editDialogOpened.value = true;
       editPath.value = response.data.data.edit_path;
