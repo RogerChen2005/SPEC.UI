@@ -97,7 +97,7 @@ function generateCode() {
     <LayerDisplay
       v-if="currentPage"
       v-model="currentPage.spec"
-      :checkable="false"
+      :checkable="true"
       :query="keyword"
       :editable="true"
     >

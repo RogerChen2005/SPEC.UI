@@ -108,6 +108,7 @@ function onComponentLClick(component: Component) {
 }
 
 function onSectionRClick(section: Section, sectionIndex: number) {
+  onSectionLClick(section);
   if (props.editable) {
     editingComponent.value = null;
     editingSection.value = section;
@@ -123,6 +124,7 @@ function onComponentRClick(
   componentIndex: number,
   component: Component
 ) {
+  onComponentLClick(component);
   if (props.editable) {
     editingSection.value = null;
     editingComponent.value = component;

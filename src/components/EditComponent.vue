@@ -49,14 +49,14 @@ const editKeys: (keyof ComponentSuggestion)[] = [
 
 function edit(component: ComponentSuggestion) {
   console.log("Edit component:", component);
-  let text = `用户想要更改path为Page_Composition/Sections/Components中Data_Component_Id为${specStore.selectedComponent?.Data_Component_Id}的组件，`;
+  let text = `用户想要更改的组件为${JSON.stringify(component)},`;
 
   for (let key of editKeys) {
     if ((component[key] as string).trim() != "") {
       text += `${key}的更改意图为: ${component[key]}, `;
     }
   }
-
+  text += "为保证一致性,需要修改整体的Page_Composition"
   let payload = {
     spec: currentPage.value.spec,
     text: text,
@@ -66,7 +66,9 @@ function edit(component: ComponentSuggestion) {
     if (response.data.success) {
       console.log("edit spec success:", response.data);
       currentPage.value.spec = response.data.data.spec;
+      console.log(currentPage.value.spec);
       currentPage.value.code = response.data.data.extracted_code;
+      console.log("Updated code:", currentPage.value.code);
     }
   });
 }
@@ -123,7 +125,7 @@ function edit(component: ComponentSuggestion) {
         ></v-textarea>
 
         <v-text-field
-          v-model="component.Color_Scheme"
+          v-model="component.Component_Layout_Style"
           density="compact"
           label="Layout Suggestion"
           placeholder="Describe the function of the component"

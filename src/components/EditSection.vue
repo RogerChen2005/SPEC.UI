@@ -50,13 +50,14 @@ const editKeys: (keyof SectionSuggestion)[] = [
 
 function edit(section: SectionSuggestion) {
   console.log("Edit section:", section);
-  let text = `用户想要更改path为Page_Composition/Sections中Data_Section_Id为${specStore.selectedSection?.Data_Section_Id}的组件，`;
+  let text = `用户想要更改的组件为${JSON.stringify(section)},`;
 
   for (let key of editKeys) {
     if ((section[key] as string).trim() != "") {
       text += `${key}的更改意图为: ${section[key]}, `;
     }
   }
+  text += "为保证一致性,需要修改整体的Page_Composition"
   let payload = {
     spec: currentPage.value.spec,
     text: text,
