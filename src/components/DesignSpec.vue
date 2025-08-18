@@ -38,11 +38,11 @@ function addSpec(index: SpecType | "Structure") {
   selectDialogVisible.value = true;
 }
 
-function handleSelection(index: number) {
+function handleSelection(index: number | number[]) {
   if (selectingType.value === "Structure") {
-    pageCompositionReference.value = index;
+    pageCompositionReference.value = index as number[];
   } else {
-    designSpecs.value[selectingType.value].value = index;
+    designSpecs.value[selectingType.value].value = index as number;
   }
   selectDialogVisible.value = false;
 }
@@ -84,7 +84,7 @@ function parseSpecText(text?: string) {
 
 function deleteSpec(index: SpecType) {
   designSpecs.value[index].customPrompt = "";
-  designSpecs.value[index].value = -2; 
+  designSpecs.value[index].value = -2;
 }
 </script>
 
@@ -93,7 +93,7 @@ function deleteSpec(index: SpecType) {
     <div class="mt-4 d-flex align-center">
       <div class="text-h6 font-weight-bold">Page Structure</div>
       <v-spacer></v-spacer>
-      <template v-if="pageCompositionReference < 0">
+      <template v-if="pageCompositionReference.length == 0">
         <v-btn
           variant="text"
           size="small"
@@ -102,18 +102,22 @@ function deleteSpec(index: SpecType) {
         >
         </v-btn>
       </template>
-      <template v-else>
+    </div>
+    <template v-for="value in pageCompositionReference">
+      <div class="mt-2 d-flex align-center">
+        <div class="font-weight-bold">{{uploadedPages[value].name}}</div>
+        <v-spacer></v-spacer>
         <v-btn
-          variant="text"
-          @click="pageCompositionReference = -1"
-          icon="mdi-cancel"
+          variant="tonal"
+          size="small"
+          @click="pageCompositionReference = pageCompositionReference.filter(v => v !== value)"
+          icon="mdi-close"
+          class="mr-2"
         >
         </v-btn>
-      </template>
-    </div>
-    <template v-if="pageCompositionReference >= 0">
+      </div>
       <LayerDisplay
-        :model-value="uploadedPages[pageCompositionReference].spec"
+        :model-value="uploadedPages[value].spec"
         :editable="false"
         :checkable="false"
       ></LayerDisplay>

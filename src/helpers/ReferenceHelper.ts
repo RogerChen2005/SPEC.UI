@@ -3,7 +3,6 @@ import type { Ref } from "vue";
 import { useMessageStore } from "~/store/messageStore";
 import type {
   Component,
-  PageComposition,
   SPEC,
   GeneratedImage,
   DesignSpec,
@@ -30,17 +29,9 @@ function filterSelectedSections(sections: Section[]): Section[] {
     }));
 }
 
-function filterSelectedPageStructure(
-  pageStructure: PageComposition
-): PageComposition {
-  return {
-    Sections: filterSelectedSections(pageStructure.Sections),
-  };
-}
-
 export function checkMissingSpecs(
   designSpecs: DesignSpec,
-  pageCompositionReference: number
+  pageCompositionReference: number[]
 ): string[] {
   const missingSpecs: string[] = [];
   const keys = Object.keys(designSpecs) as Array<SpecType>;
@@ -51,7 +42,7 @@ export function checkMissingSpecs(
     }
   }
 
-  if (pageCompositionReference < 0) {
+  if (pageCompositionReference.length <= 0) {
     missingSpecs.push("Page Structure");
   }
 
@@ -120,7 +111,7 @@ export function imageUploadUtil(
 export function imageGenerationUtil(
   uploadedPages: Ref<UploadImage[]>,
   generatedPages: Ref<GeneratedImage[]>,
-  pageCompositionReference: Ref<number>,
+  pageCompositionReference: Ref<number[]>,
   designSpecs: Ref<DesignSpec>,
   added: () => void
 ) {
@@ -136,12 +127,14 @@ export function imageGenerationUtil(
             ?.UI_Design_Specification[key] || "";
   }
 
-  spec.Page_Composition = filterSelectedPageStructure(
-    uploadedPages.value[pageCompositionReference.value].spec
-      ?.Page_Composition || {
-      Sections: [],
-    }
-  );
+  spec.Page_Composition = {
+    Sections: pageCompositionReference.value.flatMap((pageIndex) => {
+      return filterSelectedSections(
+        uploadedPages.value[pageIndex].spec?.Page_Composition.Sections || []
+      );
+    }),
+  };
+
   spec.UI_Design_Specification =
     ui_design_specification as UIDesignSpecification;
 

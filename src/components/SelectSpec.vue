@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+import { watch, ref, computed } from "vue";
 import { useSpecStore } from "~/store/SpecStore";
 import type { SpecType } from "~/types";
 
@@ -8,7 +8,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "selected", index: number): void;
+  (e: "selected", index: number | number[]): void;
 }>();
 
 const specStore = useSpecStore();
@@ -21,13 +21,37 @@ const selectedIndex = computed(() =>
     ? specStore.pageCompositionReference
     : specStore.designSpecs[props.type].value
 );
+const structureIndex = ref<boolean[]>(
+  Array(uploadedPages.value.length).fill(false)
+);
+
+watch(
+  () => uploadedPages.value,
+  (newPages) => {
+    structureIndex.value = Array(newPages.length).fill(false);
+  },
+  { immediate: true }
+);
 
 function selectImage(index: number) {
   emit("selected", index);
 }
 
+function toggleSelectStructure(index: number) {
+  if (props.type === "Structure")
+    structureIndex.value[index] = !structureIndex.value[index];
+}
+
+function confirmStructueSelection() {
+  const selected = structureIndex.value
+    .map((selected, index) => (selected ? index : -1))
+    .filter((index) => index !== -1);
+  emit("selected", selected);
+  structureIndex.value = [];
+}
+
 function useCustomPrompt() {
-  if (props.type !== 'Structure' && designSpecs.value[props.type].customPrompt)
+  if (props.type !== "Structure" && designSpecs.value[props.type].customPrompt)
     selectImage(-1);
 }
 </script>
@@ -53,7 +77,17 @@ function useCustomPrompt() {
         </v-col>
       </v-row>
     </template>
-    <h1 class="text-h6 font-weight-bold mb-4">Select From Reference Image:</h1>
+    <div class="d-flex align-center justify-between mb-4">
+      <h1 class="text-h6 font-weight-bold">Select From Reference Image:</h1>
+      <v-spacer></v-spacer>
+      <v-btn
+        v-if="props.type === 'Structure' && uploadedPages.length > 0"
+        variant="tonal"
+        size="small"
+        @click="confirmStructueSelection"
+        icon="mdi-check"
+      ></v-btn>
+    </div>
     <v-row class="d-flex flex-wrap">
       <v-col
         v-for="(page, index) in uploadedPages"
@@ -64,19 +98,27 @@ function useCustomPrompt() {
         <v-card
           class="page rounded-lg pa-2 d-flex flex-column"
           :class="{
-            'selected-page': selectedIndex === index,
+            'selected-page': selectedIndex === index || structureIndex[index],
           }"
-          v-ripple
           elevation="2"
-          @click="selectImage(index)"
+          :link="props.type === 'Structure'"
+          @click="toggleSelectStructure(index)"
         >
           <template #append>
-            <v-icon
-              v-if="selectedIndex === index"
-              color="primary"
-              icon="mdi-check-circle"
+            <v-btn
+              v-if="props.type !== 'Structure'"
+              variant="text"
+              :icon="
+                selectedIndex === index
+                  ? 'mdi-check-circle'
+                  : 'mdi-check-circle-outline'
+              "
               size="36"
-            ></v-icon>
+              @click="selectImage(index)"
+            ></v-btn>
+            <v-icon v-else-if="structureIndex[index]">
+              mdi-check-circle
+            </v-icon>
           </template>
           <template #title>
             <div class="text-h5 font-weight-bold">
@@ -88,13 +130,23 @@ function useCustomPrompt() {
               <v-col :cols="type === 'Structure' ? 12 : 6">
                 <v-img
                   :src="page.url"
-                  height="220px"
+                  height="230px"
                   cover
-                  class="border-b"
+                  class="rounded-lg"
                 ></v-img>
               </v-col>
-              <v-col cols="6" class="spec-text" v-if="type !== 'Structure'">
-                {{ page.spec?.UI_Design_Specification[type] }}
+              <v-col
+                cols="6"
+                class="spec-text pa-0 pt-2"
+                v-if="type !== 'Structure'"
+              >
+                <v-textarea
+                  v-if="page.spec"
+                  v-model="page.spec.UI_Design_Specification[type]"
+                  hide-details
+                  rows="9"
+                  density="compact"
+                ></v-textarea>
               </v-col>
             </v-row>
           </v-card-text>
@@ -106,18 +158,16 @@ function useCustomPrompt() {
 
 <style scoped>
 .page {
-  margin-bottom: 1rem;
   height: fit-content;
   position: relative;
-  height: 300px;
+  height: 310px;
   overflow: hidden;
-  cursor: pointer;
   transition: transform 0.2s ease-in-out;
 }
 
-.page:hover {
+/* .page:hover {
   transform: scale(1.02);
-}
+} */
 
 .selected-page {
   background-color: rgba(var(--v-theme-primary), 0.3);

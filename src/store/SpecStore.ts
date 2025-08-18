@@ -58,7 +58,7 @@ export const useSpecStore = defineStore("spec", () => {
       complete: CompleteStatus.Complete,
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui1.png",
       time: new Date(),
-      reference: 0,
+      reference: [0],
       code: generate_code.code,
     },
     {
@@ -67,7 +67,7 @@ export const useSpecStore = defineStore("spec", () => {
       complete: CompleteStatus.Complete,
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui2.png",
       time: new Date(),
-      reference: 1,
+      reference: [0, 1],
       code: generate_code.code,
     },
     {
@@ -76,7 +76,7 @@ export const useSpecStore = defineStore("spec", () => {
       complete: CompleteStatus.Error,
       url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui2.png",
       time: new Date(),
-      reference: 1,
+      reference: [1],
       code: generate_code.code,
     },
   ]);
@@ -114,7 +114,7 @@ export const useSpecStore = defineStore("spec", () => {
     },
   });
 
-  const pageCompositionReference = ref(-1);
+  const pageCompositionReference = ref<number[]>([]);
 
   function generateImage() {
     imageGenerationUtil(
