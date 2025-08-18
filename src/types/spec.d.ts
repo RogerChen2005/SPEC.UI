@@ -52,6 +52,7 @@ export interface BaseImage {
   spec?: SPEC;
   complete: CompleteStatus;
   url: string;
+  attribute?: UIDesignSpecification;
 }
 
 export interface UploadImage extends BaseImage {

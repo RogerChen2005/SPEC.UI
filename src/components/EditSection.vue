@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import ColorTextField from "./ColorTextField.vue";
-import { type PropType, ref, watch } from "vue";
+import { type PropType, ref, watch, computed } from "vue";
 import type { Section } from "~/types";
 import axios from "~/helpers/RequestHelper";
+import { useSpecStore } from "~/store/SpecStore";
+
 
 const props = defineProps({
   editSection: {
     type: Object as PropType<Section | null>,
   },
+});
+
+const specStore = useSpecStore();
+
+const currentPage = computed(() => {
+  return specStore.generatedPages[specStore.currentGeneratedPageIndex];
 });
 
 interface SectionSuggestion {
@@ -34,8 +42,6 @@ watch(
   { immediate: true }
 );
 
-const emit = defineEmits<(e: "edit", section: Section) => void>();
-
 const editKeys: (keyof SectionSuggestion)[] = [
   "Section_Position_on_Page",
   "Component_Layout_in_Section",
@@ -44,23 +50,24 @@ const editKeys: (keyof SectionSuggestion)[] = [
 
 function edit(section: SectionSuggestion) {
   console.log("Edit section:", section);
-  let text = "User wants to edit ";
+  let text = `用户想要更改的组件为${JSON.stringify(section)},`;
 
   for (let key of editKeys) {
     if ((section[key] as string).trim() != "") {
-      text += `${key}: with requirements: ${section[key]}, `;
+      text += `${key}的更改意图为: ${section[key]}, `;
     }
   }
-  text += "if necessary, you can edit the components belong to this section.";
+  text += "为保证一致性,需要修改整体的Page_Composition"
   let payload = {
-    spec: props.editSection,
+    spec: currentPage.value.spec,
     text: text,
   };
   console.log(payload);
   axios.post("/edit_spec", payload).then((response) => {
     if (response.data.success) {
+      currentPage.value.spec = response.data.data.spec;
+      currentPage.value.code = response.data.data.extracted_code;
       console.log("edit spec success:", response.data);
-      emit("edit", response.data.data.spec);
     }
   });
 }

@@ -108,6 +108,7 @@ function onComponentLClick(component: Component) {
 }
 
 function onSectionRClick(section: Section, sectionIndex: number) {
+  onSectionLClick(section);
   if (props.editable) {
     editingComponent.value = null;
     editingSection.value = section;
@@ -123,6 +124,7 @@ function onComponentRClick(
   componentIndex: number,
   component: Component
 ) {
+  onComponentLClick(component);
   if (props.editable) {
     editingSection.value = null;
     editingComponent.value = component;
@@ -132,22 +134,6 @@ function onComponentRClick(
       componentsRef.value[section.Section_Name][componentIndex];
     menuOpen.value = true;
   }
-}
-
-function onSectionEdit(section: Section) {
-  if (spec.value) {
-    spec.value.Page_Composition.Sections[editInfo.value.sectionIndex] = section;
-  }
-  menuOpen.value = false;
-}
-
-function onComponentEdit(component: Component) {
-  if (spec.value) {
-    spec.value.Page_Composition.Sections[
-      editInfo.value.sectionIndex
-    ].Contained_Components[editInfo.value.componentIndex] = component;
-  }
-  menuOpen.value = false;
 }
 
 </script>
@@ -235,11 +221,9 @@ function onComponentEdit(component: Component) {
   >
     <EditComponent
       :edit-component="editingComponent"
-      @edit="onComponentEdit"
     ></EditComponent>
     <EditSection
       :edit-section="editingSection"
-      @edit="onSectionEdit"
     ></EditSection>
   </v-menu>
 </template>
