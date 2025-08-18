@@ -367,6 +367,7 @@ function confirmEditSpec() {
         specStore.generatedPages[index].spec = response.data.data.spec as SPEC;
         console.log(specStore.generatedPages[index].spec);
       }
+      specStore.generatedPages[index].code = response.data.data.extracted_code;
       editDialogOpened.value = true;
       editPath.value = response.data.data.edit_path;
     })
