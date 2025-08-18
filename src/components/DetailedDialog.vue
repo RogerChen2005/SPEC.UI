@@ -35,13 +35,26 @@ const designSpecs = computed(() => specStore.designSpecs);
 const designSpecsKeys = computed<SpecType[]>(
   () => Object.keys(designSpecs.value) as SpecType[]
 );
+
+function toggleReference() {
+  const index = pageCompositionReference.value.indexOf(props.pageIndex);
+  if (index !== -1) pageCompositionReference.value.splice(index, 1);
+  else pageCompositionReference.value.push(props.pageIndex);
+}
 </script>
 
 <template>
   <v-container class="ma-0 pa-4" fluid style="height: 100%">
     <v-row style="height: 100%">
-      <v-col cols="7" class="d-flex align-center justify-center pa-6 ui-reference">
-        <SmoothPicture :url="currentViewingPage.url" :max-height="500" :max-width="800"></SmoothPicture>
+      <v-col
+        cols="7"
+        class="d-flex align-center justify-center pa-6 ui-reference"
+      >
+        <SmoothPicture
+          :url="currentViewingPage.url"
+          :max-height="500"
+          :max-width="800"
+        ></SmoothPicture>
       </v-col>
       <v-col cols="5" class="overflow-y-auto pl-8" style="height: 100%">
         <div v-if="currentViewingPage.spec">
@@ -64,18 +77,16 @@ const designSpecsKeys = computed<SpecType[]>(
               <div class="d-flex align-center justify-between mb-2">
                 <h1 class="font-weight-bold text-h5 mb-2">Page Structure</h1>
                 <v-spacer></v-spacer>
-                <v-btn
-                  variant="tonal"
-                  @click="pageCompositionReference = props.pageIndex"
-                  v-if="editable"
-                >
-                  <template v-if="pageCompositionReference != props.pageIndex">
-                    <v-icon>mdi-plus</v-icon>
-                    Apply
-                  </template>
-                  <template v-else>
+                <v-btn variant="tonal" @click="toggleReference" v-if="editable">
+                  <template
+                    v-if="pageCompositionReference.includes(props.pageIndex)"
+                  >
                     <v-icon>mdi-check</v-icon>
                     Applied
+                  </template>
+                  <template v-else>
+                    <v-icon>mdi-plus</v-icon>
+                    Apply
                   </template>
                 </v-btn>
               </div>
@@ -123,19 +134,20 @@ const designSpecsKeys = computed<SpecType[]>(
             <template v-if="!editable">
               <v-window-item value="reference">
                 <h1 class="font-weight-bold text-h5 mb-3">Reference</h1>
-                <v-img
-                  :src="uploadedPages[(currentViewingPage as GeneratedImage).reference].url"
-                  class="rounded-lg"
-                ></v-img>
-                <v-col class="d-flex align-center justify-center">
-                  <v-chip prepend-icon="mdi-image-outline" class="pa-4">
-                    {{
-                      uploadedPages[
-                        (currentViewingPage as GeneratedImage).reference
-                      ].name
-                    }}
-                  </v-chip>
-                </v-col>
+                <template
+                  v-for="(pageIndex,index) in (currentViewingPage as GeneratedImage).reference"
+                  :key="index"
+                >
+                  <v-img
+                    :src="uploadedPages[pageIndex].url"
+                    class="rounded-lg"
+                  ></v-img>
+                  <v-col class="d-flex align-center justify-center">
+                    <v-chip prepend-icon="mdi-image-outline" class="pa-4">
+                      {{ uploadedPages[pageIndex].name }}
+                    </v-chip>
+                  </v-col>
+                </template>
               </v-window-item>
             </template>
           </v-window>
@@ -146,7 +158,7 @@ const designSpecsKeys = computed<SpecType[]>(
 </template>
 
 <style scoped>
-.ui-reference{
-  border-right: solid 1px rgba(var(--v-border-color),0.2);
+.ui-reference {
+  border-right: solid 1px rgba(var(--v-border-color), 0.2);
 }
 </style>
