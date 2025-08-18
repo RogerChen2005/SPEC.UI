@@ -201,7 +201,7 @@ import CDialog from "~/components/UI/CDialog.vue";
 import DetailedDialog from "~/components/DetailedDialog.vue";
 import axios from "~/helpers/RequestHelper";
 import { CompleteStatus } from "~/enums";
-import type { SPEC, UploadImage, UIDesignSpecification, PageComposition } from "~/types";
+import type { SPEC, UploadImage, UIDesignSpecification } from "~/types";
 import { defineAsyncComponent } from "vue";
 import { v4 } from "uuid";
 
