@@ -345,14 +345,16 @@ function uploadImage() {
         };
         axios.post("/image_reference", payload)
         .then((response) => {
-          console.log("Image upload response:", response.data);
-          if(response.data.success) {
-            newImage.complete = CompleteStatus.Complete;
-            newImage.attribute = response.data as UIDesignSpecification;
-            specStore.uploadedPages.push(newImage);
+          if(response.data) {
+            const imageIndex = uploadedPages.value.findIndex(
+              (img) => img.id === id
+            );
+            uploadedPages.value[imageIndex].attribute = response.data.UI_Design_Specification as UIDesignSpecification;
+            uploadedPages.value[imageIndex].complete = CompleteStatus.Complete;
+            console.log("Image upload response:", uploadedPages.value[imageIndex].attribute);
             messageStore.add("Image uploaded successfully!", "success");
           } else {
-            messageStore.add("Image upload failed: " + response.data.message, "error");
+            messageStore.add("Image upload failed: " + "error");
           }
         })
       }

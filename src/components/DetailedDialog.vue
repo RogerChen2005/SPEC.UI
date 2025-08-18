@@ -43,6 +43,7 @@ function toggleReference() {
 }
 
 function copyText(text: string) {
+  console.log(currentViewingPage.value?.attribute);
   navigator.clipboard.writeText(text).then(() => {
     console.log("Text copied to clipboard:", text);
   });
@@ -102,49 +103,7 @@ function copyText(text: string) {
               ></LayerSelect>
             </v-window-item>
 
-            <v-window-item value="ui" v-if="currentViewingPage.attribute">
-              <h1 class="font-weight-bold text-h5 mb-2">
-                UI Design Specification
-              </h1>
-              <template v-for="key in designSpecsKeys" :key="key">
-                <div class="d-flex align-center justify-between mb-2">
-                  <h2 class="font-weight-bold text-h6">
-                    {{ designSpecs[key].label }}
-                  </h2>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                    variant="tonal"
-                    @click="copyText(currentViewingPage.attribute[key])"
-                    v-if="editable"
-                  >
-                  Copy
-                  </v-btn>
-                  <v-btn
-                    variant="tonal"
-                    @click="designSpecs[key].value = props.pageIndex"
-                    v-if="editable"
-                  >
-                    <template v-if="designSpecs[key].value != props.pageIndex">
-                      <v-icon>mdi-plus</v-icon>
-                      Apply
-                    </template>
-                    <template v-else>
-                      <v-icon>mdi-check</v-icon>
-                      Applied
-                    </template>
-                  </v-btn>
-                </div>
-                <v-textarea
-                  v-model="currentViewingPage.attribute[key]"
-                  variants="tonal"
-                  rows="3"
-                  auto-grow
-                  class="spec-edit"
-                  :readonly="!editable"
-                ></v-textarea>
-              </template>
-            </v-window-item>
-            <v-window-item value="ui" v-else-if="currentViewingPage.spec">
+            <v-window-item value="ui" v-if="currentViewingPage.spec">
               <h1 class="font-weight-bold text-h5 mb-2">
                 UI Design Specification
               </h1>
@@ -178,6 +137,49 @@ function copyText(text: string) {
                 </div>
                 <v-textarea
                   v-model="currentViewingPage.spec.UI_Design_Specification[key]"
+                  variants="tonal"
+                  rows="3"
+                  auto-grow
+                  class="spec-edit"
+                  :readonly="!editable"
+                ></v-textarea>
+              </template>
+            </v-window-item>
+
+            <v-window-item value="ui" v-else-if="currentViewingPage.attribute">
+              <h1 class="font-weight-bold text-h5 mb-2">
+                UI Design Specification
+              </h1>
+              <template v-for="key in designSpecsKeys" :key="key">
+                <div class="d-flex align-center justify-between mb-2">
+                  <h2 class="font-weight-bold text-h6">
+                    {{ designSpecs[key].label }}
+                  </h2>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    variant="tonal"
+                    @click="copyText(currentViewingPage.attribute[key])"
+                    v-if="editable"
+                  >
+                  Copy
+                  </v-btn>
+                  <v-btn
+                    variant="tonal"
+                    @click="designSpecs[key].value = props.pageIndex"
+                    v-if="editable"
+                  >
+                    <template v-if="designSpecs[key].value != props.pageIndex">
+                      <v-icon>mdi-plus</v-icon>
+                      Apply
+                    </template>
+                    <template v-else>
+                      <v-icon>mdi-check</v-icon>
+                      Applied
+                    </template>
+                  </v-btn>
+                </div>
+                <v-textarea
+                  v-model="currentViewingPage.attribute[key]"
                   variants="tonal"
                   rows="3"
                   auto-grow
