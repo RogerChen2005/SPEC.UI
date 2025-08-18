@@ -35,7 +35,7 @@ const currentPage = computed(() => {
 function selectPage() {
   specStore.selectedSection = undefined;
   specStore.selectedComponent = undefined;
-  console.log( specStore.currentGeneratedPageIndex);
+  console.log( currentPage.value.spec);
 }
 
 function generateCode() {
@@ -69,7 +69,7 @@ function generateCode() {
       flat
       hide-details
       class="ma-2"
-      @click="selectPage"
+      @update:model-value="selectPage"
     >
     </v-select>
 
@@ -97,7 +97,7 @@ function generateCode() {
     <LayerDisplay
       v-if="currentPage"
       v-model="currentPage.spec"
-      :checkable="false"
+      :checkable="true"
       :query="keyword"
       :editable="true"
     >

@@ -176,6 +176,21 @@
       </template>
     </CDialog>
   </teleport>
+
+  <teleport to="body">
+    <CDialog v-model:visible="editDialogOpened" width="80%" height="80%">
+      <template #header>
+        <v-row class="align-center">
+          <v-col cols="10">
+            <h2 class="text-h6 ml-4">Edit Message</h2>
+          </v-col>
+        </v-row>
+        <v-textarea>  
+          {{ editPath }}
+        </v-textarea>
+      </template>
+    </CDialog>
+  </teleport>
 </template>
 
 <script setup lang="ts">
@@ -202,7 +217,8 @@ const currentPage = computed(
 );
 const markText = ref("");
 const markDialogOpened = ref(false);
-
+const editPath = ref("");
+const editDialogOpened = ref(false);
 const dialogOpened = ref(false);
 const viewingPage = ref(0);
 
@@ -334,6 +350,8 @@ function confirmEditSpec() {
     text: textValue.value,
     spec: spec,
   };
+
+  textValue.value = "";
   axios
     .post("/edit_spec", payload)
     .then((response) => {
@@ -349,7 +367,8 @@ function confirmEditSpec() {
         specStore.generatedPages[index].spec = response.data.data.spec as SPEC;
         console.log(specStore.generatedPages[index].spec);
       }
-      
+      editDialogOpened.value = true;
+      editPath.value = response.data.data.edit_path;
     })
     .catch((error) => {
       console.error("Error editing spec:", error);

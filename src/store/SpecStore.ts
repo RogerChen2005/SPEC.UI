@@ -81,7 +81,6 @@ export const useSpecStore = defineStore("spec", () => {
     },
   ]);
   const currentGeneratedPageIndex = ref<number>(0);
-  const selectedUploadedImage = ref<UploadImage>();
   const selectedComponent = ref<Component>();
   const currentUploadedPageIndex = ref<number>(uploadedPages.value.length - 1);
   const selectedSection = ref<Section>();
@@ -134,7 +133,6 @@ export const useSpecStore = defineStore("spec", () => {
     currentGeneratedPageIndex,
     uploadedPages,
     generatedPages,
-    selectedUploadedImage,
     selectedComponent,
     tab,
     designSpecs,
