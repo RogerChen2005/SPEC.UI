@@ -2,82 +2,57 @@ import { defineStore } from "pinia";
 import { ref, nextTick } from "vue";
 import type {
   GeneratedImage,
-  SPEC,
   UploadImage,
   Component,
   DesignSpec,
   Section,
+  LibraryInfo,
 } from "~/types";
-
-import { CompleteStatus } from "~/enums";
-import upload_spec from "~/example/upload_spec.json";
-import generate_spec from "~/example/generate_spec.json";
-import generate_code from "~/example/generate_code_1.json";
 import { imageGenerationUtil } from "~/helpers/ReferenceHelper";
-import { v4 } from "uuid";
 
-interface upload_spec {
-  specs: SPEC[];
-}
+// import { CompleteStatus } from "~/enums";
+// // import upload_spec from "~/example/upload_spec.json";
+// import generate_spec from "~/example/generate_spec.json";
+// import generate_code from "~/example/generate_code_1.json";
+// import { v4 } from "uuid";
+
+// interface upload_spec {
+//   specs: SPEC[];
+// }
 
 export const useSpecStore = defineStore("spec", () => {
-  const uploadedPages = ref<UploadImage[]>([
-    {
-      id: v4(),
-      name: "Sample Image",
-      url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui1.png",
-      complete: CompleteStatus.Complete,
-      spec: (upload_spec as upload_spec).specs[0],
-    },
-    {
-      id: v4(),
-      name: "Sample Image 2",
-      url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui2.png",
-      complete: CompleteStatus.Complete,
-      spec: (upload_spec as upload_spec).specs[1],
-    },
-    {
-      id: v4(),
-      name: "Sample Image 3",
-      url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui3.png",
-      complete: CompleteStatus.Complete,
-      spec: (upload_spec as upload_spec).specs[2],
-    },
-    {
-      id: v4(),
-      name: "Sample Image 4",
-      url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/ui4.png",
-      complete: CompleteStatus.Complete,
-      spec: (upload_spec as upload_spec).specs[3],
-    },
-  ]);
+  const uploadedPages = ref<UploadImage[]>([]);
+  const customUploadedPages = ref<UploadImage[]>([]);
   const generatedPages = ref<GeneratedImage[]>([
+  ]);
+  const specLibrary = ref<LibraryInfo[]>([
     {
-      id: v4(),
-      spec: generate_spec.specs[0] as SPEC,
-      complete: CompleteStatus.Complete,
-      url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui1.png",
-      time: new Date(),
-      reference: [0],
-      code: generate_code.code,
+      name: "Task1-Region",
+      label: "For Region Testing",
+      path: "task1",
+      selected: false,
+      pages: [],
     },
     {
-      id: v4(),
-      spec: generate_spec.specs[0]  as SPEC,
-      complete: CompleteStatus.Complete,
-      url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui2.png",
-      time: new Date(),
-      reference: [0, 1],
-      code: generate_code.code,
+      name: "Task2-Region",
+      label: "For Region Testing",
+      path: "task2",
+      selected: false,
+      pages: [],
     },
     {
-      id: v4(),
-      spec: generate_spec.specs[0]  as SPEC,
-      complete: CompleteStatus.Error,
-      url: "https://pub-3e35661d2fc44d53ab77988f4adbc462.r2.dev/generated_ui2.png",
-      time: new Date(),
-      reference: [1],
-      code: generate_code.code,
+      name: "Task1-Style",
+      label: "For Style Testing",
+      path: "task1_s",
+      selected: false,
+      pages: [],
+    },
+    {
+      name: "Task2-Region",
+      label: "For Style Testing",
+      path: "task2_s",
+      selected: false,
+      pages: [],
     },
   ]);
   const currentGeneratedPageIndex = ref<number>(0);
@@ -85,7 +60,7 @@ export const useSpecStore = defineStore("spec", () => {
   const selectedComponent = ref<Component>();
   const currentUploadedPageIndex = ref<number>(uploadedPages.value.length - 1);
   const selectedSection = ref<Section>();
-  const tab = ref("2");
+  const tab = ref("1");
 
   const designSpecs = ref<DesignSpec>({
     Color_System: {
@@ -116,30 +91,42 @@ export const useSpecStore = defineStore("spec", () => {
 
   const pageCompositionReference = ref<number[]>([]);
 
+  function clearSpecSelection() {
+    designSpecs.value.Color_System.value = -2;
+    designSpecs.value.Layout_Structure.value = -2;
+    designSpecs.value.Shape_Language.value = -2;
+    designSpecs.value.Usage_Scenario.value = -2;
+    pageCompositionReference.value = [];
+  }
+
   function generateImage() {
     imageGenerationUtil(
       uploadedPages,
       generatedPages,
       pageCompositionReference,
-      designSpecs,()=>{
-        nextTick(()=>{
+      designSpecs,
+      () => {
+        nextTick(() => {
           currentGeneratedPageIndex.value = generatedPages.value.length - 1;
-        })
+        });
       }
     );
   }
 
   return {
+    customUploadedPages,
     currentUploadedPageIndex,
     currentGeneratedPageIndex,
     uploadedPages,
     generatedPages,
     selectedUploadedImage,
     selectedComponent,
+    specLibrary,
     tab,
     designSpecs,
     pageCompositionReference,
     selectedSection,
     generateImage,
+    clearSpecSelection,
   };
 });

@@ -48,7 +48,7 @@ export interface SPEC {
 }
 
 export interface BaseImage {
-  id: string
+  id: string;
   spec?: SPEC;
   complete: CompleteStatus;
   url: string;
@@ -81,4 +81,12 @@ export type DesignSpec = Record<
 export interface EditInfo {
   sectionIndex: number;
   componentIndex: number;
+}
+
+export interface LibraryInfo {
+  name: string;
+  label: string;
+  path: string;
+  selected: boolean;
+  pages: UploadImage[];
 }

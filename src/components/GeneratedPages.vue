@@ -16,6 +16,7 @@ const specStore = useSpecStore();
 const generatedPages = computed(() => specStore.generatedPages);
 
 const slideRefs = ref<InstanceType<typeof Element>[]>([]);
+const EmptyPadderRef = ref<InstanceType<typeof Element> | null>(null);
 const activeSlide = computed({
   get: () => specStore.currentGeneratedPageIndex,
   set: (val) => {
@@ -29,21 +30,24 @@ watch(activeSlide, () => {
   updateActiveSlide();
 });
 
-function setSlideRef(el: ComponentPublicInstance | Element | null, index: number) {
+function setSlideRef(
+  el: ComponentPublicInstance | Element | null,
+  index: number
+) {
   if (el) {
     slideRefs.value[index] = el as Element;
   }
-};
+}
 
 function scrollPrev() {
   activeSlide.value =
     (activeSlide.value - 1 + generatedPages.value.length) %
     generatedPages.value.length;
-};
+}
 
 function scrollNext() {
   activeSlide.value = (activeSlide.value + 1) % generatedPages.value.length;
-};
+}
 
 function updateActiveSlide() {
   nextTick(() => {
@@ -61,18 +65,30 @@ function openDialog(index: number) {
     setTimeout(() => {
       dialogOpened.value = true;
     }, 400);
-  }
-  else dialogOpened.value = true;
+  } else dialogOpened.value = true;
   activeSlide.value = index;
   updateActiveSlide();
 }
 
 function switchToEdit() {
-  specStore.tab = "2";
+  if (generatedPages.value.length > 0) {
+    specStore.tab = "2";
+  }
 }
- 
+
 onMounted(() => {
-  updateActiveSlide();
+  if (generatedPages.value.length === 0) {
+    nextTick(() =>
+      EmptyPadderRef.value?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      })
+    );
+    console.log(EmptyPadderRef.value)
+  } else {
+    updateActiveSlide();
+  }
 });
 </script>
 
@@ -104,7 +120,22 @@ onMounted(() => {
       </v-col>
       <v-col cols="10">
         <div class="generatedPages-wrapper">
-          <div class="slide-item  padder"></div>
+          <div class="slide-item padder"></div>
+          <div
+            ref="EmptyPadderRef"
+            class="slide-item active-slide"
+            v-if="generatedPages.length == 0"
+          >
+            <div class="slide-content  rounded-lg">
+              <v-sheet
+                class="d-flex flex-column align-center justify-center"
+                height="100%"
+              >
+                <v-icon size="large" class="mb-2">mdi-information</v-icon>
+                <span>No Generated UI</span>
+              </v-sheet>
+            </div>
+          </div>
           <div
             v-for="(page, index) in generatedPages"
             :key="index"
@@ -119,7 +150,9 @@ onMounted(() => {
             @click="openDialog(index)"
           >
             <div class="slide-content rounded-lg">
-              <template v-if="page.complete == CompleteStatus.Complete && page.url">
+              <template
+                v-if="page.complete == CompleteStatus.Complete && page.url"
+              >
                 <img class="slide-image" :src="page.url" />
               </template>
               <template v-else-if="page.complete == CompleteStatus.Incomplete">
@@ -166,7 +199,11 @@ onMounted(() => {
         <h2 class="text-h6 ml-4">Generated Page</h2>
         <h2 class="text-h4 font-weight-bold ml-4">Page Details</h2>
       </template>
-      <DetailedDialog :editable="false" :page-index="viewingPage" @close="dialogOpened = false">
+      <DetailedDialog
+        :editable="false"
+        :page-index="viewingPage"
+        @close="dialogOpened = false"
+      >
       </DetailedDialog>
     </CDialog>
   </teleport>
@@ -217,7 +254,7 @@ onMounted(() => {
   filter: blur(5px);
 }
 
-.slide-item.left-slide:hover{
+.slide-item.left-slide:hover {
   transform: scale(0.83);
 }
 
@@ -227,7 +264,7 @@ onMounted(() => {
   filter: blur(5px);
 }
 
-.slide-item.right-slide:hover{
+.slide-item.right-slide:hover {
   transform: scale(0.83);
 }
 
@@ -253,7 +290,7 @@ onMounted(() => {
   transform: translateX(-90%) rotateY(-10deg);
 }
 
-.padder{
+.padder {
   cursor: default;
 }
 </style>

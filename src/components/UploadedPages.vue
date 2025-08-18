@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, type ComponentPublicInstance, nextTick } from "vue";
+import {
+  computed,
+  onMounted,
+  ref,
+  type ComponentPublicInstance,
+  nextTick,
+} from "vue";
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import { useSpecStore } from "~/store/SpecStore";
 import CDialog from "./UI/CDialog.vue";
 import DetailedDialog from "./DetailedDialog.vue";
+import SpecLibrary from "./SpecLibrary.vue";
 import { CompleteStatus } from "~/enums";
 
 const specStore = useSpecStore();
@@ -15,8 +22,10 @@ const currentPage = computed({
 });
 const viewingPage = ref(0);
 const uploadedPages = computed(() => specStore.uploadedPages);
-const CardRef = ref<Record<string,InstanceType<typeof Element>>>({});
+const CardRef = ref<Record<string, InstanceType<typeof Element>>>({});
 const dialogOpened = ref(false);
+const libraryDialogOpened = ref(false);
+const specLibrary = computed(() => specStore.specLibrary);
 
 function uploadImage() {
   const input = document.createElement("input");
@@ -26,14 +35,17 @@ function uploadImage() {
     const target = e.target as HTMLInputElement;
     if (target.files && target.files[0]) {
       const file = target.files[0];
-      imageUploadUtil(uploadedPages, file, () => {
-        nextTick(() => {
-          currentPage.value = uploadedPages.value.length - 1;
-          updateActiveSlide();
-        });
-      },()=>{
-        openDialog(uploadedPages.value.length - 1);
-      });
+      libraryDialogOpened.value = false;
+      imageUploadUtil(
+        ref(specStore.customUploadedPages),
+        file,
+        () => {
+          ConfirmSelection();
+        },
+        () => {
+          openDialog(uploadedPages.value.length - 1);
+        }
+      );
     }
   };
   input.click();
@@ -65,14 +77,45 @@ function updateActiveSlide() {
   });
 }
 
-function setCardRef(el: ComponentPublicInstance | Element | null, index: string) {
+function openLibraryDialog() {
+  libraryDialogOpened.value = true;
+}
+
+function setCardRef(
+  el: ComponentPublicInstance | Element | null,
+  index: string
+) {
   if (el) {
     CardRef.value[index] = el as Element;
   }
 }
 
+function ConfirmSelection() {
+  specStore.uploadedPages = [];
+  specStore.clearSpecSelection();
+  for (const library of specLibrary.value) {
+    if (library.selected) {
+      specStore.uploadedPages = specStore.uploadedPages.concat(library.pages);
+      console.log(specStore.uploadedPages);
+    }
+  }
+  specStore.uploadedPages = specStore.uploadedPages.concat(
+    specStore.customUploadedPages
+  );
+  libraryDialogOpened.value = false;
+  nextTick(() => {
+    currentPage.value = uploadedPages.value.length - 1;
+    updateActiveSlide();
+  });
+}
+
 onMounted(() => {
-  nextTick(()=>updateActiveSlide());
+  nextTick(() => {
+    if (uploadedPages.value.length > 0) {
+      currentPage.value = 0;
+      updateActiveSlide();
+    }
+  });
 });
 </script>
 
@@ -83,7 +126,7 @@ onMounted(() => {
     </v-col>
     <v-col cols="auto">
       <v-btn
-        @click="uploadImage"
+        @click="openLibraryDialog"
         color="primary"
         width="150"
         variant="flat"
@@ -108,13 +151,18 @@ onMounted(() => {
           <div class="slide"></div>
           <div
             v-for="(page, index) in uploadedPages"
-            :ref="(el)=>setCardRef(el,page.id)"
+            :ref="(el) => setCardRef(el, page.id)"
             :key="index"
             class="slide"
           >
-            <v-card @click="openDialog(index)" link class="uploaded-page" :class="{
-              'current-page': currentPage === index
-            }">
+            <v-card
+              @click="openDialog(index)"
+              link
+              class="uploaded-page"
+              :class="{
+                'current-page': currentPage === index,
+              }"
+            >
               <template v-if="page.complete == CompleteStatus.Complete">
                 <v-img :src="page.url" height="400px" cover></v-img>
               </template>
@@ -158,22 +206,15 @@ onMounted(() => {
           </div>
           <div class="slide"></div>
         </template>
-
         <template v-else>
-          <v-sheet
-            height="400"
-            class="rounded d-flex align-center justify-center"
-            color="surface-variant"
+          <v-card
+            class="slide text-center d-flex flex-column align-center justify-center"
+            height="350px"
+            variant="tonal"
           >
-            <div class="text-center">
-              <v-icon
-                icon="mdi-image-outline"
-                size="large"
-                class="mb-2"
-              ></v-icon>
-              <div>Upload a page to start...</div>
-            </div>
-          </v-sheet>
+            <v-icon icon="mdi-image-outline" size="large" class="mb-2"></v-icon>
+            <div>Upload a page to start...</div>
+          </v-card>
         </template>
       </v-col>
 
@@ -198,6 +239,42 @@ onMounted(() => {
       </template>
       <DetailedDialog :page-index="viewingPage" @close="dialogOpened = false">
       </DetailedDialog>
+    </CDialog>
+  </teleport>
+
+  <teleport to="body">
+    <CDialog v-model:visible="libraryDialogOpened" width="80%" height="75%">
+      <template #header>
+        <div
+          class="d-flex justify-space-between"
+          style="width: 100%; align-items: flex-end"
+        >
+          <div>
+            <h2 class="text-h6 ml-4">Spec Library</h2>
+            <h2 class="text-h4 font-weight-bold ml-4">
+              Select a Library or Upload a Page
+            </h2>
+          </div>
+          <v-btn class="mr-8" @click="ConfirmSelection"> Confirm </v-btn>
+        </div>
+      </template>
+      <v-container class="mt-6 fill-height" fluid style="overflow-y: auto">
+        <v-row cols="12" class="fill-height pb-4">
+          <v-col v-for="library in specLibrary" :md="4">
+            <SpecLibrary :info="library"></SpecLibrary>
+          </v-col>
+          <v-col :md="4">
+            <v-card link height="100%" @click="uploadImage">
+              <div
+                class="d-flex flex-column align-center justify-center fill-height"
+              >
+                <v-icon size="large">mdi-upload</v-icon>
+                <span class="text-subtitle-1">Upload New Page</span>
+              </div>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
     </CDialog>
   </teleport>
 </template>
@@ -237,7 +314,7 @@ onMounted(() => {
   border: solid 6px rgba(var(--v-border-color), 0);
 }
 
-.current-page{
+.current-page {
   border: solid 6px rgba(var(--v-border-color), 0.2);
 }
 </style>

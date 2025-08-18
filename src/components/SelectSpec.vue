@@ -128,11 +128,13 @@ function useCustomPrompt() {
           <v-card-text>
             <v-row class="flex-grow-1">
               <v-col :cols="type === 'Structure' ? 12 : 6">
-                <v-img
-                  :src="page.url"
-                  height="230px"
-                  cover
-                  class="rounded-lg"
+                <v-img :src="page.url" height="230px" cover class="rounded-lg">
+                  <template v-slot:placeholder>
+                    <div class="d-flex align-center justify-center fill-height">
+                      <v-progress-circular
+                        indeterminate
+                      ></v-progress-circular>
+                    </div> </template
                 ></v-img>
               </v-col>
               <v-col

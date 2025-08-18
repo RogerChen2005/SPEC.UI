@@ -13,8 +13,7 @@ export function useVuetifyTheme() {
       preferTheme = store.isDarkMode ? 'dark' : 'light';
     }
     let themeName = colorPreference !== 'default' ? `${preferTheme}-${colorPreference}` : preferTheme;
-    console.log(themeName)
-    theme.global.name.value = themeName;
+    theme.change(themeName)
   };
 
   setVuetifyTheme(store.ThemePreference, store.ColorPreference);
