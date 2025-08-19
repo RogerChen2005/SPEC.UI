@@ -1,16 +1,4 @@
 <template>
-  <!-- <v-card outlined>
-          <v-row no-gutters class="fill-height">
-            <v-col cols="8">
-              <iframe 
-              src="http://118.31.58.101:45501" 
-              height="1000px" 
-              width="700px" 
-              style="transform: scale(0.9); transform-origin: 0 0;">
-              </iframe>
-            </v-col>
-          </v-row>
-        </v-card> -->
   <v-row class="mt-2 align-center">
     <v-col cols="4" class="d-flex align-center">
       <v-btn
@@ -42,32 +30,11 @@
         >
           Export
         </v-btn>
+        <SelectHistory v-if="currentPage.history"></SelectHistory>
       </div>
     </v-col>
   </v-row>
   <v-container class="pa-0 ma-0" fluid>
-    <!-- <v-row align="center">
-        <v-col cols="10">
-          <div class="slide-content rounded-lg" @click="openDialog(specStore.currentGeneratedPageIndex)">
-            <template v-if="currentPage.complete && currentPage.url">
-              <img class="slide-image" :src="currentPage.url" />
-            </template>
-            <template v-else>
-              <v-sheet
-                class="d-flex flex-column align-center justify-center"
-                height="100%"
-              >
-                <v-progress-circular
-                  indeterminate
-                  color="primary"
-                  class="mb-2"
-                ></v-progress-circular>
-                <span>Generating UI...</span>
-              </v-sheet>
-            </template>
-          </div>
-        </v-col>
-      </v-row> -->
     <v-row v-if="currentPage.code" class="mt-2">
       <v-col
         cols="10"
@@ -109,8 +76,6 @@
   </v-container>
 
   <v-sheet color="background" class="pa-1">
-    <!-- Image display area -->
-
     <div class="input-area">
       <div class="mb-2 input-area-header">
         <span class="text-h6 text-medium-emphasis">
@@ -177,20 +142,6 @@
     </CDialog>
   </teleport>
 
-  <teleport to="body">
-    <CDialog v-model:visible="editDialogOpened" width="80%" height="80%">
-      <template #header>
-        <v-row class="align-center">
-          <v-col cols="10">
-            <h2 class="text-h6 ml-4">Edit Message</h2>
-          </v-col>
-        </v-row>
-        <v-textarea>  
-          {{ editPath }}
-        </v-textarea>
-      </template>
-    </CDialog>
-  </teleport>
 </template>
 
 <script setup lang="ts">
@@ -204,6 +155,7 @@ import { CompleteStatus } from "~/enums";
 import type { SPEC, UploadImage, UIDesignSpecification } from "~/types";
 import { defineAsyncComponent } from "vue";
 import { v4 } from "uuid";
+import SelectHistory from "~/components/SelectHistory.vue";
 
 const UIPreview = defineAsyncComponent(
   () => import("~/components/UIPreview.vue")
@@ -218,8 +170,6 @@ const currentPage = computed(
 );
 const markText = ref("");
 const markDialogOpened = ref(false);
-const editPath = ref("");
-const editDialogOpened = ref(false);
 const dialogOpened = ref(false);
 const viewingPage = ref(0);
 
@@ -369,10 +319,10 @@ function confirmEditSpec() {
   let index = specStore.currentGeneratedPageIndex;
   let prompt = "";
   if (specStore.selectedComponent) {
-    prompt += `用户想要更改path为Page_Composition/Sections/Components中Data_Component_Id为${specStore.selectedComponent.Data_Component_Id}的组件，意图为：`;
+    prompt += `用户想要更改的组件为${JSON.stringify(specStore.selectedComponent)}，意图为：`;
   } else if (specStore.selectedSection) {
-    prompt += `用户想要更改path为Page_Composition/Sections中Data_Section_Id为${specStore.selectedSection.Data_Section_Id}的组件，意图为：`;
-  } 
+    prompt += `用户想要更改的组件为${JSON.stringify(specStore.selectedSection)}，意图为：`;
+  }
 
   console.log("Confirming edit spec with prompt:", prompt + textValue.value);
 
@@ -386,12 +336,20 @@ function confirmEditSpec() {
   axios
     .post("/edit_spec", payload)
     .then((response) => {
-      console.log("Edit spec response:", response.data);
-      specStore.generatedPages[index].spec = response.data.data.spec as SPEC;
-      console.log(specStore.generatedPages[index].spec);
-      specStore.generatedPages[index].code = response.data.data.extracted_code;
-      editDialogOpened.value = true;
-      editPath.value = response.data.data.edit_path;
+      if(response.data.success) {
+        console.log("Edit spec response:", response.data);
+        if(!currentPage.value.history) {
+          currentPage.value.history = [];
+        }
+        if (currentPage.value.history) {
+          const { history, ...rest } = currentPage.value;
+          currentPage.value.history.push({ ...rest });
+        }
+        currentPage.value.spec = response.data.data.spec as SPEC;
+        console.log(currentPage.value.spec);
+        currentPage.value.code = response.data.data.extracted_code;
+        currentPage.value.time = new Date();
+      }
     })
     .catch((error) => {
       console.error("Error editing spec:", error);

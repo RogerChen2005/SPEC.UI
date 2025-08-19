@@ -2,10 +2,8 @@
 import { computed, ref } from "vue";
 import { useSpecStore } from "~/store/SpecStore";
 import LayerDisplay from "./LayerDisplay.vue";
-import axios from "~/helpers/RequestHelper";
 import CDialog from "./UI/CDialog.vue";
 import type { SpecType } from "~/types";
-import { CompleteStatus } from "~/enums";
 
 const specStore = useSpecStore();
 const currentTab = ref<number>(0);
@@ -38,24 +36,6 @@ function selectPage() {
   console.log( currentPage.value.spec);
 }
 
-function generateCode() {
-  let index = specStore.currentGeneratedPageIndex;
-  axios
-    .post("/generate_code", {
-      spec: specStore.generatedPages[index].spec,
-      save_name: "generate_1",
-    })
-    .then((response) => {
-      if (response.data.success) {
-        console.log("generate code success:", response.data);
-        specStore.generatedPages[index].code = response.data.data.code;
-        specStore.generatedPages[index].complete = CompleteStatus.Complete;
-        specStore.generatedPages[index].url =
-          "data:image/png;base64," + response.data.data.render_image;
-        console.log("Updated generated page:", specStore.generatedPages[index]);
-      }
-    });
-}
 </script>
 
 <template>
@@ -116,16 +96,6 @@ function generateCode() {
     >
     </v-card>
 
-    <div class="pa-2">
-      <v-btn
-        id="generate-button"
-        block
-        color="primary"
-        @click="generateCode"
-        class="mb-2"
-        >Generate UI</v-btn
-      >
-    </div>
   </v-container>
   <Teleport to="body">
     <CDialog v-model:visible="dialogOpened" width="80%" height="80%">

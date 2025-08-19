@@ -64,11 +64,17 @@ function edit(component: ComponentSuggestion) {
   console.log(payload);
   axios.post("/edit_spec", payload).then((response) => {
     if (response.data.success) {
-      console.log("edit spec success:", response.data);
+      console.log("Edit spec response:", response.data);
+      if(!currentPage.value.history) {
+        currentPage.value.history = [];
+      }
+      if (currentPage.value.history) {
+        const { history, ...rest } = currentPage.value;
+        currentPage.value.history.push({ ...rest });
+      }
       currentPage.value.spec = response.data.data.spec;
-      console.log(currentPage.value.spec);
       currentPage.value.code = response.data.data.extracted_code;
-      console.log("Updated code:", currentPage.value.code);
+      currentPage.value.time = new Date();
     }
   });
 }
