@@ -333,7 +333,8 @@ function confirmEditSpec() {
   };
 
   textValue.value = "";
-  axios
+  if(specStore.selectedSection || specStore.selectedComponent) {
+    axios
     .post("/edit_spec", payload)
     .then((response) => {
       if(response.data.success) {
@@ -354,6 +355,30 @@ function confirmEditSpec() {
     .catch((error) => {
       console.error("Error editing spec:", error);
     });
+  } else {
+    axios
+    .post("/edit_spec_global", payload)
+    .then((response) => {
+      if(response.data.success) {
+        console.log("Edit spec response:", response.data);
+        if(!currentPage.value.history) {
+          currentPage.value.history = [];
+        }
+        if (currentPage.value.history) {
+          const { history, ...rest } = currentPage.value;
+          currentPage.value.history.push({ ...rest });
+        }
+        currentPage.value.spec = response.data.data.spec as SPEC;
+        console.log(currentPage.value.spec);
+        currentPage.value.code = response.data.data.extracted_code;
+        currentPage.value.time = new Date();
+      }
+    })
+    .catch((error) => {
+      console.error("Error editing spec:", error);
+    });
+  }
+  
 }
 
 function back() {
