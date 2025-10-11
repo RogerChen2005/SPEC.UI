@@ -76,6 +76,8 @@ function edit(section: SectionSuggestion) {
       currentPage.value.spec = response.data.data.spec;
       currentPage.value.code = response.data.data.extracted_code;
       currentPage.value.time = new Date();
+      specStore.selectedComponent = undefined;
+      specStore.selectedSection = undefined;
     }
   });
 }

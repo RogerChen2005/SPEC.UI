@@ -350,6 +350,8 @@ function confirmEditSpec() {
         console.log(currentPage.value.spec);
         currentPage.value.code = response.data.data.extracted_code;
         currentPage.value.time = new Date();
+        specStore.selectedComponent = undefined;
+        specStore.selectedSection = undefined;
       }
     })
     .catch((error) => {
@@ -372,6 +374,8 @@ function confirmEditSpec() {
         console.log(currentPage.value.spec);
         currentPage.value.code = response.data.data.extracted_code;
         currentPage.value.time = new Date();
+        specStore.selectedComponent = undefined;
+        specStore.selectedSection = undefined;
       }
     })
     .catch((error) => {
