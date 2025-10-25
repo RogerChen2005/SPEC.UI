@@ -2,19 +2,13 @@
 import { ref, onMounted, watch, onBeforeUnmount, nextTick, computed } from 'vue';
 import { createRoot, type Root } from 'react-dom/client';
 import { useSpecStore } from '~/store/SpecStore';
-import React from 'react';
+import type { ComponentType } from 'react';
 
 // Define the shape of our editable attribute objects
 interface EditableAttribute {
   name: string;
   value: string;
 }
-
-// Set of HTML void elements that cannot have inner content.
-// const VOID_ELEMENTS = new Set([
-//   'AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 
-//   'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'
-// ]);
 
 
 // 动态导入大型库
@@ -72,12 +66,6 @@ const containerRef = ref<HTMLElement | null>(null);
 const loading = ref(true);
 let reactRoot: Root | null = null;
 let libraries: Awaited<ReturnType<typeof loadLibraries>> | null = null;
-
-// Computed property to check if the selected element is a void element
-// const isVoidElement = computed(() => {
-//     if (!selectedElRef.value) return false;
-//     return VOID_ELEMENTS.has(selectedElRef.value.tagName);
-// });
 
 function parseImports(code: string, LIBRARY_MAP: any): { imports: Record<string, any>, cleanCode: string } {
     const importRegex = /import\s+([\s\S]*?)\s+from\s+['"]([^'"]+)['"];?/g;
@@ -140,24 +128,6 @@ const handleClick = (event: Event): void => {
         }
     }
 };
-
-/**
- * Handles changes to attributes from the text fields and applies them to the actual DOM element.
- */
-// const handleAttributeChange = (name: string, newValue: string) => {
-//   if (selectedElRef.value) {
-//     selectedElRef.value.setAttribute(name, newValue);
-//   }
-// };
-
-/**
- * Handles changes to inner text from the textarea and applies them to the actual DOM element.
- */
-// const handleInnerTextChange = (newText: string) => {
-//     if (selectedElRef.value) {
-//         selectedElRef.value.innerText = newText;
-//     }
-// };
 
 // --- Watch for changes to the selected element ---
 watch(selectedElRef, (newEl) => {
@@ -243,8 +213,36 @@ const renderReact = async (): Promise<void> => {
         const getReactElement = new Function(...scopeKeys, `${transformResult.code}; return App;`);
         const elementToRender = getReactElement(...scopeValues);
 
+        const ReactLib = libraries.React;
+        const AntdModule = libraries.LIBRARY_MAP['antd'] as {
+            ConfigProvider?: ComponentType<Record<string, unknown>>;
+            default?: {
+                ConfigProvider?: ComponentType<Record<string, unknown>>;
+            };
+        } | undefined;
+        const ConfigProvider = AntdModule?.ConfigProvider ?? AntdModule?.default?.ConfigProvider ?? null;
+
+        const getPopupContainer = (): HTMLElement => {
+            if (containerRef.value) {
+                return containerRef.value;
+            }
+            if (document.body) {
+                return document.body;
+            }
+            return document.documentElement;
+        };
+
+        const renderedApp = ReactLib.createElement(elementToRender, {
+            popupContainer: getPopupContainer,
+            getPopupContainer
+        });
+
         reactRoot = createRoot(containerRef.value);
-        reactRoot.render(React.createElement(elementToRender));
+        reactRoot.render(
+            ConfigProvider
+                ? ReactLib.createElement(ConfigProvider, { getPopupContainer }, renderedApp)
+                : renderedApp
+        );
 
         await nextTick();
         containerRef.value.addEventListener('click', handleClick);
@@ -299,58 +297,6 @@ onBeforeUnmount((): void => {
             </div>
         </v-col>
         <v-divider vertical></v-divider>
-        <!-- <v-col>
-            <div class="element-inspector">
-                <v-card flat>
-                    <v-card-title>
-                        Element Inspector
-                    </v-card-title>
-                    <v-card-subtitle v-if="selectedElRef">
-                        Tag: &lt;{{ selectedElRef.tagName.toLowerCase() }}&gt;
-                    </v-card-subtitle>
-                    <v-card-subtitle v-else>
-                         Click an element to inspect
-                    </v-card-subtitle>
-
-                    <v-card-text>
-                        <div v-if="editableAttributes.length > 0">
-                            <p class="text-overline">Attributes</p>
-                            <div v-for="attr in editableAttributes" :key="attr.name">
-                                <v-text-field
-                                    :label="attr.name"
-                                    v-model="attr.value"
-                                    @update:model-value="(newValue) => handleAttributeChange(attr.name, String(newValue))"
-                                    variant="outlined"
-                                    density="compact"
-                                    class="mb-2"
-                                >
-                                </v-text-field>
-                            </div>
-                        </div>
-                        <div v-else-if="selectedElRef">
-                            This element has no attributes.
-                        </div>
-                         <div v-else>
-                            No element selected.
-                        </div>
-
-                        <div v-if="selectedElRef && !isVoidElement">
-                            <v-divider class="my-4"></v-divider>
-                            <p class="text-overline">Inner Text</p>
-                             <v-textarea
-                                label="Inner Text"
-                                v-model="editableInnerText"
-                                @update:model-value="handleInnerTextChange"
-                                variant="outlined"
-                                density="compact"
-                                rows="3"
-                                auto-grow
-                            ></v-textarea>
-                        </div>
-                    </v-card-text>
-                </v-card>
-            </div>
-        </v-col> -->
     </v-row>
 </template>
 

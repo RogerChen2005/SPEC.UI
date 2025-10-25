@@ -8,7 +8,7 @@ import {
 } from "vue";
 import { imageUploadUtil } from "~/helpers/ReferenceHelper";
 import { useSpecStore } from "~/store/SpecStore";
-import CDialog from "./UI/CDialog.vue";
+import CDialog from "./CUI/CDialog.vue";
 import DetailedDialog from "./DetailedDialog.vue";
 import SpecLibrary from "./SpecLibrary.vue";
 import { CompleteStatus } from "~/enums";

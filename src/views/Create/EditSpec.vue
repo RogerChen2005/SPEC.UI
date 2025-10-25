@@ -148,7 +148,7 @@
 import { ref, computed, toRaw } from "vue";
 import { useSpecStore } from "~/store/SpecStore";
 import { useMessageStore } from "~/store/messageStore";
-import CDialog from "~/components/UI/CDialog.vue";
+import CDialog from "~/components/CUI/CDialog.vue";
 import DetailedDialog from "~/components/DetailedDialog.vue";
 import axios from "~/helpers/RequestHelper";
 import { CompleteStatus } from "~/enums";

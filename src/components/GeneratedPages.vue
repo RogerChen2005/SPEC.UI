@@ -8,7 +8,7 @@ import {
   watch,
 } from "vue";
 import { useSpecStore } from "~/store/SpecStore";
-import CDialog from "./UI/CDialog.vue";
+import CDialog from "./CUI/CDialog.vue";
 import DetailedDialog from "./DetailedDialog.vue";
 import { CompleteStatus } from "~/enums";
 

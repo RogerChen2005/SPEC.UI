@@ -2,7 +2,7 @@
 import { computed, ref } from "vue";
 import { useSpecStore } from "~/store/SpecStore";
 import LayerDisplay from "./LayerDisplay.vue";
-import CDialog from "./UI/CDialog.vue";
+import CDialog from "./CUI/CDialog.vue";
 import type { SpecType } from "~/types";
 
 const specStore = useSpecStore();

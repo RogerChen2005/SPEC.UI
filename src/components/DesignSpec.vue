@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import { checkMissingSpecs } from "~/helpers/ReferenceHelper";
 import { useSpecStore } from "~/store/SpecStore";
 import LayerDisplay from "./LayerDisplay.vue";
-import CDialog from "./UI/CDialog.vue";
+import CDialog from "./CUI/CDialog.vue";
 import SelectSpec from "./SelectSpec.vue";
 import type { SpecType } from "~/types";
 
