@@ -20,10 +20,10 @@
       <v-row align="center">
         <v-col cols="2">
           <v-btn
-            @click="backHome"
+            @click="openSettings"
             variant="plain"
             value="home"
-            icon="mdi-home"
+            icon="mdi-cog"
             class="ml-4"
           >
           </v-btn>
@@ -83,8 +83,8 @@ const specStore = useSpecStore();
 const tab = computed(() => specStore.tab);
 
 const router = useRouter();
-const backHome = () => {
-  router.push("/");
+const openSettings = () => {
+  router.push("/settings");
 };
 const sidebarOpen = ref(true);
 </script>

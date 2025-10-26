@@ -1,13 +1,13 @@
 import type { RouteRecordRaw } from "vue-router";
 
 import SettingsView from "~/views/SettingsView.vue";
-import ProjectList from "~/views/ProjectList.vue";
+import CreateView from "~/views/Create/CreateView.vue";
 
 export const rootRoutes: RouteRecordRaw[] = [
   {
     path: "",
-    component: ProjectList,
-    meta: { requiresAuth: true, title: "项目列表" },
+    component: CreateView,
+    meta: { requiresAuth: true, title: "创建" },
   },
   {
     path: "/settings",

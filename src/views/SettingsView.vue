@@ -1,5 +1,5 @@
 <template>
-    <div class="settings-page pa-4">
+    <div class="settings-page pa-8">
         <h1 class="text-h4 mb-8 font-weight-bold">Settings</h1>
 
         <v-card class="pa-4 mt-4" variant="tonal">
