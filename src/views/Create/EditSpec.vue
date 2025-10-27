@@ -330,6 +330,7 @@ function confirmEditSpec() {
     save_name: "edit_spec_01",
     text: prompt + textValue.value,
     spec: generatedPages.value[index].spec,
+    code: generatedPages.value[index].code,
   };
 
   textValue.value = "";

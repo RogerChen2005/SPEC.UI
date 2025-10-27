@@ -61,6 +61,7 @@ function edit(section: SectionSuggestion) {
   let payload = {
     spec: currentPage.value.spec,
     text: text,
+    code: currentPage.value.code,
   };
   console.log(payload);
   axios.post("/edit_spec", payload).then((response) => {
